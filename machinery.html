@@ -6,6 +6,8 @@
     <title>Agricultural Machinery - FarmConnect</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Add Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Colorful Navigation Bar */
         .header {
@@ -730,7 +732,16 @@
             text-align: center;
         }
 
-        #locationFilterSection button {
+        .location-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .location-controls button {
             background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
             border: none;
@@ -742,16 +753,55 @@
             font-size: 0.9rem;
         }
 
-        #locationFilterSection button:hover {
+        .location-controls button:hover {
             background: linear-gradient(135deg, #2E7D32, #4CAF50);
+        }
+
+        .location-controls input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            min-width: 200px;
+        }
+
+        .location-controls input:focus {
+            outline: none;
+            border-color: #4CAF50;
         }
 
         #map {
             width: 100%;
-            height: 400px;
+            height: 500px;
             margin: 20px 0;
             border-radius: 12px;
             overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* Custom Map Marker Styles */
+        .marker-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        .user-location-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
         }
 
         /* Location Options */
@@ -810,6 +860,34 @@
             cursor: pointer;
             margin-left: auto;
             font-size: 0.8rem;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-control-btn {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .map-control-btn:hover {
+            background: #f8f9fa;
         }
 
         /* Responsive adjustments */
@@ -915,9 +993,12 @@
                 font-size: 1.5rem;
             }
 
-            #locationFilterSection button {
-                padding: 8px 16px;
-                font-size: 0.8rem;
+            .location-controls {
+                flex-direction: column;
+            }
+
+            .location-controls input {
+                width: 100%;
             }
 
             #map {
@@ -928,13 +1009,23 @@
                 flex-direction: column;
                 align-items: center;
             }
+
+            .map-controls {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Add this before your other script tags -->
     <script src="api-client.js"></script>
-<script src="dashboard.js"></script>
+    <script src="dashboard.js"></script>
+    <!-- Add Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
    <header class="header">
     <nav class="navbar">
         <div class="nav-brand">
@@ -1011,6 +1102,7 @@
         <div class="container">
             <h1>Agricultural Machinery Rental</h1>
             <p>Browse and add machinery to your cart. Complete booking at checkout.</p>
+            <a href="#Machinery-list" class="btn btn-primary">Browse machinery</a>
         </div>
     </section>
 
@@ -1080,13 +1172,23 @@
         </div>
     </section>
 
-    <!-- Location Filter Section -->
+    <!-- Enhanced Location Filter Section with Map -->
     <section id="locationFilterSection">
         <div class="container">
             <h3>Find Machinery Near You</h3>
-            <button onclick="getUserLocation()">Use My Location</button>
-            <input type="text" id="locationInput" placeholder="Enter city or pincode">
-            <button onclick="filterByLocation()">Search</button>
+            
+            <div class="location-controls">
+                <button onclick="showUserLocation()">
+                    <i class="fas fa-location-crosshairs"></i> Use My Location
+                </button>
+                <input type="text" id="locationInput" placeholder="Enter city or pincode">
+                <button onclick="filterByLocation()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button onclick="resetMap()">
+                    <i class="fas fa-sync-alt"></i> Reset Map
+                </button>
+            </div>
             
             <!-- Location Options -->
             <div class="location-options">
@@ -1099,11 +1201,9 @@
         </div>
     </section>
 
+   
     <!-- Location Search Results -->
     <div id="locationSearchResults" class="location-search-results" style="display: none;"></div>
-
-    <!-- Map Section -->
-    <div id="map"></div>
 
     <!-- Machinery Gallery Section -->
     <section class="machinery-gallery">
@@ -1113,7 +1213,7 @@
             
             <div class="machinery-grid" id="machineryGrid">
                 <!-- Tractor 1 -->
-                <div class="machinery-item" data-type="tractor" data-location="kalyani" data-price="800">
+                <div class="machinery-item" data-type="tractor" data-location="kalyani" data-price="800" data-id="john-deere-5050d">
                     <div class="machinery-image">
                         <img src="assets/tractor1.jpg" alt="John Deere 5050D Tractor" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1191,7 +1291,7 @@
                 </div>
 
                 <!-- Tractor 2 -->
-                <div class="machinery-item" data-type="tractor" data-location="nadia" data-price="1200">
+                <div class="machinery-item" data-type="tractor" data-location="nadia" data-price="1200" data-id="mahindra-6050">
                     <div class="machinery-image">
                         <img src="assets/tractor2.jpg" alt="Mahindra 6050 Tractor" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1269,7 +1369,7 @@
                 </div>
 
                 <!-- Power Tiller -->
-                <div class="machinery-item" data-type="cultivator" data-location="kalyani" data-price="400">
+                <div class="machinery-item" data-type="cultivator" data-location="kalyani" data-price="400" data-id="power-tiller">
                     <div class="machinery-image">
                         <img src="assets/power-tiller.jpg" alt="Power Tiller" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1347,7 +1447,7 @@
                 </div>
 
                 <!-- Rotavator -->
-                <div class="machinery-item" data-type="cultivator" data-location="ranaghat" data-price="600">
+                <div class="machinery-item" data-type="cultivator" data-location="ranaghat" data-price="600" data-id="rotavator">
                     <div class="machinery-image">
                         <img src="assets/rotavator.jpg" alt="Rotavator" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1425,7 +1525,7 @@
                 </div>
 
                 <!-- Disc Harrow -->
-                <div class="machinery-item" data-type="plough" data-location="shantipur" data-price="500">
+                <div class="machinery-item" data-type="plough" data-location="shantipur" data-price="500" data-id="disc-harrow">
                     <div class="machinery-image">
                         <img src="assets/disc-harrow.jpg" alt="Disc Harrow" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1503,7 +1603,7 @@
                 </div>
 
                 <!-- Irrigation Pump -->
-                <div class="machinery-item" data-type="irrigation" data-location="ranaghat" data-price="300">
+                <div class="machinery-item" data-type="irrigation" data-location="ranaghat" data-price="300" data-id="water-pump">
                     <div class="machinery-image">
                         <img src="assets/pump.jpg" alt="Water Pump" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1581,7 +1681,7 @@
                 </div>
 
                 <!-- Sprayer -->
-                <div class="machinery-item" data-type="sprayer" data-location="shantipur" data-price="400">
+                <div class="machinery-item" data-type="sprayer" data-location="shantipur" data-price="400" data-id="sprayer">
                     <div class="machinery-image">
                         <img src="assets/sprayer.jpg" alt="Power Sprayer" 
                              style="width: 100%; height: 300px; object-fit: cover;"
@@ -1658,7 +1758,7 @@
                 </div>
 
                 <!-- Harvester -->
-                <div class="machinery-item" data-type="harvester" data-location="krishnanagar" data-price="2500">
+                <div class="machinery-item" data-type="harvester" data-location="krishnanagar" data-price="2500" data-id="combine-harvester">
                     <div class="machinery-image">
                         <img src="assets/harvester1.jpg" alt="Combine Harvester" 
                              style="width: 100%; height: 250px; object-fit: cover;"
@@ -1735,7 +1835,7 @@
                 </div>
 
                 <!-- Agricultural Drone -->
-                <div class="machinery-item" data-type="drone" data-location="kalyani" data-price="3500">
+                <div class="machinery-item" data-type="drone" data-location="kalyani" data-price="3500" data-id="agri-drone">
                     <div class="machinery-image">
                         <img src="https://vaimanikaaerospace.com/wp-content/uploads/2025/02/Agriculture-Drone.jpg" alt="Agricultural Drone"
                              style="width: 100%; height: 250px; object-fit: cover;">
@@ -1806,7 +1906,7 @@
                 </div>
 
                 <!-- Solar Operated Pump -->
-                <div class="machinery-item" data-type="irrigation" data-location="nadia" data-price="900">
+                <div class="machinery-item" data-type="irrigation" data-location="nadia" data-price="900" data-id="solar-pump">
                     <div class="machinery-image">
                         <img src="https://5.imimg.com/data5/ET/CI/LO/SELLER-3310025/solar-powered-water-pump-500x500.jpg" alt="Solar Operated Pump"
                              style="width: 100%; height: 250px; object-fit: cover;">
@@ -1880,17 +1980,33 @@
         </div>
     </section>
 
-    <!-- Map and Location-based Services Section -->
-    <div id="map" style="width:100%;height:400px;margin:20px 0;"></div>
-    <div id="machineryList">
-        <!-- Machinery items will be listed here -->
-    </div>
-
     <script src="location.js"></script>
 
     <script>
-        // Cart functionality
+        // ==================== REAL-TIME MAP SYSTEM ====================
+        let map;
+        let markers = [];
+        let userMarker = null;
+        
+        // Machinery coordinates for West Bengal, Nadia District
+        const machineryLocations = {
+            'john-deere-5050d': { lat: 22.9750, lng: 88.4345, name: 'John Deere 5050D Tractor' },
+            'mahindra-6050': { lat: 23.4075, lng: 88.3658, name: 'Mahindra 6050 Tractor' },
+            'power-tiller': { lat: 22.9850, lng: 88.4445, name: 'Kubota Power Tiller' },
+            'rotavator': { lat: 23.1763, lng: 88.5665, name: 'Mahindra Rotavator' },
+            'disc-harrow': { lat: 23.2471, lng: 88.4332, name: 'Disc Harrow' },
+            'water-pump': { lat: 23.1863, lng: 88.5565, name: 'Water Pump' },
+            'sprayer': { lat: 23.2571, lng: 88.4232, name: 'Power Sprayer' },
+            'combine-harvester': { lat: 23.4000, lng: 88.5000, name: 'Combine Harvester' },
+            'agri-drone': { lat: 22.9650, lng: 88.4245, name: 'Agriculture Drone' },
+            'solar-pump': { lat: 23.4175, lng: 88.3558, name: 'Solar Pump' }
+        };
+
+        // Initialize the map when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            
+            // Cart functionality and other existing code...
             const addToCartButtons = document.querySelectorAll('.add-to-cart');
             const cartCount = document.getElementById('cartCount');
             const cartNotification = document.getElementById('cartNotification');
@@ -2003,15 +2119,22 @@
                 }
             }
             
-            // Check user login state
+            // Check user login state (support multiple localStorage keys used across pages)
             function checkUserLoginState() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                
+                // Support legacy/demo keys: 'currentUser', 'farmconnect_current_user', 'farmconnect_remembered_user'
+                let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user') || localStorage.getItem('farmconnect_remembered_user');
+                let currentUser = null;
+                try {
+                    currentUser = raw ? JSON.parse(raw) : null;
+                } catch (e) {
+                    currentUser = null;
+                }
+
                 if (currentUser && userProfileNav && authButtons) {
                     // User is logged in
                     userProfileNav.style.display = 'flex';
                     authButtons.style.display = 'none';
-                    
+
                     // Update user info
                     updateUserInfo(currentUser);
                 } else if (userProfileNav && authButtons) {
@@ -2025,20 +2148,32 @@
                 const userAvatarNav = document.getElementById('userAvatarNav');
                 const userNameNav = document.getElementById('userNameNav');
                 const userRoleNav = document.getElementById('userRoleNav');
-                
+
+                if (!user) return;
+
+                // Normalize common name fields
+                const displayName = user.fullname || user.name || user.username || 'User';
+                const role = user.userType || user.role || '';
+
+                // Update avatar: prefer profile image if available, otherwise show initials
                 if (userAvatarNav) {
-                    const names = user.fullname.split(' ');
-                    const initials = names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1));
-                    userAvatarNav.innerHTML = initials;
-                    userAvatarNav.style.fontSize = '1rem';
+                    const imageUrl = user.profileImage || user.avatar || user.image || null;
+                    if (imageUrl) {
+                        userAvatarNav.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    } else {
+                        const names = (displayName || 'User').split(' ');
+                        const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
+                        userAvatarNav.textContent = initials;
+                        userAvatarNav.style.fontSize = '1rem';
+                    }
                 }
-                
+
                 if (userNameNav) {
-                    userNameNav.textContent = user.fullname;
+                    userNameNav.textContent = displayName;
                 }
-                
+
                 if (userRoleNav) {
-                    userRoleNav.textContent = formatUserType(user.userType);
+                    userRoleNav.textContent = formatUserType(role);
                 }
             }
             
@@ -2257,7 +2392,283 @@
             initializeLocationOptions();
         });
 
-        // Location-based search functions
+        // ==================== MAP FUNCTIONS ====================
+        function initializeMap() {
+            // Default center (Nadia District, West Bengal)
+            const defaultCenter = { lat: 23.4000, lng: 88.5000 };
+            
+            // Initialize Leaflet Map
+            map = L.map('map').setView([defaultCenter.lat, defaultCenter.lng], 11);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Add machinery markers
+            addMachineryMarkers();
+            
+            // Add click event to map to add custom location
+            map.on('click', function(e) {
+                console.log('Map clicked at:', e.latlng);
+            });
+        }
+
+        function addMachineryMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Add markers for each machinery
+            Object.entries(machineryLocations).forEach(([id, location]) => {
+                const machineryItem = document.querySelector(`.machinery-item[data-id="${id}"]`);
+                
+                if (machineryItem) {
+                    const name = location.name;
+                    const price = machineryItem.getAttribute('data-price') || 'N/A';
+                    const locationName = machineryItem.getAttribute('data-location') || 'Unknown';
+                    const image = machineryItem.querySelector('img')?.src || 'https://via.placeholder.com/50';
+                    
+                    const marker = L.marker([location.lat, location.lng], {
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            html: `<div class="marker-icon" style="background-color: #4CAF50; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                                   <i class="fas fa-tractor"></i>
+                                   </div>`,
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 30]
+                        })
+                    }).addTo(map);
+                    
+                    // Custom popup content
+                    const popupContent = `
+                        <div style="min-width: 200px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <img src="${image}" alt="${name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                <div>
+                                    <strong>${name}</strong><br>
+                                    <small>${formatLocationName(locationName)}</small>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Price:</strong> ₹${price}/day<br>
+                                <strong>Location:</strong> ${formatLocationName(locationName)}
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <button onclick="showDirections(${location.lat}, ${location.lng})" 
+                                        style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-route"></i> Directions
+                                </button>
+                                <button onclick="bookMachineryFromMap('${id}')" 
+                                        style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-cart-plus"></i> Book Now
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    marker.bindPopup(popupContent);
+                    markers.push(marker);
+                    
+                    // Add click event to machinery items to pan to marker
+                    const machineryCard = machineryItem.querySelector('.add-to-cart');
+                    if (machineryCard) {
+                        machineryCard.addEventListener('click', function() {
+                            map.setView([location.lat, location.lng], 15);
+                            marker.openPopup();
+                        });
+                    }
+                }
+            });
+        }
+
+        function showUserLocation() {
+            if (navigator.geolocation) {
+                const locationBtn = document.querySelector('#locationFilterSection button');
+                const originalText = locationBtn.innerHTML;
+                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+                locationBtn.disabled = true;
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        
+                        // Remove previous user marker
+                        if (userMarker) {
+                            map.removeLayer(userMarker);
+                        }
+                        
+                        // Add user marker
+                        userMarker = L.marker([userLat, userLng], {
+                            icon: L.divIcon({
+                                className: 'user-marker',
+                                html: `<div class="user-location-icon" style="background-color: #2196F3; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                                       <i class="fas fa-user"></i>
+                                       </div>`,
+                                iconSize: [30, 30],
+                                iconAnchor: [15, 30]
+                            })
+                        }).addTo(map);
+                        
+                        userMarker.bindPopup("<b>Your Location</b><br>Machinery locations near you are highlighted").openPopup();
+                        
+                        // Center map on user
+                        map.setView([userLat, userLng], 13);
+                        
+                        // Highlight nearby machinery
+                        highlightNearbyMachinery(userLat, userLng);
+                        
+                        // Update button
+                        locationBtn.innerHTML = originalText;
+                        locationBtn.disabled = false;
+                        
+                        // Show nearby results
+                        showLocationResults('nearby');
+                    },
+                    function(error) {
+                        alert('Unable to get your location. Please enable location services or select a location manually.');
+                        const locationBtn = document.querySelector('#locationFilterSection button');
+                        locationBtn.innerHTML = originalText;
+                        locationBtn.disabled = false;
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser. Please select a location manually.');
+            }
+        }
+
+        function highlightNearbyMachinery(userLat, userLng, radiusKm = 20) {
+            markers.forEach(marker => {
+                const markerLat = marker.getLatLng().lat;
+                const markerLng = marker.getLatLng().lng;
+                
+                const distance = calculateDistance(userLat, userLng, markerLat, markerLng);
+                
+                if (distance <= radiusKm) {
+                    // Change marker color for nearby machinery
+                    const newIcon = L.divIcon({
+                        className: 'nearby-marker',
+                        html: `<div class="marker-icon" style="background-color: #FF9800; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                               <i class="fas fa-tractor"></i>
+                               </div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker.setIcon(newIcon);
+                    
+                    // Highlight corresponding card
+                    const machineryId = Object.keys(machineryLocations).find(id => 
+                        machineryLocations[id].lat === markerLat && machineryLocations[id].lng === markerLng
+                    );
+                    
+                    if (machineryId) {
+                        const card = document.querySelector(`.machinery-item[data-id="${machineryId}"]`);
+                        if (card) {
+                            card.style.boxShadow = '0 0 0 3px #FF9800';
+                            card.style.transition = 'box-shadow 0.3s ease';
+                            
+                            // Add distance badge
+                            const locationDiv = card.querySelector('.machinery-location');
+                            if (locationDiv && !locationDiv.querySelector('.distance-badge')) {
+                                const distanceBadge = document.createElement('span');
+                                distanceBadge.className = 'distance-badge';
+                                distanceBadge.textContent = `${distance.toFixed(1)} km`;
+                                distanceBadge.style.marginLeft = '10px';
+                                distanceBadge.style.background = '#FF9800';
+                                distanceBadge.style.color = 'white';
+                                distanceBadge.style.padding = '2px 8px';
+                                distanceBadge.style.borderRadius = '10px';
+                                distanceBadge.style.fontSize = '0.8rem';
+                                locationDiv.appendChild(distanceBadge);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function showDirections(lat, lng) {
+            // Open Google Maps with directions
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            window.open(url, '_blank');
+        }
+
+        function bookMachineryFromMap(machineryId) {
+            const machineryItem = document.querySelector(`.machinery-item[data-id="${machineryId}"]`);
+            if (machineryItem) {
+                const addToCartBtn = machineryItem.querySelector('.add-to-cart');
+                if (addToCartBtn) {
+                    addToCartBtn.click();
+                }
+            }
+        }
+
+        function showAllMachinery() {
+            // Reset all markers to default color
+            markers.forEach(marker => {
+                const defaultIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div class="marker-icon" style="background-color: #4CAF50; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                           <i class="fas fa-tractor"></i>
+                           </div>`,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30]
+                });
+                marker.setIcon(defaultIcon);
+            });
+            
+            // Reset card highlights
+            document.querySelectorAll('.machinery-item').forEach(card => {
+                card.style.boxShadow = '';
+                const distanceBadge = card.querySelector('.distance-badge');
+                if (distanceBadge) {
+                    distanceBadge.remove();
+                }
+            });
+            
+            // Reset map view
+            map.setView([23.4000, 88.5000], 11);
+        }
+
+        function zoomToArea(area) {
+            const areaCoordinates = {
+                'kalyani': { lat: 22.9750, lng: 88.4345, zoom: 13 },
+                'nadia': { lat: 23.4075, lng: 88.3658, zoom: 12 },
+                'krishnanagar': { lat: 23.4000, lng: 88.5000, zoom: 13 },
+                'ranaghat': { lat: 23.1763, lng: 88.5665, zoom: 13 },
+                'shantipur': { lat: 23.2471, lng: 88.4332, zoom: 13 }
+            };
+            
+            if (areaCoordinates[area]) {
+                const { lat, lng, zoom } = areaCoordinates[area];
+                map.setView([lat, lng], zoom);
+            }
+        }
+
+        function resetMap() {
+            showAllMachinery();
+            if (userMarker) {
+                map.removeLayer(userMarker);
+                userMarker = null;
+            }
+            clearLocationFilter();
+        }
+
+        // ==================== LOCATION FUNCTIONS ====================
         let selectedLocation = '';
         let userLocation = null;
 
@@ -2278,40 +2689,13 @@
                     // Filter machinery by location
                     filterMachineryByLocation(selectedLocation);
                     
+                    // Zoom to area on map
+                    zoomToArea(selectedLocation);
+                    
                     // Show results
                     showLocationResults(selectedLocation);
                 });
             });
-        }
-
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                const locationBtn = document.querySelector('#locationFilterSection button');
-                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
-                locationBtn.disabled = true;
-                
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        userLocation = {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
-                        };
-                        
-                        // Simulate finding nearby locations (in real app, you'd use geocoding API)
-                        findNearbyMachineryLocations(userLocation);
-                        
-                        locationBtn.innerHTML = 'Use My Location';
-                        locationBtn.disabled = false;
-                    },
-                    function(error) {
-                        alert('Unable to get your location. Please enable location services or select a location manually.');
-                        locationBtn.innerHTML = 'Use My Location';
-                        locationBtn.disabled = false;
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by your browser. Please select a location manually.');
-            }
         }
 
         function filterByLocation() {
@@ -2344,55 +2728,32 @@
             const resultsContainer = document.getElementById('locationSearchResults');
             const count = document.querySelectorAll(`.machinery-item[data-location="${location}"]`).length;
             
-            resultsContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <strong>Location: ${formatLocationName(location)}</strong>
-                        <span class="distance-badge">${count} machines found</span>
-                    </div>
-                    <button class="clear-location-filter" onclick="clearLocationFilter()">
-                        <i class="fas fa-times"></i> Clear
-                    </button>
-                </div>
-            `;
-            resultsContainer.style.display = 'block';
-        }
-
-        function findNearbyMachineryLocations(userCoords) {
-            // In a real application, you would:
-            // 1. Send user coordinates to your backend
-            // 2. Calculate distances to all machinery locations
-            // 3. Return sorted results by distance
-            
-            // For demo purposes, we'll simulate this
-            const nearbyLocations = ['kalyani', 'nadia']; // Simulated nearby locations
-            
-            if (nearbyLocations.length > 0) {
-                selectedLocation = nearbyLocations[0];
-                filterMachineryByLocation(selectedLocation);
-                
-                const resultsContainer = document.getElementById('locationSearchResults');
+            if (location === 'nearby') {
                 resultsContainer.innerHTML = `
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <strong>Nearby Locations Found</strong>
-                            <span class="distance-badge">Based on your location</span>
-                        </div>
-                        <div>
-                            ${nearbyLocations.map(loc => `
-                                <span class="location-option" style="display: inline-block; margin: 5px; padding: 5px 10px;" 
-                                      onclick="selectLocation('${loc}')">
-                                    ${formatLocationName(loc)}
-                                </span>
-                            `).join('')}
+                            <strong>Machinery Near You</strong>
+                            <span class="distance-badge">Based on your current location</span>
                         </div>
                         <button class="clear-location-filter" onclick="clearLocationFilter()">
                             <i class="fas fa-times"></i> Clear
                         </button>
                     </div>
                 `;
-                resultsContainer.style.display = 'block';
+            } else {
+                resultsContainer.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <strong>Location: ${formatLocationName(location)}</strong>
+                            <span class="distance-badge">${count} machines found</span>
+                        </div>
+                        <button class="clear-location-filter" onclick="clearLocationFilter()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                `;
             }
+            resultsContainer.style.display = 'block';
         }
 
         function formatLocationName(location) {
@@ -2401,18 +2762,10 @@
                 'nadia': 'Nadia',
                 'krishnanagar': 'Krishnanagar',
                 'ranaghat': 'Ranaghat',
-                'shantipur': 'Shantipur'
+                'shantipur': 'Shantipur',
+                'nearby': 'Near Your Location'
             };
             return names[location] || location;
-        }
-
-        function selectLocation(location) {
-            const locationOptions = document.querySelectorAll('.location-option');
-            locationOptions.forEach(opt => {
-                if (opt.getAttribute('data-location') === location) {
-                    opt.click();
-                }
-            });
         }
 
         function clearLocationFilter() {
@@ -2422,6 +2775,9 @@
             const resultsContainer = document.getElementById('locationSearchResults');
             resultsContainer.style.display = 'none';
             
+            const locationInput = document.getElementById('locationInput');
+            locationInput.value = '';
+            
             selectedLocation = '';
             
             // Show all machinery
@@ -2429,29 +2785,17 @@
             machineryItems.forEach(item => {
                 item.style.display = 'block';
             });
+            
+            // Reset map
+            resetMap();
         }
-
-        // Initialize map (basic implementation)
-        function initializeMap() {
-            // This is a basic implementation. In a real app, you would use Google Maps or Leaflet
-            const map = document.getElementById('map');
-            map.innerHTML = `
-                <div style="width:100%; height:100%; background:#e9ecef; display:flex; align-items:center; justify-content:center; color:#666;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-map-marked-alt" style="font-size:3rem; margin-bottom:15px;"></i>
-                        <p>Interactive Map View</p>
-                        <p style="font-size:0.9rem;">(Map integration would show machinery locations here)</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Initialize map when page loads
-        document.addEventListener('DOMContentLoaded', initializeMap);
         
-        // Logout function
+        // Logout function - clear all known session keys
         function logout() {
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('farmconnect_current_user');
+            localStorage.removeItem('farmconnect_remembered_user');
+            localStorage.removeItem('token');
             window.location.reload();
         }
     </script>
