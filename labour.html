@@ -6,6 +6,8 @@
     <title>Skilled Labour - FarmConnect</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Add Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Colorful Navigation Bar */
         .header {
@@ -598,10 +600,14 @@
             }
         }
 
-        /* Map Section */
+        /* Enhanced Location Filter Section */
         #locationFilterSection {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
             text-align: center;
-            margin: 40px 0;
         }
 
         #locationFilterSection h3 {
@@ -610,43 +616,105 @@
             color: #2E7D32;
         }
 
-        #locationFilterSection button {
+        .location-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .location-controls button {
             background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 1rem;
-            margin-right: 10px;
             transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        #locationFilterSection button:hover {
+        .location-controls button:hover {
             background: linear-gradient(135deg, #2E7D32, #4CAF50);
         }
 
-        #locationFilterSection input {
-            padding: 10px;
+        .location-controls input {
+            padding: 10px 15px;
             border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            width: 250px;
-            transition: border-color 0.3s ease;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            min-width: 200px;
         }
 
-        #locationFilterSection input:focus {
-            border-color: #4CAF50;
+        .location-controls input:focus {
             outline: none;
+            border-color: #4CAF50;
         }
 
         /* Map Styles */
         #map {
             width: 100%;
-            height: 400px;
+            height: 500px;
             margin: 20px 0;
             border-radius: 12px;
             overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* Custom Map Marker Styles */
+        .marker-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        .user-location-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-control-btn {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .map-control-btn:hover {
+            background: #f8f9fa;
         }
 
         /* Location Search Results */
@@ -706,6 +774,88 @@
             border-color: #4CAF50;
             color: #2E7D32;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .labour-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .labour-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .labour-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .labour-badge {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
+
+            /* Location Filter Section */
+            #locationFilterSection {
+                padding: 15px;
+            }
+
+            #locationFilterSection h3 {
+                font-size: 1.5rem;
+            }
+
+            .location-controls {
+                flex-direction: column;
+            }
+
+            .location-controls input {
+                width: 100%;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .location-options {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .map-controls {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 10px 0;
+            }
+        }
     </style>
     <!-- Add this to index.html, machinery.html, labour.html, contact.html, billing.html, login.html -->
      <script src="api-client.js"></script>
@@ -714,6 +864,9 @@
 <script src="location.js"></script>
 </head>
 <body>
+    <!-- Add Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <header class="header">
     <nav class="navbar">
         <div class="nav-brand">
@@ -723,7 +876,7 @@
         <ul class="nav-menu">
             <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> Machinery</a></li>
-            <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> Labour</a></li>
+            <li><a href="labour.html" class="nav-link active"><i class="fas fa-users"></i> Labour</a></li>
             <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
             <li><a href="billing.html" class="nav-link cart-link">
                 <i class="fas fa-shopping-cart"></i> Cart
@@ -783,7 +936,6 @@
             <p>Find experienced farm workers for planting, harvesting, irrigation, and other agricultural tasks. Add to cart and complete booking at checkout.</p>
             <div class="hero-buttons">
                 <a href="#labour-list" class="btn btn-primary">Browse Labourers</a>
-                <a href="register.html" class="btn btn-secondary">Register as Labourer</a>
             </div>
         </div>
     </section>
@@ -850,13 +1002,23 @@
         </div>
     </section>
 
-    <!-- Location Filter Section -->
+    <!-- Enhanced Location Filter Section with Map -->
     <section id="locationFilterSection">
         <div class="container">
             <h3>Find Labour Near You</h3>
-            <button onclick="getUserLocation()">Use My Location</button>
-            <input type="text" id="locationInput" placeholder="Enter city or pincode">
-            <button onclick="filterByLocation()">Search</button>
+            
+            <div class="location-controls">
+                <button onclick="showUserLocation()">
+                    <i class="fas fa-location-crosshairs"></i> Use My Location
+                </button>
+                <input type="text" id="locationInput" placeholder="Enter city or pincode">
+                <button onclick="filterByLocation()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button onclick="resetMap()">
+                    <i class="fas fa-sync-alt"></i> Reset Map
+                </button>
+            </div>
             
             <!-- Location Options -->
             <div class="location-options">
@@ -869,11 +1031,11 @@
         </div>
     </section>
 
+    <!-- Interactive Map -->
+    <div id="map"></div>
+    
     <!-- Location Search Results -->
     <div id="locationSearchResults" class="location-search-results" style="display: none;"></div>
-
-    <!-- Map Section -->
-    <div id="map"></div>
 
     <!-- Labour List Section -->
     <section id="labour-list" class="labour-gallery">
@@ -883,7 +1045,7 @@
             
             <div class="labour-grid" id="labourGrid">
                 <!-- Labourer 1 -->
-                <div class="labour-card" data-skill="harvesting" data-experience="5" data-location="kalyani" data-wage="500">
+                <div class="labour-card" data-skill="harvesting" data-experience="5" data-location="kalyani" data-wage="500" data-id="rajesh-kumar">
                     <div class="labour-image">
                         <img src="https://www.fao.org/images/newsroomlibraries/stories-images/60b0fbe22bf1d254d6d9867e43706e05.jpg?sfvrsn=6bd62e35_10" alt="Rajesh Kumar">
                         <div class="availability-badge available">Available</div>
@@ -937,7 +1099,7 @@
                 </div>
 
                 <!-- Labourer 2 -->
-                <div class="labour-card" data-skill="tractor" data-experience="8" data-location="krishnanagar" data-wage="600">
+                <div class="labour-card" data-skill="tractor" data-experience="8" data-location="krishnanagar" data-wage="600" data-id="sunil-patel">
                     <div class="labour-image">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFq-VUsZxZvlg9kQotgtM4f_LWL71YTnvfvg&s" alt="Sunil Patel">
                         <div class="availability-badge available">Available</div>
@@ -991,7 +1153,7 @@
                 </div>
 
                 <!-- Labourer 3 -->
-                <div class="labour-card" data-skill="irrigation" data-experience="6" data-location="ranaghat" data-wage="550">
+                <div class="labour-card" data-skill="irrigation" data-experience="6" data-location="ranaghat" data-wage="550" data-id="amit-sharma">
                     <div class="labour-image">
                         <img src="https://www.mckinsey.com/~/media/mckinsey/industries/agriculture/our%20insights/indian%20farmers%20optimism%20is%20driving%20interest%20in%20new%20products/mck248245-1536x1536.jpg" alt="Amit Sharma">
                         <div class="availability-badge available">Available</div>
@@ -1045,7 +1207,7 @@
                 </div>
 
                 <!-- Labourer 4 -->
-                <div class="labour-card" data-skill="organic" data-experience="10" data-location="shantipur" data-wage="700">
+                <div class="labour-card" data-skill="organic" data-experience="10" data-location="shantipur" data-wage="700" data-id="vikram-singh">
                     <div class="labour-image">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2G-NiMZHWfE0Tmn5H7-dpnG0c84rrANXWRA&s" alt="Vikram Singh">
                         <div class="availability-badge unavailable">Not Available</div>
@@ -1094,7 +1256,7 @@
                 </div>
 
                 <!-- Labourer 5 -->
-                <div class="labour-card" data-skill="planting" data-experience="4" data-location="nadia" data-wage="450">
+                <div class="labour-card" data-skill="planting" data-experience="4" data-location="nadia" data-wage="450" data-id="ramesh-yadav">
                     <div class="labour-image">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBCvnjVHxhCBzJPUjXSdGje95DesTtBjQpng&s" alt="Ramesh Yadav">
                         <div class="availability-badge available">Available</div>
@@ -1148,7 +1310,7 @@
                 </div>
 
                 <!-- Labourer 6 -->
-                <div class="labour-card" data-skill="spraying" data-experience="7" data-location="kalyani" data-wage="500">
+                <div class="labour-card" data-skill="spraying" data-experience="7" data-location="kalyani" data-wage="500" data-id="sanjay-gupta">
                     <div class="labour-image">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTVVLdXjMx1995PXwX3Meas_23TWeewRZfiw&s" alt="Sanjay Gupta">
                         <div class="availability-badge available">Available</div>
@@ -1254,8 +1416,26 @@
     </section>
 
     <script>
-        // Cart functionality for labour page
+        // ==================== REAL-TIME MAP SYSTEM ====================
+        let map;
+        let markers = [];
+        let userMarker = null;
+        
+        // Labourer coordinates for West Bengal, Nadia District
+        const labourLocations = {
+            'rajesh-kumar': { lat: 22.9850, lng: 88.4345, name: 'Rajesh Kumar - Harvesting Specialist' },
+            'sunil-patel': { lat: 23.4000, lng: 88.5000, name: 'Sunil Patel - Tractor Expert' },
+            'amit-sharma': { lat: 23.1863, lng: 88.5665, name: 'Amit Sharma - Irrigation Specialist' },
+            'vikram-singh': { lat: 23.2571, lng: 88.4332, name: 'Vikram Singh - Organic Expert' },
+            'ramesh-yadav': { lat: 23.4175, lng: 88.3658, name: 'Ramesh Yadav - Planting Specialist' },
+            'sanjay-gupta': { lat: 22.9750, lng: 88.4445, name: 'Sanjay Gupta - Spraying Expert' }
+        };
+
+        // Initialize the map when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            
+            // Cart functionality and other existing code...
             const addToCartButtons = document.querySelectorAll('.add-to-cart');
             const cartCount = document.getElementById('cartCount');
             const cartNotification = document.getElementById('cartNotification');
@@ -1272,6 +1452,9 @@
             
             let cartItems = JSON.parse(localStorage.getItem('farmconnect_cart')) || [];
             updateCartCount();
+
+            // Check user login state and update nav UI
+            checkUserLoginState();
             
             // Mobile menu toggle
             hamburger.addEventListener('click', function() {
@@ -1411,7 +1594,315 @@
             initializeLocationOptions();
         });
 
-        // Location-based search functions
+        // ==================== MAP FUNCTIONS ====================
+        function initializeMap() {
+            // Default center (Nadia District, West Bengal)
+            const defaultCenter = { lat: 23.4000, lng: 88.5000 };
+            
+            // Initialize Leaflet Map
+            map = L.map('map').setView([defaultCenter.lat, defaultCenter.lng], 11);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Add labour markers
+            addLabourMarkers();
+            
+            // Add click event to map
+            map.on('click', function(e) {
+                console.log('Map clicked at:', e.latlng);
+            });
+        }
+
+        function addLabourMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Add markers for each labourer
+            Object.entries(labourLocations).forEach(([id, location]) => {
+                const labourCard = document.querySelector(`.labour-card[data-id="${id}"]`);
+                
+                if (labourCard) {
+                    const name = location.name;
+                    const wage = labourCard.getAttribute('data-wage') || 'N/A';
+                    const locationName = labourCard.getAttribute('data-location') || 'Unknown';
+                    const experience = labourCard.getAttribute('data-experience') || 'N/A';
+                    const skill = labourCard.getAttribute('data-skill') || 'Unknown';
+                    const image = labourCard.querySelector('img')?.src || 'https://via.placeholder.com/50';
+                    const isAvailable = !labourCard.querySelector('.availability-badge.unavailable');
+                    
+                    const marker = L.marker([location.lat, location.lng], {
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            html: `<div class="marker-icon" style="background-color: ${isAvailable ? '#4CAF50' : '#f44336'}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                                   <i class="fas fa-user"></i>
+                                   </div>`,
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 30]
+                        })
+                    }).addTo(map);
+                    
+                    // Custom popup content
+                    const popupContent = `
+                        <div style="min-width: 200px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <img src="${image}" alt="${name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                <div>
+                                    <strong>${name.split(' - ')[0]}</strong><br>
+                                    <small>${locationName}</small>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Skill:</strong> ${formatSkillName(skill)}<br>
+                                <strong>Experience:</strong> ${experience} years<br>
+                                <strong>Wage:</strong> ₹${wage}/day<br>
+                                <strong>Status:</strong> ${isAvailable ? '<span style="color:green;">Available</span>' : '<span style="color:red;">Not Available</span>'}
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                ${isAvailable ? `
+                                <button onclick="bookLabourFromMap('${id}')" 
+                                        style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-cart-plus"></i> Book Now
+                                </button>
+                                ` : ''}
+                                <button onclick="showDirections(${location.lat}, ${location.lng})" 
+                                        style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-route"></i> Directions
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    marker.bindPopup(popupContent);
+                    markers.push(marker);
+                    
+                    // Add click event to labour cards to pan to marker
+                    const labourButton = labourCard.querySelector('.add-to-cart');
+                    if (labourButton) {
+                        labourButton.addEventListener('click', function() {
+                            map.setView([location.lat, location.lng], 15);
+                            marker.openPopup();
+                        });
+                    }
+                }
+            });
+        }
+
+        function showUserLocation() {
+            if (navigator.geolocation) {
+                const locationBtn = document.querySelector('#locationFilterSection button');
+                const originalText = locationBtn.innerHTML;
+                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+                locationBtn.disabled = true;
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        
+                        // Remove previous user marker
+                        if (userMarker) {
+                            map.removeLayer(userMarker);
+                        }
+                        
+                        // Add user marker
+                        userMarker = L.marker([userLat, userLng], {
+                            icon: L.divIcon({
+                                className: 'user-marker',
+                                html: `<div class="user-location-icon" style="background-color: #2196F3; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                                       <i class="fas fa-user"></i>
+                                       </div>`,
+                                iconSize: [30, 30],
+                                iconAnchor: [15, 30]
+                            })
+                        }).addTo(map);
+                        
+                        userMarker.bindPopup("<b>Your Location</b><br>Labour locations near you are highlighted").openPopup();
+                        
+                        // Center map on user
+                        map.setView([userLat, userLng], 13);
+                        
+                        // Highlight nearby labourers
+                        highlightNearbyLabourers(userLat, userLng);
+                        
+                        // Update button
+                        locationBtn.innerHTML = originalText;
+                        locationBtn.disabled = false;
+                        
+                        // Show nearby results
+                        showLocationResults('nearby');
+                    },
+                    function(error) {
+                        alert('Unable to get your location. Please enable location services or select a location manually.');
+                        const locationBtn = document.querySelector('#locationFilterSection button');
+                        locationBtn.innerHTML = originalText;
+                        locationBtn.disabled = false;
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser. Please select a location manually.');
+            }
+        }
+
+        function highlightNearbyLabourers(userLat, userLng, radiusKm = 20) {
+            markers.forEach(marker => {
+                const markerLat = marker.getLatLng().lat;
+                const markerLng = marker.getLatLng().lng;
+                
+                const distance = calculateDistance(userLat, userLng, markerLat, markerLng);
+                
+                if (distance <= radiusKm) {
+                    // Change marker color for nearby labourers
+                    const newIcon = L.divIcon({
+                        className: 'nearby-marker',
+                        html: `<div class="marker-icon" style="background-color: #FF9800; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                               <i class="fas fa-user"></i>
+                               </div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker.setIcon(newIcon);
+                    
+                    // Highlight corresponding card
+                    const labourId = Object.keys(labourLocations).find(id => 
+                        labourLocations[id].lat === markerLat && labourLocations[id].lng === markerLng
+                    );
+                    
+                    if (labourId) {
+                        const card = document.querySelector(`.labour-card[data-id="${labourId}"]`);
+                        if (card) {
+                            card.style.boxShadow = '0 0 0 3px #FF9800';
+                            card.style.transition = 'box-shadow 0.3s ease';
+                            
+                            // Add distance badge
+                            const statItems = card.querySelector('.labour-stats');
+                            if (statItems) {
+                                const existingBadge = card.querySelector('.distance-badge');
+                                if (!existingBadge) {
+                                    const distanceBadge = document.createElement('div');
+                                    distanceBadge.className = 'stat-item';
+                                    distanceBadge.innerHTML = `
+                                        <i class="fas fa-location-arrow"></i>
+                                        <span>${distance.toFixed(1)} km from you</span>
+                                    `;
+                                    distanceBadge.style.background = '#fff8e1';
+                                    distanceBadge.style.borderLeftColor = '#FF9800';
+                                    statItems.appendChild(distanceBadge);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function showDirections(lat, lng) {
+            // Open Google Maps with directions
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            window.open(url, '_blank');
+        }
+
+        function bookLabourFromMap(labourId) {
+            const labourCard = document.querySelector(`.labour-card[data-id="${labourId}"]`);
+            if (labourCard) {
+                const addToCartBtn = labourCard.querySelector('.add-to-cart');
+                if (addToCartBtn) {
+                    addToCartBtn.click();
+                }
+            }
+        }
+
+        function showAllLabourers() {
+            // Reset all markers to default color
+            markers.forEach(marker => {
+                const labourId = Object.keys(labourLocations).find(id => 
+                    labourLocations[id].lat === marker.getLatLng().lat && 
+                    labourLocations[id].lng === marker.getLatLng().lng
+                );
+                
+                if (labourId) {
+                    const labourCard = document.querySelector(`.labour-card[data-id="${labourId}"]`);
+                    const isAvailable = labourCard && !labourCard.querySelector('.availability-badge.unavailable');
+                    
+                    const defaultIcon = L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div class="marker-icon" style="background-color: ${isAvailable ? '#4CAF50' : '#f44336'}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                               <i class="fas fa-user"></i>
+                               </div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker.setIcon(defaultIcon);
+                }
+            });
+            
+            // Reset card highlights
+            document.querySelectorAll('.labour-card').forEach(card => {
+                card.style.boxShadow = '';
+                const distanceBadge = card.querySelector('.distance-badge');
+                if (distanceBadge && distanceBadge.parentElement.classList.contains('stat-item')) {
+                    distanceBadge.parentElement.remove();
+                }
+            });
+            
+            // Reset map view
+            map.setView([23.4000, 88.5000], 11);
+        }
+
+        function zoomToArea(area) {
+            const areaCoordinates = {
+                'kalyani': { lat: 22.9750, lng: 88.4345, zoom: 13 },
+                'nadia': { lat: 23.4075, lng: 88.3658, zoom: 12 },
+                'krishnanagar': { lat: 23.4000, lng: 88.5000, zoom: 13 },
+                'ranaghat': { lat: 23.1763, lng: 88.5665, zoom: 13 },
+                'shantipur': { lat: 23.2471, lng: 88.4332, zoom: 13 }
+            };
+            
+            if (areaCoordinates[area]) {
+                const { lat, lng, zoom } = areaCoordinates[area];
+                map.setView([lat, lng], zoom);
+            }
+        }
+
+        function resetMap() {
+            showAllLabourers();
+            if (userMarker) {
+                map.removeLayer(userMarker);
+                userMarker = null;
+            }
+            clearLocationFilter();
+        }
+
+        function formatSkillName(skill) {
+            const skillNames = {
+                'harvesting': 'Harvesting',
+                'planting': 'Planting',
+                'irrigation': 'Irrigation',
+                'tractor': 'Tractor Operation',
+                'spraying': 'Spraying',
+                'pruning': 'Pruning',
+                'organic': 'Organic Farming'
+            };
+            return skillNames[skill] || skill;
+        }
+
+        // ==================== LOCATION FUNCTIONS ====================
         let selectedLocation = '';
         let userLocation = null;
 
@@ -1430,42 +1921,15 @@
                     selectedLocation = this.getAttribute('data-location');
                     
                     // Filter labourers by location
-                    filterByLocation(selectedLocation);
+                    filterLabourersByLocation(selectedLocation);
+                    
+                    // Zoom to area on map
+                    zoomToArea(selectedLocation);
                     
                     // Show results
                     showLocationResults(selectedLocation);
                 });
             });
-        }
-
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                const locationBtn = document.querySelector('#locationFilterSection button');
-                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
-                locationBtn.disabled = true;
-                
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        userLocation = {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
-                        };
-                        
-                        // Simulate finding nearby locations (in real app, you'd use geocoding API)
-                        findNearbyLocations(userLocation);
-                        
-                        locationBtn.innerHTML = 'Use My Location';
-                        locationBtn.disabled = false;
-                    },
-                    function(error) {
-                        alert('Unable to get your location. Please enable location services or select a location manually.');
-                        locationBtn.innerHTML = 'Use My Location';
-                        locationBtn.disabled = false;
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by your browser. Please select a location manually.');
-            }
         }
 
         function filterByLocation() {
@@ -1498,55 +1962,32 @@
             const resultsContainer = document.getElementById('locationSearchResults');
             const count = document.querySelectorAll(`.labour-card[data-location="${location}"]`).length;
             
-            resultsContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <strong>Location: ${formatLocationName(location)}</strong>
-                        <span class="distance-badge">${count} labourers found</span>
-                    </div>
-                    <button class="clear-location-filter" onclick="clearLocationFilter()">
-                        <i class="fas fa-times"></i> Clear
-                    </button>
-                </div>
-            `;
-            resultsContainer.style.display = 'block';
-        }
-
-        function findNearbyLocations(userCoords) {
-            // In a real application, you would:
-            // 1. Send user coordinates to your backend
-            // 2. Calculate distances to all labour locations
-            // 3. Return sorted results by distance
-            
-            // For demo purposes, we'll simulate this
-            const nearbyLocations = ['kalyani', 'nadia']; // Simulated nearby locations
-            
-            if (nearbyLocations.length > 0) {
-                selectedLocation = nearbyLocations[0];
-                filterLabourersByLocation(selectedLocation);
-                
-                const resultsContainer = document.getElementById('locationSearchResults');
+            if (location === 'nearby') {
                 resultsContainer.innerHTML = `
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <strong>Nearby Locations Found</strong>
-                            <span class="distance-badge">Based on your location</span>
-                        </div>
-                        <div>
-                            ${nearbyLocations.map(loc => `
-                                <span class="location-option" style="display: inline-block; margin: 5px; padding: 5px 10px;" 
-                                      onclick="selectLocation('${loc}')">
-                                    ${formatLocationName(loc)}
-                                </span>
-                            `).join('')}
+                            <strong>Labourers Near You</strong>
+                            <span class="distance-badge">Based on your current location</span>
                         </div>
                         <button class="clear-location-filter" onclick="clearLocationFilter()">
                             <i class="fas fa-times"></i> Clear
                         </button>
                     </div>
                 `;
-                resultsContainer.style.display = 'block';
+            } else {
+                resultsContainer.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <strong>Location: ${formatLocationName(location)}</strong>
+                            <span class="distance-badge">${count} labourers found</span>
+                        </div>
+                        <button class="clear-location-filter" onclick="clearLocationFilter()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                `;
             }
+            resultsContainer.style.display = 'block';
         }
 
         function formatLocationName(location) {
@@ -1555,18 +1996,10 @@
                 'nadia': 'Nadia',
                 'krishnanagar': 'Krishnanagar',
                 'ranaghat': 'Ranaghat',
-                'shantipur': 'Shantipur'
+                'shantipur': 'Shantipur',
+                'nearby': 'Near Your Location'
             };
             return names[location] || location;
-        }
-
-        function selectLocation(location) {
-            const locationOptions = document.querySelectorAll('.location-option');
-            locationOptions.forEach(opt => {
-                if (opt.getAttribute('data-location') === location) {
-                    opt.click();
-                }
-            });
         }
 
         function clearLocationFilter() {
@@ -1576,6 +2009,9 @@
             const resultsContainer = document.getElementById('locationSearchResults');
             resultsContainer.style.display = 'none';
             
+            const locationInput = document.getElementById('locationInput');
+            locationInput.value = '';
+            
             selectedLocation = '';
             
             // Show all labourers
@@ -1583,25 +2019,70 @@
             labourCards.forEach(card => {
                 card.style.display = 'block';
             });
+            
+            // Reset map
+            resetMap();
         }
 
-        // Initialize map (basic implementation)
-        function initializeMap() {
-            // This is a basic implementation. In a real app, you would use Google Maps or Leaflet
-            const map = document.getElementById('map');
-            map.innerHTML = `
-                <div style="width:100%; height:100%; background:#e9ecef; display:flex; align-items:center; justify-content:center; color:#666;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-map-marked-alt" style="font-size:3rem; margin-bottom:15px;"></i>
-                        <p>Interactive Map View</p>
-                        <p style="font-size:0.9rem;">(Map integration would show labour locations here)</p>
-                    </div>
-                </div>
-            `;
+        // ==================== USER AUTH FUNCTIONS ====================
+        // Check user login state (support multiple localStorage keys)
+        function checkUserLoginState() {
+            const userProfileNav = document.getElementById('userProfileNav');
+            let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user') || localStorage.getItem('farmconnect_remembered_user');
+            let currentUser = null;
+            try { currentUser = raw ? JSON.parse(raw) : null; } catch (e) { currentUser = null; }
+
+            if (currentUser && userProfileNav) {
+                userProfileNav.style.display = 'flex';
+                updateUserInfo(currentUser);
+            } else if (userProfileNav) {
+                userProfileNav.style.display = 'none';
+            }
         }
 
-        // Initialize map when page loads
-        document.addEventListener('DOMContentLoaded', initializeMap);
+        function updateUserInfo(user) {
+            if (!user) return;
+            const userAvatar = document.getElementById('userAvatar');
+            const userDisplayName = document.getElementById('userDisplayName');
+            const userDisplayRole = document.getElementById('userDisplayRole');
+
+            const displayName = user.fullname || user.name || user.username || 'User';
+            const role = user.userType || user.role || '';
+
+            // Avatar: prefer image
+            const imageUrl = user.profileImage || user.avatar || user.image || null;
+            if (userAvatar) {
+                if (imageUrl) {
+                    userAvatar.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                } else {
+                    const names = (displayName || 'User').split(' ');
+                    const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
+                    userAvatar.textContent = initials;
+                }
+            }
+
+            if (userDisplayName) userDisplayName.textContent = displayName;
+            if (userDisplayRole) userDisplayRole.textContent = formatUserType(role);
+        }
+
+        function formatUserType(userType) {
+            const typeMap = { 
+                'farmer': 'Farmer', 
+                'machinery_owner': 'Machinery Owner', 
+                'labour': 'Labour Provider', 
+                'admin': 'Administrator' 
+            };
+            return typeMap[userType] || (userType ? userType.toString().replace(/_/g,' ') : '');
+        }
+
+        // Global logout clears known keys
+        window.logout = function() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('farmconnect_current_user');
+            localStorage.removeItem('farmconnect_remembered_user');
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
     </script>
 </body>
 </html>
