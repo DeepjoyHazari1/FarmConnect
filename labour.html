@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skilled Labour - FarmConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Add Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Colorful Navigation Bar */
+        .header {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50, #8BC34A);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-brand h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 25px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .cart-link {
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        #cartCount {
+            background: #540cfa;
+            color: white;
+            border-radius: 70%;
+            width: 30px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Enhanced Search Section */
+        .search-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .search-filters {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            font-size: 1rem;
+            background: white;
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .filter-select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Labour Hero Section */
+        .labour-hero {
+            background: linear-gradient(rgba(76, 175, 80, 0.8), rgba(56, 142, 60, 0.9));
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+ /* Labour Hero Section with Background Image */
+        .labour-hero {
+            position: relative;
+            background: linear-gradient(rgba(76, 175, 80, 0.7), rgba(46, 125, 50, 0.8)), url('https://sabrangindia.in/wp-content/uploads/2024/11/agrilabour.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 150px 0;
+            text-align: center;
+            overflow: hidden;
+        }
+        .labour-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .labour-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2E7D32;
+        }
+
+        /* Labour Grid Section */
+        .labour-gallery {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #FF9800;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .labour-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .labour-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #ddd;
+        }
+
+        .labour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .labour-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .labour-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .labour-card:hover .labour-image img {
+            transform: scale(1.05);
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .available {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .unavailable {
+            background: #f44336;
+            color: white;
+        }
+
+        .labour-info {
+            padding: 25px;
+        }
+
+        /* Enhanced Card Styles */
+        .labour-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .labour-header h3 {
+            margin: 0;
+            flex: 1;
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .labour-badge {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Stats Grid */
+        .labour-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .stat-item i {
+            color: #4CAF50;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Enhanced Rating */
+        .labour-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 12px;
+            background: #fff8e1;
+            border-radius: 8px;
+            border-left: 4px solid #FFC107;
+        }
+
+        .stars {
+            color: #FFC107;
+            font-size: 1.2rem;
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Description Section */
+        .labour-description {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .labour-description p {
+            margin: 0;
+            color: #555;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .labour-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .feature-tag {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            color: #2E7D32;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #c8e6c9;
+            transition: all 0.3s ease;
+        }
+
+        .feature-tag:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-labour {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-labour:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-labour:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-count {
+            background: #FF9800;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        .testimonial-grid {
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            margin-top: 40px;
+            scrollbar-width: thin;
+            scrollbar-color: #4CAF50 #f8f9fa;
+        }
+        .testimonial-card {
+            min-width: 210px;
+            max-width: 210px;
+            flex: 0 0 210px;
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+            border: 1px solid #eee;
+            font-size: 0.92rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .testimonial-text {
+            font-size: 0.93rem;
+            margin-bottom: 10px;
+            font-style: italic;
+            color: #555;
+            line-height: 1.5;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .testimonial-author strong {
+            font-size: 0.98rem;
+        }
+        .testimonial-author p {
+            font-size: 0.85rem;
+            color: #888;
+            margin: 0;
+        }
+        @media (max-width: 992px) {
+            .testimonial-card {
+                min-width: 160px;
+                max-width: 65vw;
+                flex: 0 0 65vw;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .testimonial-card {
+                min-width: 120px;
+                max-width: 80vw;
+                flex: 0 0 80vw;
+                font-size: 0.88rem;
+            }
+        }
+
+        /* Enhanced Location Filter Section */
+        #locationFilterSection {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        #locationFilterSection h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2E7D32;
+        }
+
+        .location-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .location-controls button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .location-controls button:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+        }
+
+        .location-controls input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            min-width: 200px;
+        }
+
+        .location-controls input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        /* Map Styles */
+        #map {
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* Custom Map Marker Styles */
+        .marker-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        .user-location-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-control-btn {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .map-control-btn:hover {
+            background: #f8f9fa;
+        }
+
+        /* Location Search Results */
+        .location-search-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .distance-badge {
+            background: #FF9800;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .clear-location-filter {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+
+        /* Location Options */
+        .location-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .location-option {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .location-option:hover {
+            background: #e9ecef;
+        }
+
+        .location-option.active {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .labour-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .labour-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .labour-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .labour-badge {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
+
+            /* Location Filter Section */
+            #locationFilterSection {
+                padding: 15px;
+            }
+
+            #locationFilterSection h3 {
+                font-size: 1.5rem;
+            }
+
+            .location-controls {
+                flex-direction: column;
+            }
+
+            .location-controls input {
+                width: 100%;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .location-options {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .map-controls {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 10px 0;
+            }
+        }
+    </style>
+    <!-- Add this to index.html, machinery.html, labour.html, contact.html, billing.html, login.html -->
+     <script src="api-client.js"></script>
+<script src="dashboard.js"></script>
+<script src="database.js"></script>
+<script src="location.js"></script>
+</head>
+<body>
+    <!-- Add Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <header class="header">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> Machinery</a></li>
+            <li><a href="labour.html" class="nav-link active"><i class="fas fa-users"></i> Labour</a></li>
+            <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="billing.html" class="nav-link cart-link">
+                <i class="fas fa-shopping-cart"></i> Cart
+                <span id="cartCount">0</span>
+            </a></li>
+        </ul>
+        
+        <!-- User Profile (shown when logged in) -->
+        <div id="userProfileNav" class="user-profile-nav" style="display: none;">
+            <div class="user-dropdown">
+                <div class="user-avatar-nav" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="dashboard.html" class="dropdown-item">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="dashboard.html#profile" class="dropdown-item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="dashboard.html#orders" class="dropdown-item">
+                        <i class="fas fa-shopping-bag"></i> My Orders
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+            <div class="user-info-nav">
+                <div class="user-name-nav" id="userDisplayName">User Name</div>
+                <div class="user-role-nav" id="userDisplayRole">Farmer</div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+</header>
+
+    <!-- Cart Notification -->
+    <div class="cart-notification" id="cartNotification">
+        <i class="fas fa-check-circle"></i>
+        <span>Labour added to cart!</span>
+        <div class="cart-count" id="notificationCount">1</div>
+    </div>
+
+    <!-- Labour Hero Section -->
+    <section class="labour-hero">
+        <div class="container">
+            <h1>Skilled Agricultural Labour</h1>
+            <p>Find experienced farm workers for planting, harvesting, irrigation, and other agricultural tasks. Add to cart and complete booking at checkout.</p>
+            <div class="hero-buttons">
+                <a href="#labour-list" class="btn btn-primary">Browse Labourers</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Search and Filter Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-filters">
+                <div class="search-box">
+                    <input type="text" placeholder="Search by skill, name, or location..." class="search-input" id="searchInput">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Skill Category:</label>
+                        <select class="filter-select" id="skillFilter">
+                            <option value="">All Skills</option>
+                            <option value="harvesting">Harvesting</option>
+                            <option value="planting">Planting</option>
+                            <option value="irrigation">Irrigation</option>
+                            <option value="tractor">Tractor Operation</option>
+                            <option value="spraying">Spraying</option>
+                            <option value="pruning">Pruning</option>
+                            <option value="organic">Organic Farming</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Experience Level:</label>
+                        <select class="filter-select" id="experienceFilter">
+                            <option value="">Any Experience</option>
+                            <option value="0-2">0-2 Years</option>
+                            <option value="3-5">3-5 Years</option>
+                            <option value="5-10">5-10 Years</option>
+                            <option value="10+">10+ Years</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Location:</label>
+                        <select class="filter-select" id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="kalyani">Kalyani</option>
+                            <option value="nadia">Nadia</option>
+                            <option value="krishnanagar">Krishnanagar</option>
+                            <option value="ranaghat">Ranaghat</option>
+                            <option value="shantipur">Shantipur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Wage Range (per day):</label>
+                        <select class="filter-select" id="wageFilter">
+                            <option value="">Any Wage</option>
+                            <option value="0-400">₹0-400</option>
+                            <option value="401-600">₹401-600</option>
+                            <option value="601-800">₹601-800</option>
+                            <option value="800+">₹800+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Location Filter Section with Map -->
+    <section id="locationFilterSection">
+        <div class="container">
+            <h3>Find Labour Near You</h3>
+            
+            <div class="location-controls">
+                <button onclick="showUserLocation()">
+                    <i class="fas fa-location-crosshairs"></i> Use My Location
+                </button>
+                <input type="text" id="locationInput" placeholder="Enter city or pincode">
+                <button onclick="filterByLocation()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button onclick="resetMap()">
+                    <i class="fas fa-sync-alt"></i> Reset Map
+                </button>
+            </div>
+            
+            <!-- Location Options -->
+            <div class="location-options">
+                <div class="location-option" data-location="kalyani">Kalyani</div>
+                <div class="location-option" data-location="nadia">Nadia</div>
+                <div class="location-option" data-location="krishnanagar">Krishnanagar</div>
+                <div class="location-option" data-location="ranaghat">Ranaghat</div>
+                <div class="location-option" data-location="shantipur">Shantipur</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map -->
+    <div id="map"></div>
+    
+    <!-- Location Search Results -->
+    <div id="locationSearchResults" class="location-search-results" style="display: none;"></div>
+
+    <!-- Labour List Section -->
+    <section id="labour-list" class="labour-gallery">
+        <div class="container">
+            <h2 class="section-title">Available Skilled Labourers</h2>
+            <p class="section-subtitle">Add labourers to cart and complete booking at checkout</p>
+            
+            <div class="labour-grid" id="labourGrid">
+                <!-- Labourer 1 -->
+                <div class="labour-card" data-skill="harvesting" data-experience="5" data-location="kalyani" data-wage="500" data-id="rajesh-kumar">
+                    <div class="labour-image">
+                        <img src="https://www.fao.org/images/newsroomlibraries/stories-images/60b0fbe22bf1d254d6d9867e43706e05.jpg?sfvrsn=6bd62e35_10" alt="Rajesh Kumar">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="labour-info">
+                        <div class="labour-header">
+                            <h3>Rajesh Kumar</h3>
+                            <div class="labour-badge">Harvesting Specialist</div>
+                        </div>
+                        
+                        <div class="labour-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>5 Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Kalyani, Nadia</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>₹500/day</span>
+                            </div>
+                        </div>
+
+                        <div class="labour-rating">
+                            <div class="stars">★★★★☆</div>
+                            <span class="rating-text">4.2/5 (24 reviews)</span>
+                        </div>
+
+                        <div class="labour-description">
+                            <p>Specialized in rice and wheat harvesting with excellent team leadership skills. Known for efficient work and attention to detail.</p>
+                        </div>
+
+                        <div class="labour-features">
+                            <span class="feature-tag">Rice Harvesting</span>
+                            <span class="feature-tag">Wheat Cutting</span>
+                            <span class="feature-tag">Team Leader</span>
+                            <span class="feature-tag">Quality Work</span>
+                        </div>
+
+                        <button class="btn-labour add-to-cart"
+                                data-id="rajesh-kumar"
+                                data-name="Rajesh Kumar - Harvesting Specialist"
+                                data-price="500"
+                                data-type="labour"
+                                data-image="https://www.fao.org/images/newsroomlibraries/stories-images/60b0fbe22bf1d254d6d9867e43706e05.jpg?sfvrsn=6bd62e35_10">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Labourer 2 -->
+                <div class="labour-card" data-skill="tractor" data-experience="8" data-location="krishnanagar" data-wage="600" data-id="sunil-patel">
+                    <div class="labour-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFq-VUsZxZvlg9kQotgtM4f_LWL71YTnvfvg&s" alt="Sunil Patel">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="labour-info">
+                        <div class="labour-header">
+                            <h3>Sunil Patel</h3>
+                            <div class="labour-badge">Tractor Expert</div>
+                        </div>
+                        
+                        <div class="labour-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>8 Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Krishnanagar</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>₹600/day</span>
+                            </div>
+                        </div>
+
+                        <div class="labour-rating">
+                            <div class="stars">★★★★★</div>
+                            <span class="rating-text">4.8/5 (31 reviews)</span>
+                        </div>
+
+                        <div class="labour-description">
+                            <p>Expert tractor operator with extensive knowledge of farm machinery maintenance and operation. Skilled in various agricultural tasks.</p>
+                        </div>
+
+                        <div class="labour-features">
+                            <span class="feature-tag">Tractor Expert</span>
+                            <span class="feature-tag">Ploughing</span>
+                            <span class="feature-tag">Maintenance</span>
+                            <span class="feature-tag">Reliable</span>
+                        </div>
+
+                        <button class="btn-labour add-to-cart"
+                                data-id="sunil-patel"
+                                data-name="Sunil Patel - Tractor Operator"
+                                data-price="600"
+                                data-type="labour"
+                                data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFq-VUsZxZvlg9kQotgtM4f_LWL71YTnvfvg&s">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Labourer 3 -->
+                <div class="labour-card" data-skill="irrigation" data-experience="6" data-location="ranaghat" data-wage="550" data-id="amit-sharma">
+                    <div class="labour-image">
+                        <img src="https://www.mckinsey.com/~/media/mckinsey/industries/agriculture/our%20insights/indian%20farmers%20optimism%20is%20driving%20interest%20in%20new%20products/mck248245-1536x1536.jpg" alt="Amit Sharma">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="labour-info">
+                        <div class="labour-header">
+                            <h3>Amit Sharma</h3>
+                            <div class="labour-badge">Irrigation Specialist</div>
+                        </div>
+                        
+                        <div class="labour-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>6 Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Ranaghat</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>₹550/day</span>
+                            </div>
+                        </div>
+
+                        <div class="labour-rating">
+                            <div class="stars">★★★★☆</div>
+                            <span class="rating-text">4.3/5 (18 reviews)</span>
+                        </div>
+
+                        <div class="labour-description">
+                            <p>Specialized in modern irrigation systems including drip irrigation and pump operations. Focuses on water conservation and efficiency.</p>
+                        </div>
+
+                        <div class="labour-features">
+                            <span class="feature-tag">Drip Irrigation</span>
+                            <span class="feature-tag">Pump Operation</span>
+                            <span class="feature-tag">Water Management</span>
+                            <span class="feature-tag">Efficient</span>
+                        </div>
+
+                        <button class="btn-labour add-to-cart"
+                                data-id="amit-sharma"
+                                data-name="Amit Sharma - Irrigation Specialist"
+                                data-price="550"
+                                data-type="labour"
+                                data-image="https://www.mckinsey.com/~/media/mckinsey/industries/agriculture/our%20insights/indian%20farmers%20optimism%20is%20driving%20interest%20in%20new%20products/mck248245-1536x1536.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Labourer 4 -->
+                <div class="labour-card" data-skill="organic" data-experience="10" data-location="shantipur" data-wage="700" data-id="vikram-singh">
+                    <div class="labour-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2G-NiMZHWfE0Tmn5H7-dpnG0c84rrANXWRA&s" alt="Vikram Singh">
+                        <div class="availability-badge unavailable">Not Available</div>
+                    </div>
+                    <div class="labour-info">
+                        <div class="labour-header">
+                            <h3>Vikram Singh</h3>
+                            <div class="labour-badge">Organic Expert</div>
+                        </div>
+                        
+                        <div class="labour-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>10 Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Shantipur</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>₹700/day</span>
+                            </div>
+                        </div>
+
+                        <div class="labour-rating">
+                            <div class="stars">★★★★★</div>
+                            <span class="rating-text">4.9/5 (42 reviews)</span>
+                        </div>
+
+                        <div class="labour-description">
+                            <p>Expert in organic farming methods with extensive knowledge of composting, soil health management, and sustainable agricultural practices.</p>
+                        </div>
+
+                        <div class="labour-features">
+                            <span class="feature-tag">Organic Methods</span>
+                            <span class="feature-tag">Composting</span>
+                            <span class="feature-tag">Soil Health</span>
+                            <span class="feature-tag">Sustainable</span>
+                        </div>
+
+                        <button class="btn-labour" disabled style="background: #ccc; cursor: not-allowed;">
+                            Currently Unavailable
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Labourer 5 -->
+                <div class="labour-card" data-skill="planting" data-experience="4" data-location="nadia" data-wage="450" data-id="ramesh-yadav">
+                    <div class="labour-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBCvnjVHxhCBzJPUjXSdGje95DesTtBjQpng&s" alt="Ramesh Yadav">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="labour-info">
+                        <div class="labour-header">
+                            <h3>Ramesh Yadav</h3>
+                            <div class="labour-badge">Planting Specialist</div>
+                        </div>
+                        
+                        <div class="labour-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>4 Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Nadia District</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>₹450/day</span>
+                            </div>
+                        </div>
+
+                        <div class="labour-rating">
+                            <div class="stars">★★★☆☆</div>
+                            <span class="rating-text">3.5/5 (12 reviews)</span>
+                        </div>
+
+                        <div class="labour-description">
+                            <p>Specialized in seed sowing, transplanting, and nursery management. Known for careful handling of delicate plants and seedlings.</p>
+                        </div>
+
+                        <div class="labour-features">
+                            <span class="feature-tag">Seed Sowing</span>
+                            <span class="feature-tag">Transplanting</span>
+                            <span class="feature-tag">Nursery Management</span>
+                            <span class="feature-tag">Careful Work</span>
+                        </div>
+
+                        <button class="btn-labour add-to-cart"
+                                data-id="ramesh-yadav"
+                                data-name="Ramesh Yadav - Planting Specialist"
+                                data-price="450"
+                                data-type="labour"
+                                data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBCvnjVHxhCBzJPUjXSdGje95DesTtBjQpng&s">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Labourer 6 -->
+                <div class="labour-card" data-skill="spraying" data-experience="7" data-location="kalyani" data-wage="500" data-id="sanjay-gupta">
+                    <div class="labour-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTVVLdXjMx1995PXwX3Meas_23TWeewRZfiw&s" alt="Sanjay Gupta">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="labour-info">
+                        <div class="labour-header">
+                            <h3>Sanjay Gupta</h3>
+                            <div class="labour-badge">Spraying Expert</div>
+                        </div>
+                        
+                        <div class="labour-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>7 Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Kalyani, Nadia</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>₹500/day</span>
+                            </div>
+                        </div>
+
+                        <div class="labour-rating">
+                            <div class="stars">★★★★☆</div>
+                            <span class="rating-text">4.4/5 (27 reviews)</span>
+                        </div>
+
+                        <div class="labour-description">
+                            <p>Expert in pesticide application with strict adherence to safety protocols. Skilled in equipment handling and precise spraying techniques.</p>
+                        </div>
+
+                        <div class="labour-features">
+                            <span class="feature-tag">Pesticide Application</span>
+                            <span class="feature-tag">Safety Protocols</span>
+                            <span class="feature-tag">Equipment Handling</span>
+                            <span class="feature-tag">Precise Work</span>
+                        </div>
+
+                        <button class="btn-labour add-to-cart"
+                                data-id="sanjay-gupta"
+                                data-name="Sanjay Gupta - Spraying Expert"
+                                data-price="500"
+                                data-type="labour"
+                                data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTVVLdXjMx1995PXwX3Meas_23TWeewRZfiw&s">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Farmers Say</h2>
+            <p class="section-subtitle">Hear from farmers who have used our skilled labour services</p>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Rajesh Kumar's harvesting team helped us complete our rice harvest in record time. Highly professional and efficient!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ58XXbCIhKQ-F49sd-YMiEeE8SDtVdZq2jig&s" alt="Farmer">
+                        </div>
+                        <div>
+                            <strong>Anil Sharma</strong>
+                            <p>Rice Farmer, Kalyani</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Sunil Patel's tractor operation skills saved us days of work. His knowledge of farm machinery is exceptional."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1r6xremJPLTzmcGZvNdNLJvhz26tjixnd0A&s" alt="Farmer">
+                        </div>
+                        <div>
+                            <strong>Rajiv Mehta</strong>
+                            <p>Wheat Farmer, Krishnanagar</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Amit Sharma transformed our irrigation system. We've reduced water usage by 30% while improving crop yield."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhUCf5Su3U1BNMywOaKvGT5TslQ6ymlcRN5Q&s" alt="Farmer">
+                        </div>
+                        <div>
+                            <strong>Prem Singh</strong>
+                            <p>Vegetable Farmer, Ranaghat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ==================== REAL-TIME MAP SYSTEM ====================
+        let map;
+        let markers = [];
+        let userMarker = null;
+        
+        // Labourer coordinates for West Bengal, Nadia District
+        const labourLocations = {
+            'rajesh-kumar': { lat: 22.9850, lng: 88.4345, name: 'Rajesh Kumar - Harvesting Specialist' },
+            'sunil-patel': { lat: 23.4000, lng: 88.5000, name: 'Sunil Patel - Tractor Expert' },
+            'amit-sharma': { lat: 23.1863, lng: 88.5665, name: 'Amit Sharma - Irrigation Specialist' },
+            'vikram-singh': { lat: 23.2571, lng: 88.4332, name: 'Vikram Singh - Organic Expert' },
+            'ramesh-yadav': { lat: 23.4175, lng: 88.3658, name: 'Ramesh Yadav - Planting Specialist' },
+            'sanjay-gupta': { lat: 22.9750, lng: 88.4445, name: 'Sanjay Gupta - Spraying Expert' }
+        };
+
+        // Initialize the map when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            
+            // Cart functionality and other existing code...
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            const cartCount = document.getElementById('cartCount');
+            const cartNotification = document.getElementById('cartNotification');
+            const notificationCount = document.getElementById('notificationCount');
+            const searchInput = document.getElementById('searchInput');
+            const skillFilter = document.getElementById('skillFilter');
+            const experienceFilter = document.getElementById('experienceFilter');
+            const locationFilter = document.getElementById('locationFilter');
+            const wageFilter = document.getElementById('wageFilter');
+            const labourCards = document.querySelectorAll('.labour-card');
+            const labourGrid = document.getElementById('labourGrid');
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            let cartItems = JSON.parse(localStorage.getItem('farmconnect_cart')) || [];
+            updateCartCount();
+
+            // Check user login state and update nav UI
+            checkUserLoginState();
+            
+            // Mobile menu toggle
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+            
+            // Add to cart functionality
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Check login before adding to cart
+                    const currentUser = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
+                    if (!currentUser) {
+                        alert('Please login or register to book labour.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseInt(this.getAttribute('data-price'));
+                    const type = this.getAttribute('data-type');
+                    const image = this.getAttribute('data-image');
+                    
+                    // Check if item already in cart
+                    const existingItem = cartItems.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cartItems.push({
+                            id,
+                            name,
+                            price,
+                            type,
+                            image,
+                            quantity: 1
+                        });
+                    }
+                    
+                    // Save to localStorage
+                    localStorage.setItem('farmconnect_cart', JSON.stringify(cartItems));
+                    
+                    // Update cart count
+                    updateCartCount();
+                    
+                    // Show notification
+                    showCartNotification();
+                    
+                    // Button feedback
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Added to Cart';
+                    this.style.background = '#4CAF50';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.background = '';
+                    }, 2000);
+                });
+            });
+            
+            function updateCartCount() {
+                const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+                cartCount.textContent = totalItems;
+            }
+            
+            function showCartNotification() {
+                const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+                notificationCount.textContent = totalItems;
+                cartNotification.style.display = 'flex';
+                
+                setTimeout(() => {
+                    cartNotification.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Search and filter functionality
+            function filterLabourers() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedSkill = skillFilter.value;
+                const selectedExperience = experienceFilter.value;
+                const selectedLocation = locationFilter.value;
+                const selectedWage = wageFilter.value;
+                
+                labourCards.forEach(card => {
+                    const name = card.querySelector('h3').textContent.toLowerCase();
+                    const skill = card.getAttribute('data-skill');
+                    const experience = parseInt(card.getAttribute('data-experience'));
+                    const location = card.getAttribute('data-location');
+                    const wage = parseInt(card.getAttribute('data-wage'));
+                    
+                    const matchesSearch = name.includes(searchTerm);
+                    const matchesSkill = !selectedSkill || skill === selectedSkill;
+                    
+                    let matchesExperience = true;
+                    if (selectedExperience) {
+                        if (selectedExperience === '0-2') {
+                            matchesExperience = experience <= 2;
+                        } else if (selectedExperience === '3-5') {
+                            matchesExperience = experience >= 3 && experience <= 5;
+                        } else if (selectedExperience === '5-10') {
+                            matchesExperience = experience >= 5 && experience <= 10;
+                        } else if (selectedExperience === '10+') {
+                            matchesExperience = experience >= 10;
+                        }
+                    }
+                    
+                    const matchesLocation = !selectedLocation || location === selectedLocation;
+                    
+                    let matchesWage = true;
+                    if (selectedWage) {
+                        if (selectedWage === '0-400') {
+                            matchesWage = wage <= 400;
+                        } else if (selectedWage === '401-600') {
+                            matchesWage = wage > 400 && wage <= 600;
+                        } else if (selectedWage === '601-800') {
+                            matchesWage = wage > 600 && wage <= 800;
+                        } else if (selectedWage === '800+') {
+                            matchesWage = wage > 800;
+                        }
+                    }
+                    
+                    if (matchesSearch && matchesSkill && matchesExperience && matchesLocation && matchesWage) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+            
+            searchInput.addEventListener('input', filterLabourers);
+            skillFilter.addEventListener('change', filterLabourers);
+            experienceFilter.addEventListener('change', filterLabourers);
+            locationFilter.addEventListener('change', filterLabourers);
+            wageFilter.addEventListener('change', filterLabourers);
+
+            // Initialize location options
+            initializeLocationOptions();
+        });
+
+        // ==================== MAP FUNCTIONS ====================
+        function initializeMap() {
+            // Default center (Nadia District, West Bengal)
+            const defaultCenter = { lat: 23.4000, lng: 88.5000 };
+            
+            // Initialize Leaflet Map
+            map = L.map('map').setView([defaultCenter.lat, defaultCenter.lng], 11);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Add labour markers
+            addLabourMarkers();
+            
+            // Add click event to map
+            map.on('click', function(e) {
+                console.log('Map clicked at:', e.latlng);
+            });
+        }
+
+        function addLabourMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Add markers for each labourer
+            Object.entries(labourLocations).forEach(([id, location]) => {
+                const labourCard = document.querySelector(`.labour-card[data-id="${id}"]`);
+                
+                if (labourCard) {
+                    const name = location.name;
+                    const wage = labourCard.getAttribute('data-wage') || 'N/A';
+                    const locationName = labourCard.getAttribute('data-location') || 'Unknown';
+                    const experience = labourCard.getAttribute('data-experience') || 'N/A';
+                    const skill = labourCard.getAttribute('data-skill') || 'Unknown';
+                    const image = labourCard.querySelector('img')?.src || 'https://via.placeholder.com/50';
+                    const isAvailable = !labourCard.querySelector('.availability-badge.unavailable');
+                    
+                    const marker = L.marker([location.lat, location.lng], {
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            html: `<div class="marker-icon" style="background-color: ${isAvailable ? '#4CAF50' : '#f44336'}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                                   <i class="fas fa-user"></i>
+                                   </div>`,
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 30]
+                        })
+                    }).addTo(map);
+                    
+                    // Custom popup content
+                    const popupContent = `
+                        <div style="min-width: 200px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <img src="${image}" alt="${name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                <div>
+                                    <strong>${name.split(' - ')[0]}</strong><br>
+                                    <small>${locationName}</small>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Skill:</strong> ${formatSkillName(skill)}<br>
+                                <strong>Experience:</strong> ${experience} years<br>
+                                <strong>Wage:</strong> ₹${wage}/day<br>
+                                <strong>Status:</strong> ${isAvailable ? '<span style="color:green;">Available</span>' : '<span style="color:red;">Not Available</span>'}
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                ${isAvailable ? `
+                                <button onclick="bookLabourFromMap('${id}')" 
+                                        style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-cart-plus"></i> Book Now
+                                </button>
+                                ` : ''}
+                                <button onclick="showDirections(${location.lat}, ${location.lng})" 
+                                        style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-route"></i> Directions
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    marker.bindPopup(popupContent);
+                    markers.push(marker);
+                    
+                    // Add click event to labour cards to pan to marker
+                    const labourButton = labourCard.querySelector('.add-to-cart');
+                    if (labourButton) {
+                        labourButton.addEventListener('click', function() {
+                            map.setView([location.lat, location.lng], 15);
+                            marker.openPopup();
+                        });
+                    }
+                }
+            });
+        }
+
+        function showUserLocation() {
+            if (navigator.geolocation) {
+                const locationBtn = document.querySelector('#locationFilterSection button');
+                const originalText = locationBtn.innerHTML;
+                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+                locationBtn.disabled = true;
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        
+                        // Remove previous user marker
+                        if (userMarker) {
+                            map.removeLayer(userMarker);
+                        }
+                        
+                        // Add user marker
+                        userMarker = L.marker([userLat, userLng], {
+                            icon: L.divIcon({
+                                className: 'user-marker',
+                                html: `<div class="user-location-icon" style="background-color: #2196F3; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                                       <i class="fas fa-user"></i>
+                                       </div>`,
+                                iconSize: [30, 30],
+                                iconAnchor: [15, 30]
+                            })
+                        }).addTo(map);
+                        
+                        userMarker.bindPopup("<b>Your Location</b><br>Labour locations near you are highlighted").openPopup();
+                        
+                        // Center map on user
+                        map.setView([userLat, userLng], 13);
+                        
+                        // Highlight nearby labourers
+                        highlightNearbyLabourers(userLat, userLng);
+                        
+                        // Update button
+                        locationBtn.innerHTML = originalText;
+                        locationBtn.disabled = false;
+                        
+                        // Show nearby results
+                        showLocationResults('nearby');
+                    },
+                    function(error) {
+                        alert('Unable to get your location. Please enable location services or select a location manually.');
+                        const locationBtn = document.querySelector('#locationFilterSection button');
+                        locationBtn.innerHTML = originalText;
+                        locationBtn.disabled = false;
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser. Please select a location manually.');
+            }
+        }
+
+        function highlightNearbyLabourers(userLat, userLng, radiusKm = 20) {
+            markers.forEach(marker => {
+                const markerLat = marker.getLatLng().lat;
+                const markerLng = marker.getLatLng().lng;
+                
+                const distance = calculateDistance(userLat, userLng, markerLat, markerLng);
+                
+                if (distance <= radiusKm) {
+                    // Change marker color for nearby labourers
+                    const newIcon = L.divIcon({
+                        className: 'nearby-marker',
+                        html: `<div class="marker-icon" style="background-color: #FF9800; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                               <i class="fas fa-user"></i>
+                               </div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker.setIcon(newIcon);
+                    
+                    // Highlight corresponding card
+                    const labourId = Object.keys(labourLocations).find(id => 
+                        labourLocations[id].lat === markerLat && labourLocations[id].lng === markerLng
+                    );
+                    
+                    if (labourId) {
+                        const card = document.querySelector(`.labour-card[data-id="${labourId}"]`);
+                        if (card) {
+                            card.style.boxShadow = '0 0 0 3px #FF9800';
+                            card.style.transition = 'box-shadow 0.3s ease';
+                            
+                            // Add distance badge
+                            const statItems = card.querySelector('.labour-stats');
+                            if (statItems) {
+                                const existingBadge = card.querySelector('.distance-badge');
+                                if (!existingBadge) {
+                                    const distanceBadge = document.createElement('div');
+                                    distanceBadge.className = 'stat-item';
+                                    distanceBadge.innerHTML = `
+                                        <i class="fas fa-location-arrow"></i>
+                                        <span>${distance.toFixed(1)} km from you</span>
+                                    `;
+                                    distanceBadge.style.background = '#fff8e1';
+                                    distanceBadge.style.borderLeftColor = '#FF9800';
+                                    statItems.appendChild(distanceBadge);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function showDirections(lat, lng) {
+            // Open Google Maps with directions
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            window.open(url, '_blank');
+        }
+
+        function bookLabourFromMap(labourId) {
+            const labourCard = document.querySelector(`.labour-card[data-id="${labourId}"]`);
+            if (labourCard) {
+                const addToCartBtn = labourCard.querySelector('.add-to-cart');
+                if (addToCartBtn) {
+                    addToCartBtn.click();
+                }
+            }
+        }
+
+        function showAllLabourers() {
+            // Reset all markers to default color
+            markers.forEach(marker => {
+                const labourId = Object.keys(labourLocations).find(id => 
+                    labourLocations[id].lat === marker.getLatLng().lat && 
+                    labourLocations[id].lng === marker.getLatLng().lng
+                );
+                
+                if (labourId) {
+                    const labourCard = document.querySelector(`.labour-card[data-id="${labourId}"]`);
+                    const isAvailable = labourCard && !labourCard.querySelector('.availability-badge.unavailable');
+                    
+                    const defaultIcon = L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div class="marker-icon" style="background-color: ${isAvailable ? '#4CAF50' : '#f44336'}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white;">
+                               <i class="fas fa-user"></i>
+                               </div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker.setIcon(defaultIcon);
+                }
+            });
+            
+            // Reset card highlights
+            document.querySelectorAll('.labour-card').forEach(card => {
+                card.style.boxShadow = '';
+                const distanceBadge = card.querySelector('.distance-badge');
+                if (distanceBadge && distanceBadge.parentElement.classList.contains('stat-item')) {
+                    distanceBadge.parentElement.remove();
+                }
+            });
+            
+            // Reset map view
+            map.setView([23.4000, 88.5000], 11);
+        }
+
+        function zoomToArea(area) {
+            const areaCoordinates = {
+                'kalyani': { lat: 22.9750, lng: 88.4345, zoom: 13 },
+                'nadia': { lat: 23.4075, lng: 88.3658, zoom: 12 },
+                'krishnanagar': { lat: 23.4000, lng: 88.5000, zoom: 13 },
+                'ranaghat': { lat: 23.1763, lng: 88.5665, zoom: 13 },
+                'shantipur': { lat: 23.2471, lng: 88.4332, zoom: 13 }
+            };
+            
+            if (areaCoordinates[area]) {
+                const { lat, lng, zoom } = areaCoordinates[area];
+                map.setView([lat, lng], zoom);
+            }
+        }
+
+        function resetMap() {
+            showAllLabourers();
+            if (userMarker) {
+                map.removeLayer(userMarker);
+                userMarker = null;
+            }
+            clearLocationFilter();
+        }
+
+        function formatSkillName(skill) {
+            const skillNames = {
+                'harvesting': 'Harvesting',
+                'planting': 'Planting',
+                'irrigation': 'Irrigation',
+                'tractor': 'Tractor Operation',
+                'spraying': 'Spraying',
+                'pruning': 'Pruning',
+                'organic': 'Organic Farming'
+            };
+            return skillNames[skill] || skill;
+        }
+
+        // ==================== LOCATION FUNCTIONS ====================
+        let selectedLocation = '';
+        let userLocation = null;
+
+        function initializeLocationOptions() {
+            const locationOptions = document.querySelectorAll('.location-option');
+            
+            locationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    locationOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Get selected location
+                    selectedLocation = this.getAttribute('data-location');
+                    
+                    // Filter labourers by location
+                    filterLabourersByLocation(selectedLocation);
+                    
+                    // Zoom to area on map
+                    zoomToArea(selectedLocation);
+                    
+                    // Show results
+                    showLocationResults(selectedLocation);
+                });
+            });
+        }
+
+        function filterByLocation() {
+            const locationInput = document.getElementById('locationInput');
+            const location = locationInput.value.toLowerCase().trim();
+            
+            if (location) {
+                selectedLocation = location;
+                filterLabourersByLocation(selectedLocation);
+                showLocationResults(selectedLocation);
+            } else {
+                alert('Please enter a location to search.');
+            }
+        }
+
+        function filterLabourersByLocation(location) {
+            const labourCards = document.querySelectorAll('.labour-card');
+            
+            labourCards.forEach(card => {
+                const cardLocation = card.getAttribute('data-location');
+                if (location === 'all' || cardLocation === location) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function showLocationResults(location) {
+            const resultsContainer = document.getElementById('locationSearchResults');
+            const count = document.querySelectorAll(`.labour-card[data-location="${location}"]`).length;
+            
+            if (location === 'nearby') {
+                resultsContainer.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <strong>Labourers Near You</strong>
+                            <span class="distance-badge">Based on your current location</span>
+                        </div>
+                        <button class="clear-location-filter" onclick="clearLocationFilter()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <strong>Location: ${formatLocationName(location)}</strong>
+                            <span class="distance-badge">${count} labourers found</span>
+                        </div>
+                        <button class="clear-location-filter" onclick="clearLocationFilter()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                `;
+            }
+            resultsContainer.style.display = 'block';
+        }
+
+        function formatLocationName(location) {
+            const names = {
+                'kalyani': 'Kalyani',
+                'nadia': 'Nadia',
+                'krishnanagar': 'Krishnanagar',
+                'ranaghat': 'Ranaghat',
+                'shantipur': 'Shantipur',
+                'nearby': 'Near Your Location'
+            };
+            return names[location] || location;
+        }
+
+        function clearLocationFilter() {
+            const locationOptions = document.querySelectorAll('.location-option');
+            locationOptions.forEach(opt => opt.classList.remove('active'));
+            
+            const resultsContainer = document.getElementById('locationSearchResults');
+            resultsContainer.style.display = 'none';
+            
+            const locationInput = document.getElementById('locationInput');
+            locationInput.value = '';
+            
+            selectedLocation = '';
+            
+            // Show all labourers
+            const labourCards = document.querySelectorAll('.labour-card');
+            labourCards.forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            // Reset map
+            resetMap();
+        }
+
+        // ==================== USER AUTH FUNCTIONS ====================
+        // Check user login state (support multiple localStorage keys)
+        function checkUserLoginState() {
+            const userProfileNav = document.getElementById('userProfileNav');
+            let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user') || localStorage.getItem('farmconnect_remembered_user');
+            let currentUser = null;
+            try { currentUser = raw ? JSON.parse(raw) : null; } catch (e) { currentUser = null; }
+
+            if (currentUser && userProfileNav) {
+                userProfileNav.style.display = 'flex';
+                updateUserInfo(currentUser);
+            } else if (userProfileNav) {
+                userProfileNav.style.display = 'none';
+            }
+        }
+
+        function updateUserInfo(user) {
+            if (!user) return;
+            const userAvatar = document.getElementById('userAvatar');
+            const userDisplayName = document.getElementById('userDisplayName');
+            const userDisplayRole = document.getElementById('userDisplayRole');
+
+            const displayName = user.fullname || user.name || user.username || 'User';
+            const role = user.userType || user.role || '';
+
+            // Avatar: prefer image
+            const imageUrl = user.profileImage || user.avatar || user.image || null;
+            if (userAvatar) {
+                if (imageUrl) {
+                    userAvatar.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                } else {
+                    const names = (displayName || 'User').split(' ');
+                    const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
+                    userAvatar.textContent = initials;
+                }
+            }
+
+            if (userDisplayName) userDisplayName.textContent = displayName;
+            if (userDisplayRole) userDisplayRole.textContent = formatUserType(role);
+        }
+
+        function formatUserType(userType) {
+            const typeMap = { 
+                'farmer': 'Farmer', 
+                'machinery_owner': 'Machinery Owner', 
+                'labour': 'Labour Provider', 
+                'admin': 'Administrator' 
+            };
+            return typeMap[userType] || (userType ? userType.toString().replace(/_/g,' ') : '');
+        }
+
+        // Global logout clears known keys
+        window.logout = function() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('farmconnect_current_user');
+            localStorage.removeItem('farmconnect_remembered_user');
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

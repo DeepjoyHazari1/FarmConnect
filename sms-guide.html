@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FarmConnect SMS Booking Guide</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            color: #333; 
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container { 
+            max-width: 700px; 
+            margin: 20px auto; 
+            background: rgba(19, 216, 209, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.1); 
+            padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h1 { 
+            background: linear-gradient(45deg, #2E7D32, #4CAF50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px; 
+            font-weight: 700;
+            font-size: 2.2rem;
+            border-left: 4px solid #16130f;
+            padding-left: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 { 
+            color: #FF9800; 
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 3px solid rgba(255,152,0,0.2);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+        }
+        h2 i {
+            background: #FF9800;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .command-example { 
+            background: linear-gradient(145deg, #e8f5e8, #d0ebd0);
+            border-left: 6px solid #4CAF50; 
+            padding: 14px 18px; 
+            border-radius: 12px; 
+            margin: 10px 0; 
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            display: inline-block;
+            width: auto;
+            color: #1e3a2f;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(76,175,80,0.2);
+        }
+        .command-example:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 12px rgba(76,175,80,0.2);
+            border-left-width: 8px;
+        }
+        ul { 
+            margin-bottom: 20px; 
+            padding-left: 20px;
+            background: rgba(241, 244, 242, 0.6);
+            padding: 15px 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+        }
+        li { 
+            margin-bottom: 12px; 
+            list-style-type: none;
+            padding-left: 25px;
+            position: relative;
+        }
+        li:before {
+            content: "\f00c"; /* FontAwesome check icon */
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-size: 1rem;
+        }
+        li:last-child {
+            margin-bottom: 0;
+        }
+        .back-link { 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 500;
+            background: linear-gradient(45deg, #2E7D32, #4CAF50);
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(46,125,50,0.3);
+        }
+        .back-link:hover { 
+            transform: translateX(-5px);
+            box-shadow: 0 6px 15px rgba(46,125,50,0.4);
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(45deg, #1b5e20, #2E7D32);
+        }
+        strong {
+            color: #2E7D32;
+            font-weight: 700;
+        }
+        .sms-note {
+            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+            border-left: 6px solid #FF9800;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 30px 0 20px;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(255,152,0,0.2);
+            border: 1px solid rgba(255,152,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .sms-note:hover {
+            transform: scale(1.02);
+        }
+        .sms-note i {
+            color: #FF9800;
+            font-size: 1.3rem;
+        }
+        .fa-arrow-left {
+            margin-right: 5px;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #666;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .highlight {
+            background: rgba(255,152,0,0.1);
+            color: #FF9800;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 20px; margin: 10px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.2rem; }
+            h2 i { width: 25px; height: 25px; font-size: 0.9rem; }
+            .command-example { 
+                font-size: 0.9rem;
+                padding: 10px 12px;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <h1><i class="fas fa-comment-alt" style="color: #FF9800; background: none; -webkit-text-fill-color: #FF9800; margin-right: 10px;"></i>SMS Booking Guide</h1>
+        <p style="font-size: 1.1rem; color: #555;">FarmConnect allows you to book machinery and labour via SMS. Send your booking SMS to <strong class="highlight">FARMCON (+1 7402674969)</strong>.</p>
+        
+        <div class="sms-note">
+            <i class="fas fa-mobile-alt" style="margin-right: 10px;"></i>
+            <strong>Quick Tip:</strong> Copy any command below and send it as an SMS message.
+            <span class="badge">24/7 Service</span>
+        </div>
+
+        <h2>
+            <i class="fas fa-tractor"></i>
+            Machinery Booking
+        </h2>
+        <ul>
+            <li><span style="font-weight: 500;">Format:</span> <span class="command-example">BOOK [MACHINERY] [DATE] [LOCATION]</span></li>
+            <li><span style="font-weight: 500;">Example:</span> <span class="command-example">BOOK TRACTOR 2026-03-15 KALYANI</span></li>
+        </ul>
+
+        <h2>
+            <i class="fas fa-users"></i>
+            Labour Booking
+        </h2>
+        <ul>
+            <li><span style="font-weight: 500;">Format:</span> <span class="command-example">LABOR [SKILL] [QUANTITY] [DATE]</span></li>
+            <li><span style="font-weight: 500;">Example:</span> <span class="command-example">LABOR HARVESTING 5 2026-03-20</span></li>
+        </ul>
+
+        <h2>
+            <i class="fas fa-cogs"></i>
+            Supported Machinery Types
+        </h2>
+        <ul style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">TRACTOR</li>
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">HARVESTER</li>
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">PLOUGH</li>
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">CULTIVATOR</li>
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">IRRIGATION</li>
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">SPRAYER</li>
+            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">DRONE</li>
+        </ul>
+
+        <h2>
+            <i class="fas fa-briefcase"></i>
+            Supported Labour Skills
+        </h2>
+        <ul style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">HARVESTING</li>
+            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">PLANTING</li>
+            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">IRRIGATION</li>
+            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">SPRAYING</li>
+            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">TRACTOR</li>
+            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">ORGANIC</li>
+        </ul>
+
+        <h2>
+            <i class="fas fa-check-circle"></i>
+            Confirmation
+        </h2>
+        <p style="background: rgba(46,125,50,0.05); padding: 15px; border-radius: 12px;">After sending your SMS, you will receive a confirmation reply with booking details and contact info.</p>
+
+        <h2>
+            <i class="fas fa-question-circle"></i>
+            Help
+        </h2>
+        <p style="background: rgba(255,152,0,0.05); padding: 15px; border-radius: 12px;">Send <span class="command-example" style="display: inline; margin: 0;">HELP</span> to receive instructions via SMS.</p>
+    </div>
+</body>
+</html>
