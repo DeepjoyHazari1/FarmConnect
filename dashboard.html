@@ -520,79 +520,79 @@
         }
     </style>
 
-    <!-- Add this before your other script tags -->
-     <script src="api-client.js"></script>
-<script src="dashboard.js"></script>
-<script src="database.js"></script>
+    <script src="api-client.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="database.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="dashboard-sidebar" id="sidebar">
             <div class="user-profile">
-                <!-- Sidebar user info -->
-                <div class="user-avatar"> <!-- JS will fill initials here --> </div>
-                <div class="user-name">Loading...</div>
-                <div class="user-role">Farmer</div>
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name" id="userName">Loading...</div>
+                <div class="user-role" id="userRole">Farmer</div>
             </div>
 
             <ul class="sidebar-menu">
                 <li class="menu-item">
                     <a href="#dashboard" class="menu-link" data-section="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
+                        <span data-key="dashboard">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="#orders" class="menu-link" data-section="orders">
                         <i class="fas fa-shopping-bag"></i>
-                        My Orders
+                        <span data-key="myOrders">My Orders</span>
                         <span class="menu-badge" id="ordersCount">0</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="#bookings" class="menu-link" data-section="bookings">
                         <i class="fas fa-calendar-check"></i>
-                        Bookings
+                        <span data-key="bookings">Bookings</span>
                         <span class="menu-badge" id="bookingsCount">0</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="#favorites" class="menu-link" data-section="favorites">
                         <i class="fas fa-heart"></i>
-                        Favorites
+                        <span data-key="favorites">Favorites</span>
                         <span class="menu-badge" id="favoritesCount">0</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="#profile" class="menu-link" data-section="profile">
                         <i class="fas fa-user-cog"></i>
-                        Profile Settings
+                        <span data-key="profileSettings">Profile Settings</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="#payments" class="menu-link" data-section="payments">
                         <i class="fas fa-credit-card"></i>
-                        Payment Methods
+                        <span data-key="paymentMethods">Payment Methods</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="#notifications" class="menu-link" data-section="notifications">
                         <i class="fas fa-bell"></i>
-                        Notifications
+                        <span data-key="notifications">Notifications</span>
                         <span class="menu-badge" id="notificationsCount">3</span>
                     </a>
                 </li>
                 <li class="menu-item" style="margin-top: 30px;">
                     <a href="index.html" class="menu-link">
                         <i class="fas fa-home"></i>
-                        Back to Home
+                        <span data-key="backToHome">Back to Home</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="login.html" class="menu-link">
+                    <a href="javascript:void(0)" class="menu-link" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        <span data-key="logout">Logout</span>
                     </a>
                 </li>
             </ul>
@@ -603,18 +603,18 @@
             <!-- Dashboard Header -->
             <div class="dashboard-header">
                 <div>
-                    <h1 class="dashboard-title" id="pageTitle">Dashboard</h1>
-                    <p style="color: #666; margin: 5px 0 0;">Welcome back! Here's your farming overview.</p>
+                    <h1 class="dashboard-title" id="pageTitle" data-key="dashboard">Dashboard</h1>
+                    <p style="color: #666; margin: 5px 0 0;" id="welcomeMessage" data-key="welcomeMessage">Welcome back! Here's your farming overview.</p>
                 </div>
                 <div class="dashboard-actions">
                     <button class="mobile-menu-toggle" id="mobileMenuToggle">
                         <i class="fas fa-bars"></i>
                     </button>
                     <button class="btn btn-outline" id="exportDataBtn">
-                        <i class="fas fa-download"></i> Export Data
+                        <i class="fas fa-download"></i> <span data-key="exportData">Export Data</span>
                     </button>
                     <button class="btn btn-primary" id="newBookingBtn">
-                        <i class="fas fa-plus"></i> New Booking
+                        <i class="fas fa-plus"></i> <span data-key="newBooking">New Booking</span>
                     </button>
                 </div>
             </div>
@@ -627,7 +627,7 @@
                     </div>
                     <div class="stat-content">
                         <h3 id="totalOrders">0</h3>
-                        <p>Total Orders</p>
+                        <p data-key="totalOrders">Total Orders</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -636,7 +636,7 @@
                     </div>
                     <div class="stat-content">
                         <h3 id="activeBookings">0</h3>
-                        <p>Active Bookings</p>
+                        <p data-key="activeBookings">Active Bookings</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -645,7 +645,7 @@
                     </div>
                     <div class="stat-content">
                         <h3 id="favoritesTotal">0</h3>
-                        <p>Favorite Items</p>
+                        <p data-key="favoriteItems">Favorite Items</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -654,7 +654,7 @@
                     </div>
                     <div class="stat-content">
                         <h3 id="pendingActions">0</h3>
-                        <p>Pending Actions</p>
+                        <p data-key="pendingActions">Pending Actions</p>
                     </div>
                 </div>
             </div>
@@ -662,10 +662,10 @@
             <!-- Recent Orders Section -->
             <section class="dashboard-section" id="ordersSection">
                 <div class="section-header">
-                    <h2 class="section-title">Recent Orders</h2>
+                    <h2 class="section-title" data-key="recentOrders">Recent Orders</h2>
                     <div class="section-actions">
                         <button class="btn btn-outline" id="viewAllOrdersBtn">
-                            View All
+                            <span data-key="viewAll">View All</span>
                         </button>
                     </div>
                 </div>
@@ -673,12 +673,12 @@
                     <table class="orders-table">
                         <thead>
                             <tr>
-                                <th>Order ID</th>
-                                <th>Item</th>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th data-key="orderId">Order ID</th>
+                                <th data-key="item">Item</th>
+                                <th data-key="date">Date</th>
+                                <th data-key="amount">Amount</th>
+                                <th data-key="status">Status</th>
+                                <th data-key="action">Action</th>
                             </tr>
                         </thead>
                         <tbody id="ordersTableBody">
@@ -688,10 +688,10 @@
                 </div>
                 <div class="empty-state" id="emptyOrders" style="display: none;">
                     <i class="fas fa-shopping-bag"></i>
-                    <h3>No Orders Yet</h3>
-                    <p>You haven't placed any orders yet. Start exploring our machinery and labor services!</p>
+                    <h3 data-key="noOrdersYet">No Orders Yet</h3>
+                    <p data-key="noOrdersMsg">You haven't placed any orders yet. Start exploring our machinery and labor services!</p>
                     <button class="btn btn-primary mt-20" id="browseMachineryBtn">
-                        <i class="fas fa-tractor"></i> Browse Machinery
+                        <i class="fas fa-tractor"></i> <span data-key="browseMachinery">Browse Machinery</span>
                     </button>
                 </div>
             </section>
@@ -699,51 +699,51 @@
             <!-- Recent Activity -->
             <section class="dashboard-section" id="activitySection">
                 <div class="section-header">
-                    <h2 class="section-title">Recent Activity</h2>
+                    <h2 class="section-title" data-key="recentActivity">Recent Activity</h2>
                 </div>
                 <ul class="activity-list" id="activityList">
                     <!-- Activities will be populated by JavaScript -->
                 </ul>
                 <div class="empty-state" id="emptyActivity" style="display: none;">
                     <i class="fas fa-history"></i>
-                    <h3>No Recent Activity</h3>
-                    <p>Your recent activities will appear here.</p>
+                    <h3 data-key="noRecentActivity">No Recent Activity</h3>
+                    <p data-key="noActivityMsg">Your recent activities will appear here.</p>
                 </div>
             </section>
 
             <!-- Quick Actions -->
             <section class="dashboard-section" id="quickActionsSection">
                 <div class="section-header">
-                    <h2 class="section-title">Quick Actions</h2>
+                    <h2 class="section-title" data-key="quickActions">Quick Actions</h2>
                 </div>
                 <div class="quick-actions-grid">
                     <div class="action-card" id="rentMachineryBtn">
                         <div class="action-icon">
                             <i class="fas fa-tractor"></i>
                         </div>
-                        <h3>Rent Machinery</h3>
-                        <p>Browse and book agricultural equipment</p>
+                        <h3 data-key="rentMachinery">Rent Machinery</h3>
+                        <p data-key="rentMachineryDesc">Browse and book agricultural equipment</p>
                     </div>
                     <div class="action-card" id="hireLaborBtn">
                         <div class="action-icon">
                             <i class="fas fa-users"></i>
                         </div>
-                        <h3>Hire Labor</h3>
-                        <p>Find skilled farm workers</p>
+                        <h3 data-key="hireLabor">Hire Labor</h3>
+                        <p data-key="hireLaborDesc">Find skilled farm workers</p>
                     </div>
                     <div class="action-card" id="newBookingActionBtn">
                         <div class="action-icon">
                             <i class="fas fa-calendar-plus"></i>
                         </div>
-                        <h3>New Booking</h3>
-                        <p>Schedule machinery or labor</p>
+                        <h3 data-key="newBooking">New Booking</h3>
+                        <p data-key="newBookingDesc">Schedule machinery or labor</p>
                     </div>
                     <div class="action-card" id="updateProfileBtn">
                         <div class="action-icon">
                             <i class="fas fa-user-edit"></i>
                         </div>
-                        <h3>Update Profile</h3>
-                        <p>Manage your account details</p>
+                        <h3 data-key="updateProfile">Update Profile</h3>
+                        <p data-key="updateProfileDesc">Manage your account details</p>
                     </div>
                 </div>
             </section>
@@ -751,13 +751,13 @@
             <!-- Profile Settings Section -->
             <section class="dashboard-section" id="profileSection" style="display: none;">
                 <div class="section-header">
-                    <h2 class="section-title">Profile Settings</h2>
+                    <h2 class="section-title" data-key="profileSettings">Profile Settings</h2>
                     <div class="section-actions">
                         <button class="btn btn-outline" id="resetProfileBtn">
-                            <i class="fas fa-undo"></i> Reset
+                            <i class="fas fa-undo"></i> <span data-key="reset">Reset</span>
                         </button>
                         <button class="btn btn-primary" id="saveProfileBtn">
-                            <i class="fas fa-save"></i> Save Changes
+                            <i class="fas fa-save"></i> <span data-key="saveChanges">Save Changes</span>
                         </button>
                     </div>
                 </div>
@@ -766,7 +766,6 @@
                     <!-- Profile Picture -->
                     <div class="profile-picture-section" style="text-align: center; margin-bottom: 40px;">
                         <div class="profile-avatar-large" id="profileAvatarLarge" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #4CAF50, #8BC34A); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 4px solid #e0e0e0; position: relative; overflow: hidden;">
-                            <!-- Initials or profile image will be set by JS -->
                             <span id="profileAvatarInitials" style="font-size: 3rem; color: white;"></span>
                             <img id="profileAvatarImg" src="" alt="Profile Picture" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
                             <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
@@ -783,13 +782,13 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="fas fa-user"></i> First Name
+                                    <i class="fas fa-user"></i> <span data-key="firstName">First Name</span>
                                 </label>
                                 <input type="text" class="form-control" id="firstName" name="firstName" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="fas fa-user"></i> Last Name
+                                    <i class="fas fa-user"></i> <span data-key="lastName">Last Name</span>
                                 </label>
                                 <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
@@ -797,21 +796,21 @@
 
                         <div class="form-group">
                             <label class="form-label">
-                                <i class="fas fa-envelope"></i> Email Address
+                                <i class="fas fa-envelope"></i> <span data-key="emailAddress">Email Address</span>
                             </label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">
-                                <i class="fas fa-phone"></i> Phone Number
+                                <i class="fas fa-phone"></i> <span data-key="phoneNumber">Phone Number</span>
                             </label>
                             <input type="tel" class="form-control" id="phone" name="phone" required>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">
-                                <i class="fas fa-map-marker-alt"></i> Address
+                                <i class="fas fa-map-marker-alt"></i> <span data-key="address">Address</span>
                             </label>
                             <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
                         </div>
@@ -819,13 +818,13 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="fas fa-city"></i> City
+                                    <i class="fas fa-city"></i> <span data-key="city">City</span>
                                 </label>
                                 <input type="text" class="form-control" id="city" name="city" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="fas fa-map-pin"></i> Pincode
+                                    <i class="fas fa-map-pin"></i> <span data-key="pincode">Pincode</span>
                                 </label>
                                 <input type="text" class="form-control" id="pincode" name="pincode" required>
                             </div>
@@ -833,32 +832,32 @@
 
                         <div class="form-group">
                             <label class="form-label">
-                                <i class="fas fa-tractor"></i> User Type
+                                <i class="fas fa-tractor"></i> <span data-key="userType">User Type</span>
                             </label>
                             <select class="form-control" id="userType" name="userType" required>
-                                <option value="farmer">Farmer</option>
-                                <option value="machinery_owner">Machinery Owner</option>
-                                <option value="labour">Skilled Labour</option>
+                                <option value="farmer" data-key="farmer">Farmer</option>
+                                <option value="machinery_owner" data-key="machineryOwner">Machinery Owner</option>
+                                <option value="labour" data-key="skilledLabour">Skilled Labour</option>
                             </select>
                         </div>
 
                         <!-- Farm Details (Visible only for Farmers) -->
                         <div id="farmDetails" style="display: none;">
                             <h4 style="color: #2E7D32; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
-                                <i class="fas fa-tractor"></i> Farm Details
+                                <i class="fas fa-tractor"></i> <span data-key="farmDetails">Farm Details</span>
                             </h4>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
                                 <div class="form-group">
-                                    <label class="form-label">Farm Name</label>
+                                    <label class="form-label" data-key="farmName">Farm Name</label>
                                     <input type="text" class="form-control" id="farmName" name="farmName">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Farm Size (acres)</label>
+                                    <label class="form-label" data-key="farmSize">Farm Size (acres)</label>
                                     <input type="number" class="form-control" id="farmSize" name="farmSize">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Main Crops</label>
+                                <label class="form-label" data-key="mainCrops">Main Crops</label>
                                 <input type="text" class="form-control" id="mainCrops" name="mainCrops" placeholder="e.g., Rice, Wheat, Vegetables">
                             </div>
                         </div>
@@ -866,10 +865,10 @@
                         <!-- Machinery Details (Visible only for Machinery Owners) -->
                         <div id="machineryDetails" style="display: none;">
                             <h4 style="color: #2196F3; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
-                                <i class="fas fa-tools"></i> Machinery Details
+                                <i class="fas fa-tools"></i> <span data-key="machineryDetails">Machinery Details</span>
                             </h4>
                             <div class="form-group">
-                                <label class="form-label">Types of Machinery</label>
+                                <label class="form-label" data-key="machineryTypes">Types of Machinery</label>
                                 <input type="text" class="form-control" id="machineryTypes" name="machineryTypes" placeholder="e.g., Tractor, Harvester, Rotavator">
                             </div>
                         </div>
@@ -877,14 +876,14 @@
                         <!-- Labour Details (Visible only for Labour) -->
                         <div id="labourDetails" style="display: none;">
                             <h4 style="color: #FF9800; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
-                                <i class="fas fa-users"></i> Labour Details
+                                <i class="fas fa-users"></i> <span data-key="labourDetails">Labour Details</span>
                             </h4>
                             <div class="form-group">
-                                <label class="form-label">Skills</label>
+                                <label class="form-label" data-key="skills">Skills</label>
                                 <input type="text" class="form-control" id="skills" name="skills" placeholder="e.g., Harvesting, Planting, Irrigation">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Experience (Years)</label>
+                                <label class="form-label" data-key="experience">Experience (Years)</label>
                                 <input type="number" class="form-control" id="experience" name="experience" min="0" max="50">
                             </div>
                         </div>
@@ -895,61 +894,180 @@
             <!-- Other Sections (Bookings, Favorites, Payments, Notifications) -->
             <section class="dashboard-section" id="bookingsSection" style="display: none;">
                 <div class="section-header">
-                    <h2 class="section-title">My Bookings</h2>
+                    <h2 class="section-title" data-key="myBookings">My Bookings</h2>
                 </div>
                 <div class="empty-state">
                     <i class="fas fa-calendar-check"></i>
-                    <h3>No Bookings Yet</h3>
-                    <p>Your upcoming and past bookings will appear here.</p>
+                    <h3 data-key="noBookingsYet">No Bookings Yet</h3>
+                    <p data-key="noBookingsMsg">Your upcoming and past bookings will appear here.</p>
                     <button class="btn btn-primary mt-20" id="createBookingBtn">
-                        <i class="fas fa-plus"></i> Create Booking
+                        <i class="fas fa-plus"></i> <span data-key="createBooking">Create Booking</span>
                     </button>
                 </div>
             </section>
 
             <section class="dashboard-section" id="favoritesSection" style="display: none;">
                 <div class="section-header">
-                    <h2 class="section-title">My Favorites</h2>
+                    <h2 class="section-title" data-key="myFavorites">My Favorites</h2>
                 </div>
                 <div class="empty-state">
                     <i class="fas fa-heart"></i>
-                    <h3>No Favorites Yet</h3>
-                    <p>Items you mark as favorite will appear here for quick access.</p>
+                    <h3 data-key="noFavoritesYet">No Favorites Yet</h3>
+                    <p data-key="noFavoritesMsg">Items you mark as favorite will appear here for quick access.</p>
                     <button class="btn btn-primary mt-20" id="browseItemsBtn">
-                        <i class="fas fa-search"></i> Browse Items
+                        <i class="fas fa-search"></i> <span data-key="browseItems">Browse Items</span>
                     </button>
                 </div>
             </section>
 
             <section class="dashboard-section" id="paymentsSection" style="display: none;">
                 <div class="section-header">
-                    <h2 class="section-title">Payment Methods</h2>
+                    <h2 class="section-title" data-key="paymentMethods">Payment Methods</h2>
                 </div>
                 <div class="empty-state">
                     <i class="fas fa-credit-card"></i>
-                    <h3>No Payment Methods</h3>
-                    <p>Add your preferred payment methods for faster checkout.</p>
+                    <h3 data-key="noPaymentMethods">No Payment Methods</h3>
+                    <p data-key="noPaymentMsg">Add your preferred payment methods for faster checkout.</p>
                     <button class="btn btn-primary mt-20" id="addPaymentBtn">
-                        <i class="fas fa-plus"></i> Add Payment Method
+                        <i class="fas fa-plus"></i> <span data-key="addPaymentMethod">Add Payment Method</span>
                     </button>
                 </div>
             </section>
 
             <section class="dashboard-section" id="notificationsSection" style="display: none;">
                 <div class="section-header">
-                    <h2 class="section-title">Notifications</h2>
+                    <h2 class="section-title" data-key="notifications">Notifications</h2>
                 </div>
                 <div class="empty-state">
                     <i class="fas fa-bell"></i>
-                    <h3>No Notifications</h3>
-                    <p>You're all caught up! New notifications will appear here.</p>
+                    <h3 data-key="noNotifications">No Notifications</h3>
+                    <p data-key="noNotificationsMsg">You're all caught up! New notifications will appear here.</p>
                 </div>
             </section>
         </main>
     </div>
 
     <script>
-        // Dashboard JavaScript
+        // ========== MULTI-LANGUAGE SUPPORT ==========
+        const translations = {
+            en: {
+                dashboard: "Dashboard", myOrders: "My Orders", bookings: "Bookings", favorites: "Favorites",
+                profileSettings: "Profile Settings", paymentMethods: "Payment Methods", notifications: "Notifications",
+                backToHome: "Back to Home", logout: "Logout", welcomeMessage: "Welcome back! Here's your farming overview.",
+                exportData: "Export Data", newBooking: "New Booking", totalOrders: "Total Orders",
+                activeBookings: "Active Bookings", favoriteItems: "Favorite Items", pendingActions: "Pending Actions",
+                recentOrders: "Recent Orders", viewAll: "View All", orderId: "Order ID", item: "Item",
+                date: "Date", amount: "Amount", status: "Status", action: "Action",
+                noOrdersYet: "No Orders Yet", noOrdersMsg: "You haven't placed any orders yet. Start exploring our machinery and labor services!",
+                browseMachinery: "Browse Machinery", recentActivity: "Recent Activity", noRecentActivity: "No Recent Activity",
+                noActivityMsg: "Your recent activities will appear here.", quickActions: "Quick Actions",
+                rentMachinery: "Rent Machinery", rentMachineryDesc: "Browse and book agricultural equipment",
+                hireLabor: "Hire Labor", hireLaborDesc: "Find skilled farm workers",
+                newBookingDesc: "Schedule machinery or labor", updateProfile: "Update Profile",
+                updateProfileDesc: "Manage your account details", reset: "Reset", saveChanges: "Save Changes",
+                firstName: "First Name", lastName: "Last Name", emailAddress: "Email Address",
+                phoneNumber: "Phone Number", address: "Address", city: "City", pincode: "Pincode",
+                userType: "User Type", farmer: "Farmer", machineryOwner: "Machinery Owner",
+                skilledLabour: "Skilled Labour", farmDetails: "Farm Details", farmName: "Farm Name",
+                farmSize: "Farm Size (acres)", mainCrops: "Main Crops", machineryDetails: "Machinery Details",
+                machineryTypes: "Types of Machinery", labourDetails: "Labour Details", skills: "Skills",
+                experience: "Experience (Years)", myBookings: "My Bookings", noBookingsYet: "No Bookings Yet",
+                noBookingsMsg: "Your upcoming and past bookings will appear here.", createBooking: "Create Booking",
+                myFavorites: "My Favorites", noFavoritesYet: "No Favorites Yet", noFavoritesMsg: "Items you mark as favorite will appear here for quick access.",
+                browseItems: "Browse Items", noPaymentMethods: "No Payment Methods", noPaymentMsg: "Add your preferred payment methods for faster checkout.",
+                addPaymentMethod: "Add Payment Method", noNotifications: "No Notifications", noNotificationsMsg: "You're all caught up! New notifications will appear here.",
+                confirmed: "Confirmed", pending: "Pending", completed: "Completed", cancelled: "Cancelled"
+            },
+            hi: {
+                dashboard: "डैशबोर्ड", myOrders: "मेरे ऑर्डर", bookings: "बुकिंग", favorites: "पसंदीदा",
+                profileSettings: "प्रोफ़ाइल सेटिंग्स", paymentMethods: "भुगतान विधियाँ", notifications: "सूचनाएं",
+                backToHome: "होम पर वापस", logout: "लॉगआउट", welcomeMessage: "वापसी पर स्वागत है! यहाँ आपका कृषि अवलोकन है।",
+                exportData: "डेटा निर्यात करें", newBooking: "नई बुकिंग", totalOrders: "कुल ऑर्डर",
+                activeBookings: "सक्रिय बुकिंग", favoriteItems: "पसंदीदा आइटम", pendingActions: "लंबित कार्य",
+                recentOrders: "हाल के ऑर्डर", viewAll: "सभी देखें", orderId: "ऑर्डर आईडी", item: "आइटम",
+                date: "तारीख", amount: "राशि", status: "स्थिति", action: "कार्रवाई",
+                noOrdersYet: "अभी कोई ऑर्डर नहीं", noOrdersMsg: "आपने अभी तक कोई ऑर्डर नहीं दिया है।",
+                browseMachinery: "मशीनरी ब्राउज़ करें", recentActivity: "हाल की गतिविधि", noRecentActivity: "कोई हाल की गतिविधि नहीं",
+                noActivityMsg: "आपकी हाल की गतिविधियाँ यहाँ दिखाई देंगी।", quickActions: "त्वरित कार्रवाई",
+                rentMachinery: "मशीनरी किराए पर लें", rentMachineryDesc: "कृषि उपकरण ब्राउज़ करें और बुक करें",
+                hireLabor: "श्रमिक किराए पर लें", hireLaborDesc: "कुशल किसान मजदूर खोजें",
+                newBookingDesc: "मशीनरी या श्रम शेड्यूल करें", updateProfile: "प्रोफ़ाइल अपडेट करें",
+                updateProfileDesc: "अपने खाते का विवरण प्रबंधित करें", reset: "रीसेट", saveChanges: "बदलाव सहेजें",
+                firstName: "पहला नाम", lastName: "अंतिम नाम", emailAddress: "ईमेल पता",
+                phoneNumber: "फोन नंबर", address: "पता", city: "शहर", pincode: "पिनकोड",
+                userType: "उपयोगकर्ता प्रकार", farmer: "किसान", machineryOwner: "मशीनरी मालिक",
+                skilledLabour: "कुशल श्रमिक", farmDetails: "खेत का विवरण", farmName: "खेत का नाम",
+                farmSize: "खेत का आकार (एकड़)", mainCrops: "मुख्य फसलें", machineryDetails: "मशीनरी विवरण",
+                machineryTypes: "मशीनरी के प्रकार", labourDetails: "श्रम विवरण", skills: "कौशल",
+                experience: "अनुभव (वर्ष)", myBookings: "मेरी बुकिंग", noBookingsYet: "अभी कोई बुकिंग नहीं",
+                noBookingsMsg: "आपकी आगामी और पिछली बुकिंग यहाँ दिखाई देंगी।", createBooking: "बुकिंग बनाएं",
+                myFavorites: "मेरे पसंदीदा", noFavoritesYet: "अभी कोई पसंदीदा नहीं", noFavoritesMsg: "आपके द्वारा पसंद किए गए आइटम यहाँ दिखेंगे।",
+                browseItems: "आइटम ब्राउज़ करें", noPaymentMethods: "कोई भुगतान विधि नहीं", noPaymentMsg: "तेज़ चेकआउट के लिए अपनी पसंदीदा भुगतान विधियाँ जोड़ें।",
+                addPaymentMethod: "भुगतान विधि जोड़ें", noNotifications: "कोई सूचना नहीं", noNotificationsMsg: "आप सब अपडेट हैं!",
+                confirmed: "पुष्टि हुई", pending: "लंबित", completed: "पूर्ण", cancelled: "रद्द"
+            },
+            bn: {
+                dashboard: "ড্যাশবোর্ড", myOrders: "আমার অর্ডার", bookings: "বুকিং", favorites: "পছন্দের তালিকা",
+                profileSettings: "প্রোফাইল সেটিংস", paymentMethods: "পেমেন্ট পদ্ধতি", notifications: "বিজ্ঞপ্তি",
+                backToHome: "হোমে ফিরে যান", logout: "লগআউট", welcomeMessage: "ফিরে আসার জন্য স্বাগতম! এখানে আপনার চাষের ওভারভিউ।",
+                exportData: "ডেটা এক্সপোর্ট করুন", newBooking: "নতুন বুকিং", totalOrders: "মোট অর্ডার",
+                activeBookings: "সক্রিয় বুকিং", favoriteItems: "পছন্দের আইটেম", pendingActions: "মুলতুবি কাজ",
+                recentOrders: "সাম্প্রতিক অর্ডার", viewAll: "সব দেখুন", orderId: "অর্ডার আইডি", item: "আইটেম",
+                date: "তারিখ", amount: "পরিমাণ", status: "অবস্থা", action: "কর্ম",
+                noOrdersYet: "এখনো কোন অর্ডার নেই", noOrdersMsg: "আপনি এখনো কোন অর্ডার দেননি।",
+                browseMachinery: "যন্ত্রপাতি ব্রাউজ করুন", recentActivity: "সাম্প্রতিক কার্যকলাপ", noRecentActivity: "কোন সাম্প্রতিক কার্যকলাপ নেই",
+                noActivityMsg: "আপনার সাম্প্রতিক কার্যকলাপ এখানে দেখা যাবে।", quickActions: "দ্রুত কর্ম",
+                rentMachinery: "যন্ত্রপাতি ভাড়া নিন", rentMachineryDesc: "কৃষি যন্ত্রপাতি ব্রাউজ এবং বুক করুন",
+                hireLabor: "শ্রমিক ভাড়া করুন", hireLaborDesc: "দক্ষ কৃষি শ্রমিক খুঁজুন",
+                newBookingDesc: "যন্ত্রপাতি বা শ্রম শিডিউল করুন", updateProfile: "প্রোফাইল আপডেট করুন",
+                updateProfileDesc: "আপনার অ্যাকাউন্টের বিবরণ পরিচালনা করুন", reset: "রিসেট", saveChanges: "পরিবর্তন সংরক্ষণ করুন",
+                firstName: "প্রথম নাম", lastName: "শেষ নাম", emailAddress: "ইমেইল ঠিকানা",
+                phoneNumber: "ফোন নম্বর", address: "ঠিকানা", city: "শহর", pincode: "পিনকোড",
+                userType: "ব্যবহারকারীর ধরন", farmer: "কৃষক", machineryOwner: "যন্ত্রপাতির মালিক",
+                skilledLabour: "দক্ষ শ্রমিক", farmDetails: "খামারের বিবরণ", farmName: "খামারের নাম",
+                farmSize: "খামারের আকার (একর)", mainCrops: "প্রধান ফসল", machineryDetails: "যন্ত্রপাতির বিবরণ",
+                machineryTypes: "যন্ত্রপাতির ধরন", labourDetails: "শ্রমের বিবরণ", skills: "দক্ষতা",
+                experience: "অভিজ্ঞতা (বছর)", myBookings: "আমার বুকিং", noBookingsYet: "এখনো কোন বুকিং নেই",
+                noBookingsMsg: "আপনার আসন্ন এবং অতীতের বুকিং এখানে দেখা যাবে।", createBooking: "বুকিং তৈরি করুন",
+                myFavorites: "আমার পছন্দের তালিকা", noFavoritesYet: "এখনো কোন পছন্দের আইটেম নেই", noFavoritesMsg: "আপনার পছন্দের আইটেম এখানে দেখা যাবে।",
+                browseItems: "আইটেম ব্রাউজ করুন", noPaymentMethods: "কোন পেমেন্ট পদ্ধতি নেই", noPaymentMsg: "দ্রুত চেকআউটের জন্য আপনার পছন্দের পেমেন্ট পদ্ধতি যোগ করুন।",
+                addPaymentMethod: "পেমেন্ট পদ্ধতি যোগ করুন", noNotifications: "কোন বিজ্ঞপ্তি নেই", noNotificationsMsg: "আপনার সব আপডেট!",
+                confirmed: "নিশ্চিত", pending: "মুলতুবি", completed: "সম্পন্ন", cancelled: "বাতিল"
+            }
+        };
+
+        let currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+        function updatePageLanguage() {
+            const t = translations[currentLang];
+            if (!t) return;
+            
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+            
+            const userTypeSelect = document.getElementById('userType');
+            if (userTypeSelect) {
+                const options = userTypeSelect.options;
+                if (options[0]) options[0].textContent = t.farmer;
+                if (options[1]) options[1].textContent = t.machineryOwner;
+                if (options[2]) options[2].textContent = t.skilledLabour;
+            }
+            
+            const mainCropsInput = document.getElementById('mainCrops');
+            if (mainCropsInput) mainCropsInput.placeholder = t.mainCrops ? `e.g., ${t.mainCrops}` : "e.g., Rice, Wheat";
+            
+            const machineryTypesInput = document.getElementById('machineryTypes');
+            if (machineryTypesInput) machineryTypesInput.placeholder = t.machineryTypes ? `e.g., ${t.machineryTypes}` : "e.g., Tractor, Harvester";
+            
+            const skillsInput = document.getElementById('skills');
+            if (skillsInput) skillsInput.placeholder = t.skills ? `e.g., ${t.skills}` : "e.g., Harvesting, Planting";
+        }
+
+        // Dashboard Manager
         class DashboardManager {
             constructor() {
                 this.currentUser = this.getCurrentUser();
@@ -962,8 +1080,8 @@
                 this.setupEventListeners();
                 this.loadDashboardData();
                 this.setupNavigation();
+                updatePageLanguage();
                 
-                // Check authentication
                 if (!this.currentUser || !this.currentUser.userID) {
                     window.location.href = 'login.html';
                     return;
@@ -972,9 +1090,9 @@
 
             getCurrentUser() {
                 try {
-                    const user = JSON.parse(localStorage.getItem('farmconnect_current_user'));
+                    const user = JSON.parse(localStorage.getItem('farmconnect_current_user')) || 
+                                 JSON.parse(localStorage.getItem('currentUser'));
                     if (!user) {
-                        // Create a default user for demo
                         const defaultUser = {
                             fullname: 'Rajesh Kumar',
                             email: 'rajesh@example.com',
@@ -983,7 +1101,7 @@
                             city: 'Kalyani',
                             pincode: '741235',
                             userType: 'farmer',
-                            userID: 'FC001',
+                            userID: 'FC' + Date.now(),
                             farmName: 'Kumar Farms',
                             farmSize: '25',
                             mainCrops: 'Rice, Wheat, Vegetables'
@@ -1002,35 +1120,66 @@
                 if (this.currentUser) {
                     document.getElementById('userName').textContent = this.currentUser.fullname;
                     document.getElementById('userRole').textContent = this.formatUserType(this.currentUser.userType);
+                    this.setProfileAvatar(this.currentUser);
                 }
             }
 
             formatUserType(userType) {
                 const types = {
-                    'farmer': 'Farmer',
-                    'machinery_owner': 'Machinery Owner',
-                    'labour': 'Skilled Labour'
+                    'farmer': translations[currentLang]?.farmer || 'Farmer',
+                    'machinery_owner': translations[currentLang]?.machineryOwner || 'Machinery Owner',
+                    'labour': translations[currentLang]?.skilledLabour || 'Skilled Labour'
                 };
                 return types[userType] || 'User';
             }
 
+            setProfileAvatar(user) {
+                const initialsEl = document.getElementById('profileAvatarInitials');
+                const imgEl = document.getElementById('profileAvatarImg');
+                if (user.profilePicture) {
+                    imgEl.src = user.profilePicture;
+                    imgEl.style.display = 'block';
+                    initialsEl.style.display = 'none';
+                } else {
+                    let initials = '';
+                    if (user.fullname) {
+                        const names = user.fullname.split(' ');
+                        initials = names[0].charAt(0).toUpperCase() + (names[1] ? names[1].charAt(0).toUpperCase() : '');
+                    } else if (user.email) {
+                        initials = user.email.charAt(0).toUpperCase();
+                    }
+                    initialsEl.textContent = initials;
+                    initialsEl.style.display = 'block';
+                    imgEl.style.display = 'none';
+                }
+            }
+
+            handleProfilePhotoChange(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    this.currentUser.profilePicture = ev.target.result;
+                    localStorage.setItem('farmconnect_current_user', JSON.stringify(this.currentUser));
+                    this.setProfileAvatar(this.currentUser);
+                    this.showNotification('Profile photo updated successfully!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+
             setupEventListeners() {
-                // Mobile menu toggle
                 document.getElementById('mobileMenuToggle').addEventListener('click', () => {
                     document.getElementById('sidebar').classList.toggle('active');
                 });
 
-                // Export Data button
                 document.getElementById('exportDataBtn').addEventListener('click', () => {
                     this.exportData();
                 });
 
-                // New Booking button
                 document.getElementById('newBookingBtn').addEventListener('click', () => {
                     this.createNewBooking();
                 });
 
-                // Quick action buttons
                 document.getElementById('rentMachineryBtn').addEventListener('click', () => {
                     window.location.href = 'machinery.html';
                 });
@@ -1055,7 +1204,6 @@
                     this.showSection('orders');
                 });
 
-                // Profile form buttons
                 document.getElementById('saveProfileBtn').addEventListener('click', () => {
                     this.saveProfile();
                 });
@@ -1065,15 +1213,17 @@
                 });
 
                 document.getElementById('changePhotoBtn').addEventListener('click', () => {
-                    this.changeProfilePhoto();
+                    document.getElementById('profilePhotoInput').click();
                 });
 
-                // User type change listener
+                document.getElementById('profilePhotoInput').addEventListener('change', (e) => {
+                    this.handleProfilePhotoChange(e);
+                });
+
                 document.getElementById('userType').addEventListener('change', (e) => {
                     this.toggleUserTypeDetails(e.target.value);
                 });
 
-                // Close mobile menu when clicking outside
                 document.addEventListener('click', (e) => {
                     const sidebar = document.getElementById('sidebar');
                     const toggle = document.getElementById('mobileMenuToggle');
@@ -1084,40 +1234,33 @@
             }
 
             setupNavigation() {
-                // Menu item clicks
                 const menuLinks = document.querySelectorAll('.menu-link');
                 menuLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
-                        e.preventDefault();
                         const section = link.getAttribute('data-section');
-                        this.showSection(section);
-                        
-                        // Update active state
-                        menuLinks.forEach(l => l.classList.remove('active'));
-                        link.classList.add('active');
-                        
-                        // Close mobile menu
-                        document.getElementById('sidebar').classList.remove('active');
+                        if (section) {
+                            e.preventDefault();
+                            this.showSection(section);
+                            menuLinks.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                            document.getElementById('sidebar').classList.remove('active');
+                        }
                     });
                 });
             }
 
             showSection(section) {
                 this.currentSection = section;
-                document.getElementById('pageTitle').textContent = this.getSectionTitle(section);
+                document.getElementById('pageTitle').textContent = translations[currentLang][section] || section;
                 
-                // Hide all sections
-                const sections = [
-                    'ordersSection', 'activitySection', 'quickActionsSection',
-                    'profileSection', 'bookingsSection', 'favoritesSection',
-                    'paymentsSection', 'notificationsSection'
-                ];
+                const sections = ['ordersSection', 'activitySection', 'quickActionsSection', 'profileSection', 
+                                  'bookingsSection', 'favoritesSection', 'paymentsSection', 'notificationsSection'];
                 
                 sections.forEach(sec => {
-                    document.getElementById(sec).style.display = 'none';
+                    const el = document.getElementById(sec);
+                    if (el) el.style.display = 'none';
                 });
 
-                // Show current section
                 switch(section) {
                     case 'dashboard':
                         document.getElementById('ordersSection').style.display = 'block';
@@ -1147,19 +1290,6 @@
                 }
             }
 
-            getSectionTitle(section) {
-                const titles = {
-                    'dashboard': 'Dashboard',
-                    'orders': 'My Orders',
-                    'bookings': 'Bookings',
-                    'favorites': 'Favorites',
-                    'profile': 'Profile Settings',
-                    'payments': 'Payment Methods',
-                    'notifications': 'Notifications'
-                };
-                return titles[section] || 'Dashboard';
-            }
-
             loadDashboardData() {
                 this.loadOrders();
                 this.loadStats();
@@ -1167,7 +1297,6 @@
             }
 
             loadOrders() {
-                // Get orders from localStorage or use sample data
                 const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || this.getSampleOrders();
                 const tableBody = document.getElementById('ordersTableBody');
                 const emptyState = document.getElementById('emptyOrders');
@@ -1179,62 +1308,45 @@
                 }
 
                 emptyState.style.display = 'none';
-                
-                // Show only recent 5 orders
                 const recentOrders = orders.slice(0, 5);
+                const t = translations[currentLang];
                 
-                tableBody.innerHTML = recentOrders.map(order => `
-                    <tr>
-                        <td><strong>${order.orderId}</strong></td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-${order.type === 'machinery' ? 'tractor' : 'users'}"></i>
-                                </div>
-                                <div>
-                                    <div style="font-weight: 500;">${order.itemName}</div>
-                                    <div style="font-size: 0.8rem; color: #666;">
-                                        ${order.duration} day(s)
+                tableBody.innerHTML = recentOrders.map(order => {
+                    let statusText = '';
+                    switch(order.status) {
+                        case 'confirmed': statusText = t.confirmed; break;
+                        case 'pending': statusText = t.pending; break;
+                        case 'completed': statusText = t.completed; break;
+                        case 'cancelled': statusText = t.cancelled; break;
+                        default: statusText = order.status;
+                    }
+                    return `
+                        <tr>
+                            <td><strong>${order.orderId}</strong></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-${order.type === 'machinery' ? 'tractor' : 'users'}"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 500;">${order.itemName}</div>
+                                        <div style="font-size: 0.8rem; color: #666;">${order.duration} day(s)</div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>${this.formatDate(order.date)}</td>
-                        <td><strong>₹${order.amount}</strong></td>
-                        <td>
-                            <span class="status-badge status-${order.status}">
-                                ${order.status}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="dashboardManager.viewOrder('${order.orderId}')">
-                                View
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
+                            </td>
+                            <td>${this.formatDate(order.date)}</td>
+                            <td><strong>₹${order.amount}</strong></td>
+                            <td><span class="status-badge status-${order.status}">${statusText}</span></td>
+                            <td><button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="dashboardManager.viewOrder('${order.orderId}')">${t.viewAll}</button></td>
+                        </tr>
+                    `;
+                }).join('');
             }
 
             getSampleOrders() {
                 return [
-                    {
-                        orderId: 'FC001',
-                        itemName: 'John Deere Tractor',
-                        type: 'machinery',
-                        date: new Date().toISOString(),
-                        amount: 2500,
-                        status: 'confirmed',
-                        duration: 3
-                    },
-                    {
-                        orderId: 'FC002',
-                        itemName: 'Skilled Harvester',
-                        type: 'labour',
-                        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                        amount: 1500,
-                        status: 'completed',
-                        duration: 2
-                    }
+                    { orderId: 'FC001', itemName: 'John Deere Tractor', type: 'machinery', date: new Date().toISOString(), amount: 2500, status: 'confirmed', duration: 3 },
+                    { orderId: 'FC002', itemName: 'Skilled Harvester', type: 'labour', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), amount: 1500, status: 'completed', duration: 2 }
                 ];
             }
 
@@ -1246,8 +1358,6 @@
                 document.getElementById('activeBookings').textContent = orders.filter(o => o.status === 'confirmed').length;
                 document.getElementById('favoritesTotal').textContent = favorites.length;
                 document.getElementById('pendingActions').textContent = orders.filter(o => o.status === 'pending').length;
-
-                // Update menu badges
                 document.getElementById('ordersCount').textContent = orders.length;
                 document.getElementById('bookingsCount').textContent = orders.filter(o => o.status === 'confirmed').length;
                 document.getElementById('favoritesCount').textContent = favorites.length;
@@ -1255,35 +1365,15 @@
 
             loadRecentActivity() {
                 const activities = [
-                    {
-                        icon: 'fa-shopping-cart',
-                        title: 'New Order Placed',
-                        description: 'You booked a tractor for your farm',
-                        time: '2 hours ago',
-                        type: 'order'
-                    },
-                    {
-                        icon: 'fa-user-check',
-                        title: 'Profile Updated',
-                        description: 'You updated your contact information',
-                        time: '1 day ago',
-                        type: 'profile'
-                    },
-                    {
-                        icon: 'fa-tractor',
-                        title: 'Machinery Viewed',
-                        description: 'You viewed John Deere 5050D tractor',
-                        time: '2 days ago',
-                        type: 'view'
-                    }
+                    { icon: 'fa-shopping-cart', title: 'New Order Placed', description: 'You booked a tractor for your farm', time: '2 hours ago' },
+                    { icon: 'fa-user-check', title: 'Profile Updated', description: 'You updated your contact information', time: '1 day ago' },
+                    { icon: 'fa-tractor', title: 'Machinery Viewed', description: 'You viewed John Deere 5050D tractor', time: '2 days ago' }
                 ];
 
                 const activityList = document.getElementById('activityList');
                 activityList.innerHTML = activities.map(activity => `
                     <li class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas ${activity.icon}"></i>
-                        </div>
+                        <div class="activity-icon"><i class="fas ${activity.icon}"></i></div>
                         <div class="activity-content">
                             <div class="activity-title">${activity.title}</div>
                             <div class="activity-desc">${activity.description}</div>
@@ -1296,15 +1386,13 @@
             loadProfile() {
                 if (!this.currentUser) return;
                 
-                // Populate form fields
                 document.getElementById('profileUserName').textContent = this.currentUser.fullname;
                 document.getElementById('profileUserRole').textContent = this.formatUserType(this.currentUser.userType);
+                this.setProfileAvatar(this.currentUser);
                 
-                // Split full name into first and last name
                 const names = (this.currentUser.fullname || '').split(' ');
                 document.getElementById('firstName').value = names[0] || '';
                 document.getElementById('lastName').value = names.slice(1).join(' ') || '';
-                
                 document.getElementById('email').value = this.currentUser.email || '';
                 document.getElementById('phone').value = this.currentUser.phone || '';
                 document.getElementById('address').value = this.currentUser.address || '';
@@ -1312,10 +1400,8 @@
                 document.getElementById('pincode').value = this.currentUser.pincode || '';
                 document.getElementById('userType').value = this.currentUser.userType || 'farmer';
                 
-                // Load user type specific details
                 this.toggleUserTypeDetails(this.currentUser.userType);
                 
-                // Populate user type specific fields
                 if (this.currentUser.userType === 'farmer') {
                     document.getElementById('farmName').value = this.currentUser.farmName || '';
                     document.getElementById('farmSize').value = this.currentUser.farmSize || '';
@@ -1329,74 +1415,63 @@
             }
 
             toggleUserTypeDetails(userType) {
-                // Hide all detail sections first
                 document.getElementById('farmDetails').style.display = 'none';
                 document.getElementById('machineryDetails').style.display = 'none';
                 document.getElementById('labourDetails').style.display = 'none';
                 
-                // Show relevant section based on user type
                 switch(userType) {
-                    case 'farmer':
-                        document.getElementById('farmDetails').style.display = 'block';
-                        break;
-                    case 'machinery_owner':
-                        document.getElementById('machineryDetails').style.display = 'block';
-                        break;
-                    case 'labour':
-                        document.getElementById('labourDetails').style.display = 'block';
-                        break;
+                    case 'farmer': document.getElementById('farmDetails').style.display = 'block'; break;
+                    case 'machinery_owner': document.getElementById('machineryDetails').style.display = 'block'; break;
+                    case 'labour': document.getElementById('labourDetails').style.display = 'block'; break;
                 }
             }
 
             saveProfile() {
-                const form = document.getElementById('profileForm');
-                const formData = new FormData(form);
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    pincode: document.getElementById('pincode').value,
+                    userType: document.getElementById('userType').value
+                };
                 
-                // Validate required fields
-                const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'pincode'];
-                for (let field of requiredFields) {
-                    if (!formData.get(field)) {
-                        this.showNotification(`Please fill in the ${field} field.`, 'error');
+                for (let key in formData) {
+                    if (!formData[key]) {
+                        this.showNotification(`Please fill in the ${key} field.`, 'error');
                         return;
                     }
                 }
                 
-                // Update user data
                 const updatedUser = {
                     ...this.currentUser,
-                    fullname: `${formData.get('firstName')} ${formData.get('lastName')}`.trim(),
-                    email: formData.get('email'),
-                    phone: formData.get('phone'),
-                    address: formData.get('address'),
-                    city: formData.get('city'),
-                    pincode: formData.get('pincode'),
-                    userType: formData.get('userType'),
+                    fullname: `${formData.firstName} ${formData.lastName}`.trim(),
+                    email: formData.email,
+                    phone: formData.phone,
+                    address: formData.address,
+                    city: formData.city,
+                    pincode: formData.pincode,
+                    userType: formData.userType,
                     updatedAt: new Date().toISOString()
                 };
                 
-                // Add user type specific data
-                switch(updatedUser.userType) {
-                    case 'farmer':
-                        updatedUser.farmName = formData.get('farmName');
-                        updatedUser.farmSize = formData.get('farmSize');
-                        updatedUser.mainCrops = formData.get('mainCrops');
-                        break;
-                    case 'machinery_owner':
-                        updatedUser.machineryTypes = formData.get('machineryTypes');
-                        break;
-                    case 'labour':
-                        updatedUser.skills = formData.get('skills');
-                        updatedUser.experience = formData.get('experience');
-                        break;
+                if (updatedUser.userType === 'farmer') {
+                    updatedUser.farmName = document.getElementById('farmName').value;
+                    updatedUser.farmSize = document.getElementById('farmSize').value;
+                    updatedUser.mainCrops = document.getElementById('mainCrops').value;
+                } else if (updatedUser.userType === 'machinery_owner') {
+                    updatedUser.machineryTypes = document.getElementById('machineryTypes').value;
+                } else if (updatedUser.userType === 'labour') {
+                    updatedUser.skills = document.getElementById('skills').value;
+                    updatedUser.experience = document.getElementById('experience').value;
                 }
                 
-                // Save to localStorage
                 localStorage.setItem('farmconnect_current_user', JSON.stringify(updatedUser));
-                
-                // Update dashboard manager
                 this.currentUser = updatedUser;
                 this.loadUserData();
-                
+                this.setProfileAvatar(updatedUser);
                 this.showNotification('Profile updated successfully!', 'success');
             }
 
@@ -1407,280 +1482,125 @@
                 }
             }
 
-            changeProfilePhoto() {
-                this.showNotification('Profile photo change functionality would be implemented here.', 'info');
-            }
-
-            // Export Data Functionality
             exportData() {
                 try {
-                    // Collect user data
-                    const userData = this.currentUser;
-                    const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || this.getSampleOrders();
-                    const favorites = JSON.parse(localStorage.getItem('farmconnect_favorites')) || [];
-                    
-                    // Prepare export data
                     const exportData = {
-                        user: userData,
-                        orders: orders,
-                        favorites: favorites,
+                        user: this.currentUser,
+                        orders: JSON.parse(localStorage.getItem('farmconnect_orders')) || this.getSampleOrders(),
+                        favorites: JSON.parse(localStorage.getItem('farmconnect_favorites')) || [],
                         exportDate: new Date().toISOString(),
                         exportType: 'FarmConnect Data Export'
                     };
-
-                    // Convert to JSON string
-                    const dataStr = JSON.stringify(exportData, null, 2);
                     
-                    // Create and download file
+                    const dataStr = JSON.stringify(exportData, null, 2);
                     const dataBlob = new Blob([dataStr], { type: 'application/json' });
                     const url = URL.createObjectURL(dataBlob);
-                    
                     const link = document.createElement('a');
                     link.href = url;
-                    link.download = `farmconnect_data_${userData.userID}_${new Date().toISOString().split('T')[0]}.json`;
+                    link.download = `farmconnect_data_${this.currentUser.userID}_${new Date().toISOString().split('T')[0]}.json`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
-                    // Clean up URL
                     setTimeout(() => URL.revokeObjectURL(url), 100);
-
-                    // Show success message
                     this.showNotification('Data exported successfully!', 'success');
-                    
                 } catch (error) {
-                    console.error('Error exporting data:', error);
                     this.showNotification('Error exporting data. Please try again.', 'error');
                 }
             }
 
-            // New Booking Functionality
             createNewBooking() {
-                // Show booking modal
-                this.showBookingModal();
-            }
-
-            showBookingModal() {
-                // Create modal for new booking
                 const modal = document.createElement('div');
                 modal.className = 'modal';
                 modal.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.5);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 10000;
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+                    display: flex; align-items: center; justify-content: center; z-index: 10000;
                 `;
-
+                const t = translations[currentLang];
                 modal.innerHTML = `
-                    <div style="background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h3 style="margin: 0; color: #1B5E20;">Create New Booking</h3>
-                            <button class="close-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+                    <div style="background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <h3>${t.newBooking || 'Create New Booking'}</h3>
+                            <button class="close-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
                         </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <p style="color: #666; margin-bottom: 20px;">Choose what you'd like to book:</p>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div class="booking-option" style="border: 2px solid #f0f0f0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
-                                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-                                        <i class="fas fa-tractor" style="color: white; font-size: 1.5rem;"></i>
-                                    </div>
-                                    <h4 style="margin: 0 0 5px; color: #333;">Machinery</h4>
-                                    <p style="margin: 0; color: #666; font-size: 0.9rem;">Rent farm equipment</p>
+                        <p style="color: #666; margin-bottom: 20px;">${t.chooseService || 'Choose what you\'d like to book:'}</p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="booking-option" data-type="machinery" style="border: 2px solid #f0f0f0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                                    <i class="fas fa-tractor" style="color: white; font-size: 1.5rem;"></i>
                                 </div>
-                                
-                                <div class="booking-option" style="border: 2px solid #f0f0f0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
-                                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2196F3, #1976D2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-                                        <i class="fas fa-users" style="color: white; font-size: 1.5rem;"></i>
-                                    </div>
-                                    <h4 style="margin: 0 0 5px; color: #333;">Labor</h4>
-                                    <p style="margin: 0; color: #666; font-size: 0.9rem;">Hire skilled workers</p>
-                                </div>
+                                <h4>${t.rentMachinery || 'Machinery'}</h4>
+                                <p style="font-size: 0.8rem; color: #666;">${t.rentMachineryDesc || 'Rent farm equipment'}</p>
                             </div>
-                        </div>
-                        
-                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                            <button class="btn btn-outline cancel-btn" style="padding: 10px 20px;">Cancel</button>
+                            <div class="booking-option" data-type="labour" style="border: 2px solid #f0f0f0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2196F3, #1976D2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                                    <i class="fas fa-users" style="color: white; font-size: 1.5rem;"></i>
+                                </div>
+                                <h4>${t.hireLabor || 'Labor'}</h4>
+                                <p style="font-size: 0.8rem; color: #666;">${t.hireLaborDesc || 'Hire skilled workers'}</p>
+                            </div>
                         </div>
                     </div>
                 `;
-
                 document.body.appendChild(modal);
-
-                // Add event listeners
-                modal.querySelector('.close-modal').addEventListener('click', () => {
-                    document.body.removeChild(modal);
-                });
-
-                modal.querySelector('.cancel-btn').addEventListener('click', () => {
-                    document.body.removeChild(modal);
-                });
-
-                // Add click handlers for booking options
-               
-                const machineryOption = modal.querySelector('.booking-option:nth-child(1)');
-                const laborOption = modal.querySelector('.booking-option:nth-child(2)');
-
-                machineryOption.addEventListener('click', () => {
-                    document.body.removeChild(modal);
-                    window.location.href = 'machinery.html';
-                });
-
-                laborOption.addEventListener('click', () => {
-                    document.body.removeChild(modal);
-                    window.location.href = 'labour.html';
-                });
-
-                // Add hover effects
-                const options = modal.querySelectorAll('.booking-option');
-                options.forEach(option => {
-                    option.addEventListener('mouseenter', function() {
+                
+                modal.querySelector('.close-modal').addEventListener('click', () => document.body.removeChild(modal));
+                modal.querySelectorAll('.booking-option').forEach(opt => {
+                    opt.addEventListener('mouseenter', function() {
                         this.style.borderColor = '#4CAF50';
                         this.style.transform = 'translateY(-2px)';
                     });
-                    
-                    option.addEventListener('mouseleave', function() {
+                    opt.addEventListener('mouseleave', function() {
                         this.style.borderColor = '#f0f0f0';
                         this.style.transform = 'translateY(0)';
                     });
-                });
-
-                // Close modal when clicking outside
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
+                    opt.addEventListener('click', () => {
+                        const type = opt.getAttribute('data-type');
                         document.body.removeChild(modal);
-                    }
+                        window.location.href = type === 'machinery' ? 'machinery.html' : 'labour.html';
+                    });
                 });
+                modal.addEventListener('click', (e) => { if (e.target === modal) document.body.removeChild(modal); });
             }
 
             viewOrder(orderId) {
                 this.showNotification(`Viewing order: ${orderId}`, 'info');
-                // In real implementation, you would show a modal or navigate to order details page
             }
 
             showNotification(message, type = 'info') {
-                // Create notification element
                 const notification = document.createElement('div');
+                const colors = { success: '#4CAF50', error: '#f44336', info: '#2196F3', warning: '#FF9800' };
                 notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 15px 20px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 10001;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                    transform: translateX(100%);
-                    transition: transform 0.3s ease;
+                    position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px;
+                    color: white; font-weight: 500; z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    transform: translateX(100%); transition: transform 0.3s ease; background-color: ${colors[type] || colors.info};
                 `;
-
-                // Set background color based on type
-                const colors = {
-                    success: '#4CAF50',
-                    error: '#f44336',
-                    info: '#2196F3',
-                    warning: '#FF9800'
-                };
-
-                notification.style.backgroundColor = colors[type] || colors.info;
                 notification.textContent = message;
-
                 document.body.appendChild(notification);
-
-                // Animate in
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(0)';
-                }, 100);
-
-                // Remove after 3 seconds
+                setTimeout(() => notification.style.transform = 'translateX(0)', 100);
                 setTimeout(() => {
                     notification.style.transform = 'translateX(100%)';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            document.body.removeChild(notification);
-                        }
-                    }, 300);
+                    setTimeout(() => notification.parentNode && document.body.removeChild(notification), 300);
                 }, 3000);
             }
 
             formatDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
+                return new Date(dateString).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
             }
         }
 
-        // Initialize dashboard when page loads
         let dashboardManager;
         document.addEventListener('DOMContentLoaded', function() {
             dashboardManager = new DashboardManager();
         });
 
-        function setProfileAvatar(user) {
-            const initialsEl = document.getElementById('profileAvatarInitials');
-            const imgEl = document.getElementById('profileAvatarImg');
-            if (user.profilePicture) {
-                imgEl.src = user.profilePicture;
-                imgEl.style.display = 'block';
-                initialsEl.style.display = 'none';
-            } else {
-                // Show initials
-                let initials = '';
-                if (user.fullname) {
-                    const names = user.fullname.split(' ');
-                    initials = names[0].charAt(0).toUpperCase() + (names[1] ? names[1].charAt(0).toUpperCase() : '');
-                } else if (user.email) {
-                    initials = user.email.charAt(0).toUpperCase();
-                }
-                initialsEl.textContent = initials;
-                initialsEl.style.display = 'block';
-                imgEl.style.display = 'none';
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('farmconnect_current_user');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('farmconnect_remembered_user');
+                window.location.href = 'login.html';
             }
         }
-
-        function handleProfilePhotoChange(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                // Save base64 image to user profile
-                const user = dashboardManager.currentUser;
-                user.profilePicture = ev.target.result;
-                localStorage.setItem('farmconnect_current_user', JSON.stringify(user));
-                setProfileAvatar(user);
-            };
-            reader.readAsDataURL(file);
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            // ...existing code...
-            // Set avatar initials or image on load
-            setProfileAvatar(dashboardManager.currentUser);
-
-            // Change photo button
-            document.getElementById('changePhotoBtn').addEventListener('click', function() {
-                document.getElementById('profilePhotoInput').click();
-            });
-            document.getElementById('profilePhotoInput').addEventListener('change', handleProfilePhotoChange);
-
-            // Update avatar after profile save
-            dashboardManager.saveProfile = function() {
-                // ...existing code for saving profile...
-                // After saving, update avatar
-                setProfileAvatar(this.currentUser);
-                // ...existing code...
-            };
-        });
     </script>
 </body>
 </html>
