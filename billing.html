@@ -3,11 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - FarmConnect</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>FarmConnect - Checkout & Billing</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* All your existing CSS styles remain exactly the same */
+        /* Color Variables */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #F57C00;
+            --accent: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #1B5E20;
+            --text: #212121;
+            --text-light: #757575;
+            --white: #FFFFFF;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Language Switcher Styles */
+        .language-switcher {
+            display: flex;
+            gap: 5px;
+            margin-left: 15px;
+            background: var(--light);
+            padding: 5px 10px;
+            border-radius: 40px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+
+        .lang-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-brand h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .nav-brand i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            border-radius: 4px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background-color: var(--light);
+        }
+
+        .nav-link.logout {
+            color: #f44336;
+        }
+
+        .cart-link {
+            position: relative;
+        }
+
+        #cartCount {
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 3px 0;
+            transition: var(--transition);
+        }
+
+        /* User Profile Styles */
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar-nav {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-info-nav {
+            text-align: right;
+        }
+
+        .user-name-nav {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .user-role-nav {
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+
+        /* Checkout Hero Section */
         .checkout-hero {
             background: linear-gradient(135deg, #2E7D32, #4CAF50);
             color: white;
@@ -150,7 +348,7 @@
             margin-bottom: 20px;
         }
 
-        /* Enhanced Customer Information Section */
+        /* Checkout Form */
         .checkout-form {
             background: white;
             border-radius: 16px;
@@ -179,11 +377,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .checkout-form h2::before {
-            content: '👤';
-            font-size: 1.5rem;
         }
 
         .form-group {
@@ -217,14 +410,15 @@
             border-color: #4CAF50;
             background: white;
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-            transform: translateY(-2px);
         }
 
-        .form-control:hover {
-            border-color: #bdbdbd;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        /* Enhanced Payment Section */
+        /* Payment Section */
         .payment-section {
             background: white;
             border-radius: 16px;
@@ -255,18 +449,12 @@
             gap: 12px;
         }
 
-        .payment-section h2::before {
-            content: '💳';
-            font-size: 1.5rem;
-        }
-
         .section-subtitle {
             color: #666;
             margin-bottom: 25px;
             font-size: 1rem;
         }
 
-        /* Colorful Payment Methods */
         .payment-methods {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -286,21 +474,6 @@
             overflow: hidden;
         }
 
-        .payment-method::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .payment-method:hover::before {
-            left: 100%;
-        }
-
         .payment-method:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -312,45 +485,15 @@
             box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
         }
 
-        /* Colorful Payment Icons */
         .payment-icon {
             font-size: 2.5rem;
             margin-bottom: 15px;
-            transition: all 0.3s ease;
         }
 
-        /* Different colors for each payment method */
-        .payment-method[data-method="card"] .payment-icon {
-            color: #2196F3;
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .payment-method[data-method="upi"] .payment-icon {
-            color: #9C27B0;
-            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .payment-method[data-method="netbanking"] .payment-icon {
-            color: #FF9800;
-            background: linear-gradient(135deg, #FF9800, #F57C00);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .payment-method[data-method="cod"] .payment-icon {
-            color: #4CAF50;
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .payment-method[data-method="card"] .payment-icon { color: #2196F3; }
+        .payment-method[data-method="upi"] .payment-icon { color: #9C27B0; }
+        .payment-method[data-method="netbanking"] .payment-icon { color: #FF9800; }
+        .payment-method[data-method="cod"] .payment-icon { color: #4CAF50; }
 
         .payment-method h4 {
             color: #333;
@@ -364,13 +507,12 @@
             margin: 0;
         }
 
-        /* Enhanced Payment Details */
         .payment-details {
             margin-top: 25px;
             padding: 25px;
             border-radius: 12px;
             background: linear-gradient(135deg, #f8f9fa, #ffffff);
-            border: 2px solid #f4f005;
+            border: 2px solid #e8f5e8;
             display: none;
             animation: slideDown 0.4s ease;
         }
@@ -379,41 +521,19 @@
             display: block;
         }
 
-        .payment-details h4 {
-            color: #2E7D32;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Enhanced Cash on Delivery */
-        .cash-on-delivery-info {
-            background: linear-gradient(135deg, #fff3e0, #ffecb3);
+        .payment-info, .cash-on-delivery-info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             padding: 20px;
             border-radius: 10px;
             margin-top: 15px;
-            border-left: 5px solid #FF9800;
+            border-left: 5px solid #2196F3;
         }
 
-        .cash-on-delivery-info p {
-            margin: 8px 0;
-            color: #5d4037;
+        .cash-on-delivery-info {
+            background: linear-gradient(135deg, #fff3e0, #ffecb3);
+            border-left-color: #FF9800;
         }
 
-        /* Enhanced Security Badge */
         .security-badge {
             display: flex;
             align-items: center;
@@ -423,15 +543,8 @@
             background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             border-radius: 10px;
             color: #1565c0;
-            border: 1px solid #90caf9;
         }
 
-        .security-badge i {
-            color: #1976d2;
-            font-size: 1.5rem;
-        }
-
-        /* Enhanced Place Order Button */
         .btn-primary {
             background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
@@ -449,159 +562,129 @@
 
         .btn-primary:hover {
             background: linear-gradient(135deg, #2E7D32, #4CAF50);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
             transform: translateY(-3px);
         }
 
-        .btn-primary:active {
-            transform: translateY(-1px);
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Form Row Enhancement */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .mt-20 {
+            margin-top: 20px;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .checkout-form,
-            .payment-section {
-                padding: 25px 20px;
+        .btn-full {
+            width: 100%;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
             }
-            
-            .payment-methods {
-                grid-template-columns: 1fr;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Add some decorative elements */
-        .checkout-form::after,
-        .payment-section::after {
-            content: '🌱';
-            position: absolute;
-            bottom: 10px;
-            right: 15px;
-            font-size: 1.2rem;
-            opacity: 0.1;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
             .checkout-container {
                 grid-template-columns: 1fr;
             }
-            
             .cart-item {
                 flex-direction: column;
                 text-align: center;
             }
-            
-            .quantity-controls {
-                justify-content: center;
-            }
-            
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
             .payment-methods {
                 grid-template-columns: 1fr;
             }
-        }
-
-        /* Additional utility classes */
-        .mt-20 {
-            margin-top: 20px;
-        }
-        .btn-full {
-            width: 100%;
-        }
-
-        /* Payment Info Styles */
-        .payment-info {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border-left: 5px solid #2196F3;
-        }
-
-        .payment-info p {
-            margin: 8px 0;
-            color: #1565c0;
+            .language-switcher {
+                margin-left: 10px;
+                padding: 3px 8px;
+            }
+            .lang-btn {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+            }
+            .nav-menu {
+                display: none;
+            }
+            .nav-menu.active {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                background: white;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+            .hamburger {
+                display: flex;
+            }
         }
     </style>
 </head>
 <body>
     
     <header class="header">
-    <nav class="navbar">
-        <div class="nav-brand">
-            <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
-        </div>
-        
-        <ul class="nav-menu">
-            <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> Machinery</a></li>
-            <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> Labour</a></li>
-            <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
-            <li><a href="billing.html" class="nav-link cart-link">
-                <i class="fas fa-shopping-cart"></i> Cart
-                <span id="cartCount">0</span>
-            </a></li>
-        </ul>
-        
-        <!-- User Profile (shown when logged in) -->
-        <div id="userProfileNav" class="user-profile-nav" style="display: none;">
-            <div class="user-dropdown">
-                <div class="user-avatar-nav" id="userAvatar">
-                    <i class="fas fa-user"></i>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> <span data-key="home">Home</span></a></li>
+                <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> <span data-key="machinery">Machinery</span></a></li>
+                <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> <span data-key="labour">Labour</span></a></li>
+                <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> <span data-key="contact">Contact</span></a></li>
+                <li><a href="billing.html" class="nav-link cart-link">
+                    <i class="fas fa-shopping-cart"></i> <span data-key="cart">Cart</span>
+                    <span id="cartCount">0</span>
+                </a></li>
+                
+                <!-- Language Switcher -->
+                <div class="language-switcher">
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                    <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+                    <button class="lang-btn" data-lang="bn">🇧🇩 বাংলা</button>
                 </div>
-                <div class="dropdown-menu" id="userDropdown">
-                    <a href="dashboard.html" class="dropdown-item">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
-                    <a href="dashboard.html#profile" class="dropdown-item">
-                        <i class="fas fa-user-cog"></i> Profile Settings
-                    </a>
-                    <a href="dashboard.html#orders" class="dropdown-item">
-                        <i class="fas fa-shopping-bag"></i> My Orders
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
+            </ul>
+            
+            <!-- User Profile (shown when logged in) -->
+            <div id="userProfileNav" class="user-profile-nav" style="display: none;">
+                <div class="user-dropdown">
+                    <div class="user-avatar-nav" id="userAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="user-info-nav">
+                    <div class="user-name-nav" id="userDisplayName">User Name</div>
+                    <div class="user-role-nav" id="userDisplayRole">Farmer</div>
                 </div>
             </div>
-            <div class="user-info-nav">
-                <div class="user-name-nav" id="userDisplayName">User Name</div>
-                <div class="user-role-nav" id="userDisplayRole">Farmer</div>
+          
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-        </div>
-      
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
 
     <!-- Checkout Hero Section -->
     <section class="checkout-hero">
         <div class="container">
-            <h1>Checkout</h1>
-            <p>Review your order and complete booking</p>
+            <h1 data-key="checkoutTitle">Checkout</h1>
+            <p data-key="checkoutSubtitle">Review your order and complete booking</p>
         </div>
     </section>
 
@@ -610,7 +693,7 @@
         <div>
             <!-- Cart Items -->
             <div class="cart-items" id="cartItems">
-                <h2>Your Cart</h2>
+                <h2 data-key="yourCart">Your Cart</h2>
                 <div id="cartItemsList">
                     <!-- Cart items will be dynamically inserted here -->
                 </div>
@@ -618,36 +701,36 @@
 
             <!-- Customer Information -->
             <div class="checkout-form">
-                <h2>Customer Information</h2>
+                <h2 data-key="customerInfo">Customer Information</h2>
                 <form id="checkoutForm">
                     <div class="form-group">
-                        <label class="form-label">Full Name</label>
+                        <label class="form-label" data-key="fullName">Full Name</label>
                         <input type="text" class="form-control" name="fullName" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email</label>
+                        <label class="form-label" data-key="email">Email</label>
                         <input type="email" class="form-control" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone Number</label>
+                        <label class="form-label" data-key="phoneNumber">Phone Number</label>
                         <input type="tel" class="form-control" name="phone" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Address</label>
+                        <label class="form-label" data-key="address">Address</label>
                         <textarea class="form-control" name="address" rows="3" required></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Booking From</label>
+                            <label class="form-label" data-key="bookingFrom">Booking From</label>
                             <input type="date" class="form-control" name="bookingFrom" id="bookingFrom" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Booking To</label>
+                            <label class="form-label" data-key="bookingTo">Booking To</label>
                             <input type="date" class="form-control" name="bookingTo" id="bookingTo" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Duration (Days)</label>
+                        <label class="form-label" data-key="duration">Duration (Days)</label>
                         <input type="number" class="form-control" name="duration" id="duration" min="1" value="1" required readonly>
                     </div>
                 </form>
@@ -655,78 +738,70 @@
 
             <!-- Payment Section -->
             <div class="payment-section">
-                <h2>Payment Method</h2>
-                <p class="section-subtitle">Choose your preferred payment method</p>
+                <h2 data-key="paymentMethod">Payment Method</h2>
+                <p class="section-subtitle" data-key="choosePayment">Choose your preferred payment method</p>
                 
                 <div class="payment-methods">
                     <div class="payment-method" data-method="card">
-                        <div class="payment-icon">
-                            <i class="fas fa-credit-card"></i>
-                        </div>
-                        <h4>Credit/Debit Card</h4>
-                        <p>Pay securely with card</p>
+                        <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                        <h4 data-key="cardPayment">Credit/Debit Card</h4>
+                        <p data-key="cardDesc">Pay securely with card</p>
                     </div>
 
                     <div class="payment-method" data-method="upi">
-                        <div class="payment-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <h4>UPI Payment</h4>
-                        <p>Pay using UPI apps</p>
+                        <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h4 data-key="upiPayment">UPI Payment</h4>
+                        <p data-key="upiDesc">Pay using UPI apps</p>
                     </div>
 
                     <div class="payment-method" data-method="netbanking">
-                        <div class="payment-icon">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <h4>Net Banking</h4>
-                        <p>Pay via net banking</p>
+                        <div class="payment-icon"><i class="fas fa-university"></i></div>
+                        <h4 data-key="netBanking">Net Banking</h4>
+                        <p data-key="netBankingDesc">Pay via net banking</p>
                     </div>
 
                     <div class="payment-method" data-method="cod">
-                        <div class="payment-icon">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
-                        <h4>Cash on Delivery</h4>
-                        <p>Pay when item arrives</p>
+                        <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <h4 data-key="cashOnDelivery">Cash on Delivery</h4>
+                        <p data-key="codDesc">Pay when item arrives</p>
                     </div>
                 </div>
 
-              <!-- Card Payment Details - REMOVED CARD INPUT FIELDS -->
+                <!-- Card Payment Details -->
                 <div class="payment-details" id="cardDetails">
-                    <h4>Card Payment</h4>
+                    <h4 data-key="cardPayment">Card Payment</h4>
                     <div class="payment-info">
-                        <p><strong>Secure Card Payment</strong></p>
-                        <p>• You will be redirected to Razorpay secure payment gateway</p>
-                        <p>• Enter your card details on the secure payment page</p>
-                        <p>• Supports Visa, Mastercard, and RuPay cards</p>
-                        <p>• Your card details are never stored on our servers</p>
+                        <p><strong data-key="secureCard">Secure Card Payment</strong></p>
+                        <p data-key="cardRedirect">• You will be redirected to Razorpay secure payment gateway</p>
+                        <p data-key="cardDetailsInfo">• Enter your card details on the secure payment page</p>
+                        <p data-key="cardSupport">• Supports Visa, Mastercard, and RuPay cards</p>
+                        <p data-key="cardSecurity">• Your card details are never stored on our servers</p>
                     </div>
                 </div>
 
                 <!-- UPI Payment Details -->
                 <div class="payment-details" id="upiDetails">
-                    <h4>UPI Payment</h4>
+                    <h4 data-key="upiPayment">UPI Payment</h4>
                     <div class="form-group">
-                        <label class="form-label">UPI ID</label>
+                        <label class="form-label" data-key="upiId">UPI ID</label>
                         <input type="text" class="form-control" id="upiId" placeholder="yourname@upi" required>
                     </div>
                     <div class="payment-info">
-                        <p><strong>UPI Payment Information</strong></p>
-                        <p>• Enter your UPI ID above</p>
-                        <p>• Payment request will be sent to your UPI app</p>
-                        <p>• You can pay using any UPI app like Google Pay, PhonePe, Paytm</p>
-                        <p>• Payment confirmation will be sent via email/SMS</p>
+                        <p><strong data-key="upiInfo">UPI Payment Information</strong></p>
+                        <p data-key="upiEnter">• Enter your UPI ID above</p>
+                        <p data-key="upiRequest">• Payment request will be sent to your UPI app</p>
+                        <p data-key="upiApps">• You can pay using any UPI app like Google Pay, PhonePe, Paytm</p>
+                        <p data-key="upiConfirmation">• Payment confirmation will be sent via email/SMS</p>
                     </div>
                 </div>
 
                 <!-- Net Banking Details -->
                 <div class="payment-details" id="netbankingDetails">
-                    <h4>Net Banking</h4>
+                    <h4 data-key="netBanking">Net Banking</h4>
                     <div class="form-group">
-                        <label class="form-label">Select Bank</label>
+                        <label class="form-label" data-key="selectBank">Select Bank</label>
                         <select class="form-control" id="bankSelect" required>
-                            <option value="">Select your bank</option>
+                            <option value="" data-key="selectBankOption">Select your bank</option>
                             <option value="sbi">State Bank of India</option>
                             <option value="hdfc">HDFC Bank</option>
                             <option value="icici">ICICI Bank</option>
@@ -738,393 +813,330 @@
                         </select>
                     </div>
                     <div class="payment-info">
-                        <p><strong>Net Banking Information</strong></p>
-                        <p>• Select your bank from the list above</p>
-                        <p>• You will be redirected to your bank's secure portal</p>
-                        <p>• Complete the payment using your net banking credentials</p>
-                        <p>• Payment confirmation will be instant</p>
+                        <p><strong data-key="netBankingInfo">Net Banking Information</strong></p>
+                        <p data-key="netBankingSelect">• Select your bank from the list above</p>
+                        <p data-key="netBankingRedirect">• You will be redirected to your bank's secure portal</p>
+                        <p data-key="netBankingComplete">• Complete the payment using your net banking credentials</p>
+                        <p data-key="netBankingInstant">• Payment confirmation will be instant</p>
                     </div>
                 </div>
 
                 <!-- Cash on Delivery Details -->
                 <div class="payment-details" id="codDetails">
-                    <h4>Cash on Delivery</h4>
+                    <h4 data-key="cashOnDelivery">Cash on Delivery</h4>
                     <div class="cash-on-delivery-info">
-                        <p><strong>Pay when your machinery/labour arrives</strong></p>
-                        <p>• Have exact cash ready for payment</p>
-                        <p>• Additional ₹50 processing fee applies</p>
-                        <p>• Available for orders above ₹500</p>
-                        <p>• Order confirmation subject to cash payment</p>
+                        <p><strong data-key="codPayOnArrival">Pay when your machinery/labour arrives</strong></p>
+                        <p data-key="codExactCash">• Have exact cash ready for payment</p>
+                        <p data-key="codProcessingFee">• Additional ₹50 processing fee applies</p>
+                        <p data-key="codMinOrder">• Available for orders above ₹500</p>
+                        <p data-key="codConfirmation">• Order confirmation subject to cash payment</p>
                     </div>
                 </div>
 
                 <!-- Security Badge -->
                 <div class="security-badge">
                     <i class="fas fa-shield-alt"></i>
-                    <span>Your payment information is secure and encrypted</span>
+                    <span data-key="securePayment">Your payment information is secure and encrypted</span>
                 </div>
 
                 <!-- Place Order Button -->
-                <button type="button" class="btn btn-primary btn-full mt-20" id="placeOrderBtn">
-                    <i class="fas fa-shopping-bag"></i> Place Order
+                <button type="button" class="btn-primary btn-full mt-20" id="placeOrderBtn">
+                    <i class="fas fa-shopping-bag"></i> <span data-key="placeOrder">Place Order</span>
                 </button>
             </div>
         </div>
 
         <!-- Order Summary -->
         <div class="order-summary">
-            <h2>Order Summary</h2>
-            <div id="orderSummary">
-                <!-- Order summary will be dynamically updated -->
-            </div>
+            <h2 data-key="orderSummary">Order Summary</h2>
+            <div id="orderSummary"></div>
             <div class="summary-item">
-                <span>Subtotal:</span>
+                <span data-key="subtotal">Subtotal:</span>
                 <span id="subtotalAmount">₹0</span>
             </div>
             <div class="summary-item">
-                <span>Processing Fee:</span>
+                <span data-key="processingFee">Processing Fee:</span>
                 <span id="processingFee">₹0</span>
             </div>
             <div class="summary-item summary-total">
-                <span>Total Amount:</span>
+                <span data-key="totalAmount">Total Amount:</span>
                 <span id="totalAmount">₹0</span>
             </div>
         </div>
     </section>
 
-    <!-- Fake Razorpay Payment Gateway Implementation -->
     <script>
-        // Fake Razorpay Payment Gateway
+        // Multi-Language Translations
+        const translations = {
+            en: {
+                home: "Home", machinery: "Machinery", labour: "Labour", contact: "Contact", cart: "Cart",
+                checkoutTitle: "Checkout", checkoutSubtitle: "Review your order and complete booking",
+                yourCart: "Your Cart", customerInfo: "Customer Information", paymentMethod: "Payment Method",
+                choosePayment: "Choose your preferred payment method", orderSummary: "Order Summary",
+                subtotal: "Subtotal", processingFee: "Processing Fee", totalAmount: "Total Amount",
+                placeOrder: "Place Order", securePayment: "Your payment information is secure and encrypted",
+                fullName: "Full Name", email: "Email", phoneNumber: "Phone Number", address: "Address",
+                bookingFrom: "Booking From", bookingTo: "Booking To", duration: "Duration (Days)",
+                cardPayment: "Credit/Debit Card", upiPayment: "UPI Payment", netBanking: "Net Banking",
+                cashOnDelivery: "Cash on Delivery", cardDesc: "Pay securely with card", upiDesc: "Pay using UPI apps",
+                netBankingDesc: "Pay via net banking", codDesc: "Pay when item arrives",
+                secureCard: "Secure Card Payment", cardRedirect: "• You will be redirected to Razorpay secure payment gateway",
+                cardDetailsInfo: "• Enter your card details on the secure payment page",
+                cardSupport: "• Supports Visa, Mastercard, and RuPay cards", cardSecurity: "• Your card details are never stored",
+                upiId: "UPI ID", upiInfo: "UPI Payment Information", upiEnter: "• Enter your UPI ID above",
+                upiRequest: "• Payment request will be sent to your UPI app",
+                upiApps: "• You can pay using any UPI app like Google Pay, PhonePe, Paytm",
+                upiConfirmation: "• Payment confirmation will be sent via email/SMS",
+                selectBank: "Select Bank", selectBankOption: "Select your bank",
+                netBankingInfo: "Net Banking Information", netBankingSelect: "• Select your bank from the list above",
+                netBankingRedirect: "• You will be redirected to your bank's secure portal",
+                netBankingComplete: "• Complete the payment using your net banking credentials",
+                netBankingInstant: "• Payment confirmation will be instant",
+                codPayOnArrival: "Pay when your machinery/labour arrives",
+                codExactCash: "• Have exact cash ready for payment", codProcessingFee: "• Additional ₹50 processing fee applies",
+                codMinOrder: "• Available for orders above ₹500", codConfirmation: "• Order confirmation subject to cash payment",
+                emptyCart: "Your cart is empty", browseMachinery: "Browse Machinery", emptyCartMsg: "Add some machinery or labour to get started"
+            },
+            hi: {
+                home: "होम", machinery: "मशीनरी", labour: "श्रमिक", contact: "संपर्क", cart: "कार्ट",
+                checkoutTitle: "चेकआउट", checkoutSubtitle: "अपना ऑर्डर समीक्षा करें और बुकिंग पूरी करें",
+                yourCart: "आपकी कार्ट", customerInfo: "ग्राहक जानकारी", paymentMethod: "भुगतान विधि",
+                choosePayment: "अपनी पसंदीदा भुगतान विधि चुनें", orderSummary: "ऑर्डर सारांश",
+                subtotal: "उप-योग", processingFee: "प्रसंस्करण शुल्क", totalAmount: "कुल राशि",
+                placeOrder: "ऑर्डर करें", securePayment: "आपकी भुगतान जानकारी सुरक्षित और एन्क्रिप्टेड है",
+                fullName: "पूरा नाम", email: "ईमेल", phoneNumber: "फोन नंबर", address: "पता",
+                bookingFrom: "बुकिंग से", bookingTo: "बुकिंग तक", duration: "अवधि (दिन)",
+                cardPayment: "क्रेडिट/डेबिट कार्ड", upiPayment: "यूपीआई भुगतान", netBanking: "नेट बैंकिंग",
+                cashOnDelivery: "कैश ऑन डिलीवरी", cardDesc: "कार्ड से सुरक्षित भुगतान करें", upiDesc: "यूपीआई ऐप से भुगतान करें",
+                netBankingDesc: "नेट बैंकिंग से भुगतान करें", codDesc: "आइटम आने पर भुगतान करें",
+                secureCard: "सुरक्षित कार्ड भुगतान", cardRedirect: "• आप रेजरपे सुरक्षित भुगतान गेटवे पर पुनर्निर्देशित होंगे",
+                cardDetailsInfo: "• सुरक्षित भुगतान पृष्ठ पर अपने कार्ड विवरण दर्ज करें",
+                cardSupport: "• वीज़ा, मास्टरकार्ड और रुपे कार्ड का समर्थन करता है",
+                cardSecurity: "• आपके कार्ड विवरण कभी भी हमारे सर्वर पर संग्रहीत नहीं होते हैं",
+                upiId: "यूपीआई आईडी", upiInfo: "यूपीआई भुगतान जानकारी", upiEnter: "• ऊपर अपनी यूपीआई आईडी दर्ज करें",
+                upiRequest: "• भुगतान अनुरोध आपके यूपीआई ऐप पर भेजा जाएगा",
+                upiApps: "• आप गूगल पे, फोनपे, पेटीएम जैसे किसी भी यूपीआई ऐप से भुगतान कर सकते हैं",
+                upiConfirmation: "• भुगतान पुष्टि ईमेल/एसएमएस के माध्यम से भेजी जाएगी",
+                selectBank: "बैंक चुनें", selectBankOption: "अपना बैंक चुनें",
+                netBankingInfo: "नेट बैंकिंग जानकारी", netBankingSelect: "• ऊपर दी गई सूची से अपना बैंक चुनें",
+                netBankingRedirect: "• आप अपने बैंक के सुरक्षित पोर्टल पर पुनर्निर्देशित होंगे",
+                netBankingComplete: "• अपने नेट बैंकिंग क्रेडेंशियल का उपयोग करके भुगतान पूरा करें",
+                netBankingInstant: "• भुगतान पुष्टि तुरंत होगी",
+                codPayOnArrival: "जब आपकी मशीनरी/श्रम आए तब भुगतान करें",
+                codExactCash: "• भुगतान के लिए सटीक नकदी तैयार रखें",
+                codProcessingFee: "• अतिरिक्त ₹50 प्रसंस्करण शुल्क लागू होता है",
+                codMinOrder: "• ₹500 से अधिक के ऑर्डर के लिए उपलब्ध",
+                codConfirmation: "• ऑर्डर पुष्टि नकद भुगतान के अधीन है",
+                emptyCart: "आपकी कार्ट खाली है", browseMachinery: "मशीनरी ब्राउज़ करें",
+                emptyCartMsg: "शुरू करने के लिए कुछ मशीनरी या श्रम जोड़ें"
+            },
+            bn: {
+                home: "হোম", machinery: "যন্ত্রপাতি", labour: "শ্রমিক", contact: "যোগাযোগ", cart: "কার্ট",
+                checkoutTitle: "চেকআউট", checkoutSubtitle: "আপনার অর্ডার পর্যালোচনা করুন এবং বুকিং সম্পূর্ণ করুন",
+                yourCart: "আপনার কার্ট", customerInfo: "গ্রাহকের তথ্য", paymentMethod: "পেমেন্ট পদ্ধতি",
+                choosePayment: "আপনার পছন্দের পেমেন্ট পদ্ধতি নির্বাচন করুন", orderSummary: "অর্ডার সারাংশ",
+                subtotal: "সাবটোটাল", processingFee: "প্রসেসিং ফি", totalAmount: "মোট পরিমাণ",
+                placeOrder: "অর্ডার করুন", securePayment: "আপনার পেমেন্ট তথ্য সুরক্ষিত এবং এনক্রিপ্ট করা আছে",
+                fullName: "পুরো নাম", email: "ইমেইল", phoneNumber: "ফোন নম্বর", address: "ঠিকানা",
+                bookingFrom: "বুকিং থেকে", bookingTo: "বুকিং পর্যন্ত", duration: "মেয়াদ (দিন)",
+                cardPayment: "ক্রেডিট/ডেবিট কার্ড", upiPayment: "ইউপিআই পেমেন্ট", netBanking: "নেট ব্যাংকিং",
+                cashOnDelivery: "ক্যাশ অন ডেলিভারি", cardDesc: "কার্ড দিয়ে সুরক্ষিত পেমেন্ট করুন", upiDesc: "ইউপিআই অ্যাপ ব্যবহার করে পেমেন্ট করুন",
+                netBankingDesc: "নেট ব্যাংকিং এর মাধ্যমে পেমেন্ট করুন", codDesc: "পণ্য আসার সময় পেমেন্ট করুন",
+                secureCard: "সুরক্ষিত কার্ড পেমেন্ট", cardRedirect: "• আপনি রেজরপে সুরক্ষিত পেমেন্ট গেটওয়ে পুনঃনির্দেশিত হবেন",
+                cardDetailsInfo: "• সুরক্ষিত পেমেন্ট পৃষ্ঠায় আপনার কার্ডের বিবরণ লিখুন",
+                cardSupport: "• ভিসা, মাস্টারকার্ড এবং রুপে কার্ড সমর্থন করে",
+                cardSecurity: "• আপনার কার্ডের বিবরণ আমাদের সার্ভারে কখনও সংরক্ষণ করা হয় না",
+                upiId: "ইউপিআই আইডি", upiInfo: "ইউপিআই পেমেন্ট তথ্য", upiEnter: "• উপরে আপনার ইউপিআই আইডি লিখুন",
+                upiRequest: "• পেমেন্ট অনুরোধ আপনার ইউপিআই অ্যাপে পাঠানো হবে",
+                upiApps: "• আপনি গুগল পে, ফোনপে, পেটিএম এর মতো যেকোনো ইউপিআই অ্যাপ ব্যবহার করে পেমেন্ট করতে পারেন",
+                upiConfirmation: "• পেমেন্ট নিশ্চিতকরণ ইমেইল/এসএমএস এর মাধ্যমে পাঠানো হবে",
+                selectBank: "ব্যাংক নির্বাচন করুন", selectBankOption: "আপনার ব্যাংক নির্বাচন করুন",
+                netBankingInfo: "নেট ব্যাংকিং তথ্য", netBankingSelect: "• উপরের তালিকা থেকে আপনার ব্যাংক নির্বাচন করুন",
+                netBankingRedirect: "• আপনি আপনার ব্যাংকের সুরক্ষিত পোর্টালে পুনঃনির্দেশিত হবেন",
+                netBankingComplete: "• আপনার নেট ব্যাংকিং ক্রেডেনশিয়াল ব্যবহার করে পেমেন্ট সম্পূর্ণ করুন",
+                netBankingInstant: "• পেমেন্ট নিশ্চিতকরণ তাৎক্ষণিক হবে",
+                codPayOnArrival: "আপনার যন্ত্রপাতি/শ্রম আসার সময় পেমেন্ট করুন",
+                codExactCash: "• পেমেন্টের জন্য সঠিক নগদ প্রস্তুত রাখুন",
+                codProcessingFee: "• অতিরিক্ত ₹50 প্রসেসিং ফি প্রযোজ্য",
+                codMinOrder: "• ₹500 এর উপরে অর্ডারের জন্য উপলব্ধ",
+                codConfirmation: "• অর্ডার নিশ্চিতকরণ নগদ পেমেন্ট সাপেক্ষে",
+                emptyCart: "আপনার কার্ট খালি", browseMachinery: "যন্ত্রপাতি ব্রাউজ করুন",
+                emptyCartMsg: "শুরু করতে কিছু যন্ত্রপাতি বা শ্রম যোগ করুন"
+            }
+        };
+
+        let currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('farmconnect_lang', lang);
+            
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Update empty cart message if cart is empty
+            if (typeof cartManager !== 'undefined' && cartManager.getItems().length === 0) {
+                const emptyCartDiv = document.querySelector('.empty-cart');
+                if (emptyCartDiv) {
+                    const emptyMsg = emptyCartDiv.querySelector('h3');
+                    const emptyDesc = emptyCartDiv.querySelector('p');
+                    const browseBtn = emptyCartDiv.querySelector('.btn-primary');
+                    if (emptyMsg) emptyMsg.textContent = translations[currentLang].emptyCart;
+                    if (emptyDesc) emptyDesc.textContent = translations[currentLang].emptyCartMsg;
+                    if (browseBtn) browseBtn.textContent = translations[currentLang].browseMachinery;
+                }
+            }
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.getAttribute('data-lang'));
+            });
+        });
+
+        // Fake Razorpay Payment Gateway Implementation
         class FakeRazorpay {
             constructor(options) {
                 this.options = options;
                 this.paymentId = null;
                 this.isInitialized = false;
-                console.log('Fake Razorpay initialized with:', options);
             }
 
             open() {
                 if (!this.isInitialized) {
                     this.init();
                 }
-
-                // Create payment modal
                 this.createPaymentModal();
             }
 
             init() {
                 this.isInitialized = true;
-                console.log('Fake Razorpay initialized with:', this.options);
                 return this;
             }
 
             createPaymentModal() {
-                console.log('Creating payment modal...');
-
-                // Create overlay
                 const overlay = document.createElement('div');
                 overlay.className = 'razorpay-overlay';
                 overlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.5);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    z-index: 10000;
-                    font-family: Arial, sans-serif;
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center;
+                    align-items: center; z-index: 10000; font-family: Arial, sans-serif;
                 `;
 
-                // Create modal
                 const modal = document.createElement('div');
-                modal.className = 'razorpay-modal';
                 modal.style.cssText = `
-                    background: white;
-                    border-radius: 12px;
-                    width: 400px;
-                    max-width: 90%;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-                    overflow: hidden;
+                    background: white; border-radius: 12px; width: 400px; max-width: 90%;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); overflow: hidden;
                 `;
 
-                // Modal header
-                const header = document.createElement('div');
-                header.style.cssText = `
-                    background: linear-gradient(135deg, #528ff0, #2c5aa0);
-                    color: white;
-                    padding: 20px;
-                    text-align: center;
-                    position: relative;
-                `;
-                header.innerHTML = `
-                    <h3 style="margin: 0; font-size: 18px;">Secure Payment - FarmConnect</h3>
-                    <div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-right: 10px;">🔒</span>
-                        <span style="font-size: 12px;">Powered by Razorpay</span>
+                modal.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #528ff0, #2c5aa0); color: white; padding: 20px; text-align: center;">
+                        <h3 style="margin: 0;">Secure Payment - FarmConnect</h3>
+                        <button class="close-modal" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">×</button>
                     </div>
-                    <button class="close-btn" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">×</button>
-                `;
-
-                // Modal body
-                const body = document.createElement('div');
-                body.style.cssText = `
-                    padding: 20px;
-                `;
-                body.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="font-size: 24px; font-weight: bold; color: #333;">₹${this.options.amount / 100}</div>
-                        <div style="color: #666; font-size: 14px; margin-top: 5px;">${this.options.description || 'Payment for FarmConnect services'}</div>
-                    </div>
-
-                    <div class="card-details" style="display: block;">
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">Card Number</label>
-                            <input type="text" class="card-input" placeholder="1234 5678 9012 3456" 
-                                   style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px;">
+                    <div style="padding: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 24px; font-weight: bold;">₹${this.options.amount / 100}</div>
                         </div>
-                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                            <div style="flex: 1;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">Expiry</label>
-                                <input type="text" class="expiry-input" placeholder="MM/YY" 
-                                       style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px;">
+                        <div>
+                            <div style="margin-bottom: 15px;">
+                                <label>Card Number</label>
+                                <input type="text" class="card-input" placeholder="1234 5678 9012 3456" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
                             </div>
-                            <div style="flex: 1;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">CVV</label>
-                                <input type="text" class="cvv-input" placeholder="123" 
-                                       style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px;">
+                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <div style="flex:1;"><label>Expiry</label><input type="text" class="expiry-input" placeholder="MM/YY" style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px;"></div>
+                                <div style="flex:1;"><label>CVV</label><input type="text" class="cvv-input" placeholder="123" style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px;"></div>
                             </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">Name on Card</label>
-                            <input type="text" class="name-input" placeholder="${this.options.prefill?.name || 'John Doe'}" 
-                                   style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px;">
-                        </div>
-                    </div>
-
-                    <button class="pay-btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #528ff0, #2c5aa0); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s;">
-                        Pay ₹${this.options.amount / 100}
-                    </button>
-
-                    <div style="text-align: center; margin-top: 15px;">
-                        <div style="display: flex; align-items: center; justify-content: center; color: #666; font-size: 12px;">
-                            <span style="margin-right: 5px;">🔒</span>
-                            <span>Your payment details are secure</span>
-                        </div>
+                        <button class="pay-btn" style="width:100%; padding:12px; background:#4CAF50; color:white; border:none; border-radius:6px; font-size:16px; cursor:pointer;">Pay ₹${this.options.amount / 100}</button>
                     </div>
                 `;
 
-                // Append elements
-                modal.appendChild(header);
-                modal.appendChild(body);
                 overlay.appendChild(modal);
                 document.body.appendChild(overlay);
 
-                // Add event listeners
-                this.addEventListeners(overlay, modal);
-            }
-
-            addEventListeners(overlay, modal) {
-                // Close button
-                const closeBtn = modal.querySelector('.close-btn');
+                const closeBtn = modal.querySelector('.close-modal');
                 closeBtn.addEventListener('click', () => {
                     document.body.removeChild(overlay);
                     if (this.options.handler) {
-                        this.options.handler({
-                            error: {
-                                code: 'USER_CLOSED',
-                                description: 'Payment cancelled by user'
-                            }
-                        });
+                        this.options.handler({ error: { code: 'USER_CLOSED', description: 'Payment cancelled' } });
                     }
                 });
 
-                // Overlay click to close
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        document.body.removeChild(overlay);
-                        if (this.options.handler) {
-                            this.options.handler({
-                                error: {
-                                    code: 'USER_CLOSED',
-                                    description: 'Payment cancelled by user'
-                                }
-                            });
-                        }
-                    }
-                });
-
-                // Pay button
                 const payBtn = modal.querySelector('.pay-btn');
                 payBtn.addEventListener('click', () => {
-                    this.processPayment(modal, overlay);
-                });
-
-                // Input formatting
-                this.addInputFormatting(modal);
-            }
-
-            addInputFormatting(modal) {
-                // Card number formatting
-                const cardInput = modal.querySelector('.card-input');
-                cardInput.addEventListener('input', (e) => {
-                    let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-                    let formattedValue = value.match(/.{1,4}/g)?.join(' ');
-                    e.target.value = formattedValue || value;
-                });
-
-                // Expiry date formatting
-                const expiryInput = modal.querySelector('.expiry-input');
-                expiryInput.addEventListener('input', (e) => {
-                    let value = e.target.value.replace(/[^0-9]/g, '');
-                    if (value.length >= 2) {
-                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                    }
-                    e.target.value = value;
-                });
-
-                // CVV formatting
-                const cvvInput = modal.querySelector('.cvv-input');
-                cvvInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 3);
-                });
-            }
-
-            processPayment(modal, overlay) {
-                const payBtn = modal.querySelector('.pay-btn');
-                const originalText = payBtn.innerHTML;
-                
-                // Show loading
-                payBtn.innerHTML = '<div class="spinner"></div> Processing...';
-                payBtn.style.background = '#ccc';
-                payBtn.disabled = true;
-
-                // Simulate API call
-                setTimeout(() => {
-                    // Generate fake payment ID
-                    this.paymentId = 'pay_' + Math.random().toString(36).substr(2, 14);
-                    
-                    // Simulate success (80% success rate for demo)
-                    const isSuccess = Math.random() > 0.2;
-
-                    if (isSuccess) {
-                        // Success
-                        this.showSuccess(modal, overlay);
-                    } else {
-                        // Failure
-                        this.showFailure(modal, payBtn, originalText);
-                    }
-                }, 2000);
-            }
-
-            showSuccess(modal, overlay) {
-                modal.innerHTML = `
-                    <div style="padding: 30px; text-align: center;">
-                        <div style="color: #4CAF50; font-size: 48px; margin-bottom: 20px;">✅</div>
-                        <h3 style="color: #333; margin-bottom: 10px;">Payment Successful!</h3>
-                        <p style="color: #666; margin-bottom: 20px;">Your payment of ₹${this.options.amount / 100} has been processed successfully.</p>
-                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
-                            <div style="font-size: 12px; color: #666;">Payment ID</div>
-                            <div style="font-family: monospace; font-size: 14px;">${this.paymentId}</div>
-                        </div>
-                        <button class="success-btn" style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer;">
-                            Continue
-                        </button>
-                    </div>
-                `;
-
-                const successBtn = modal.querySelector('.success-btn');
-                successBtn.addEventListener('click', () => {
-                    document.body.removeChild(overlay);
-                    if (this.options.handler) {
-                        this.options.handler({
-                            razorpay_payment_id: this.paymentId,
-                            razorpay_order_id: this.options.order_id,
-                            razorpay_signature: 'fake_signature_' + Math.random().toString(36).substr(2, 20)
-                        });
-                    }
-                });
-            }
-
-            showFailure(modal, payBtn, originalText) {
-                modal.innerHTML = `
-                    <div style="padding: 30px; text-align: center;">
-                        <div style="color: #f44336; font-size: 48px; margin-bottom: 20px;">❌</div>
-                        <h3 style="color: #333; margin-bottom: 10px;">Payment Failed</h3>
-                        <p style="color: #666; margin-bottom: 20px;">We couldn't process your payment. Please try again.</p>
-                        <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <div style="color: #c62828; font-size: 14px;">Error: Insufficient funds / Bank decline</div>
-                        </div>
-                        <button class="retry-btn" style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer;">
-                            Try Again
-                        </button>
-                    </div>
-                `;
-
-                const retryBtn = modal.querySelector('.retry-btn');
-                retryBtn.addEventListener('click', () => {
-                    document.body.removeChild(modal.parentElement);
-                    this.open();
+                    payBtn.innerHTML = 'Processing...';
+                    payBtn.disabled = true;
+                    setTimeout(() => {
+                        document.body.removeChild(overlay);
+                        this.paymentId = 'pay_' + Math.random().toString(36).substr(2, 14);
+                        if (this.options.handler) {
+                            this.options.handler({ razorpay_payment_id: this.paymentId });
+                        }
+                    }, 2000);
                 });
             }
         }
 
-        // Global function to initialize Razorpay
         window.Razorpay = function(options) {
             return new FakeRazorpay(options);
         };
 
-        // Add CSS for spinner
-        const style = document.createElement('style');
-        style.textContent = `
-            .spinner {
-                display: inline-block;
-                width: 16px;
-                height: 16px;
-                border: 2px solid #ffffff;
-                border-radius: 50%;
-                border-top-color: transparent;
-                animation: spin 1s ease-in-out infinite;
-                margin-right: 8px;
+        // Cart Manager
+        const cartManager = {
+            getItems: function() {
+                return JSON.parse(localStorage.getItem('farmconnect_cart')) || [];
+            },
+            getTotalPrice: function() {
+                const items = this.getItems();
+                return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+            },
+            updateQuantity: function(itemId, quantity) {
+                const items = this.getItems();
+                const item = items.find(item => item.id === itemId);
+                if (item) {
+                    item.quantity = Math.max(1, quantity);
+                    localStorage.setItem('farmconnect_cart', JSON.stringify(items));
+                    this.updateCartCount();
+                }
+            },
+            removeItem: function(itemId) {
+                const items = this.getItems().filter(item => item.id !== itemId);
+                localStorage.setItem('farmconnect_cart', JSON.stringify(items));
+                this.updateCartCount();
+            },
+            clearCart: function() {
+                localStorage.removeItem('farmconnect_cart');
+                this.updateCartCount();
+            },
+            updateCartCount: function() {
+                const items = this.getItems();
+                const totalItems = items.reduce((total, item) => total + item.quantity, 0);
+                const cartCount = document.getElementById('cartCount');
+                if (cartCount) cartCount.textContent = totalItems;
             }
-            
-            @keyframes spin {
-                to { transform: rotate(360deg); }
-            }
-            
-            .razorpay-overlay {
-                animation: fadeIn 0.3s ease;
-            }
-            
-            .razorpay-modal {
-                animation: slideUp 0.3s ease;
-            }
-            
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            
-            @keyframes slideUp {
-                from { transform: translateY(50px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
+        };
 
-        console.log('Fake Razorpay loaded successfully');
-    </script>
-
-    <!-- Billing Page JavaScript -->
-    <script>
         // Billing page functionality
         document.addEventListener('DOMContentLoaded', function() {
+            updateLanguage(currentLang);
+            
             const cartItemsList = document.getElementById('cartItemsList');
             const orderSummary = document.getElementById('orderSummary');
             const subtotalAmount = document.getElementById('subtotalAmount');
-            const processingFee = document.getElementById('processingFee');
+            const processingFeeEl = document.getElementById('processingFee');
             const totalAmount = document.getElementById('totalAmount');
             const checkoutForm = document.getElementById('checkoutForm');
             const placeOrderBtn = document.getElementById('placeOrderBtn');
@@ -1132,135 +1144,15 @@
             const paymentDetails = document.querySelectorAll('.payment-details');
             let selectedPaymentMethod = 'card';
 
-            // Initialize cart manager
-            const cartManager = {
-                getItems: function() {
-                    return JSON.parse(localStorage.getItem('farmconnect_cart')) || [];
-                },
-                getTotalPrice: function() {
-                    const items = this.getItems();
-                    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
-                },
-                updateQuantity: function(itemId, quantity) {
-                    const items = this.getItems();
-                    const item = items.find(item => item.id === itemId);
-                    if (item) {
-                        item.quantity = Math.max(1, quantity);
-                        localStorage.setItem('farmconnect_cart', JSON.stringify(items));
-                        this.updateCartCount();
-                    }
-                },
-                removeItem: function(itemId) {
-                    const items = this.getItems().filter(item => item.id !== itemId);
-                    localStorage.setItem('farmconnect_cart', JSON.stringify(items));
-                    this.updateCartCount();
-                },
-                clearCart: function() {
-                    localStorage.removeItem('farmconnect_cart');
-                    this.updateCartCount();
-                },
-                updateCartCount: function() {
-                    const items = this.getItems();
-                    const totalItems = items.reduce((total, item) => total + item.quantity, 0);
-                    const cartCount = document.getElementById('cartCount');
-                    if (cartCount) {
-                        cartCount.textContent = totalItems;
-                    }
-                }
-            };
-
-            // Initialize payment method selection
-            initializePaymentMethods();
-
-            // Render cart items
-            function renderCartItems() {
-                const cartItems = cartManager.getItems();
-                
-                if (cartItems.length === 0) {
-                    cartItemsList.innerHTML = `
-                        <div class="empty-cart">
-                            <i class="fas fa-shopping-cart"></i>
-                            <h3>Your cart is empty</h3>
-                            <p>Add some machinery or labour to get started</p>
-                            <a href="machinery.html" class="btn btn-primary mt-20">Browse Machinery</a>
-                        </div>
-                    `;
-                    placeOrderBtn.disabled = true;
-                    return;
-                }
-                
-                cartItemsList.innerHTML = cartItems.map(item => `
-                    <div class="cart-item" data-id="${item.id}">
-                        <div class="cart-item-image">
-                            <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80x80?text=Image'">
-                        </div>
-                        <div class="cart-item-details">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-type">${item.type}</div>
-                            <div class="cart-item-price">₹${item.price}/day</div>
-                            <div class="quantity-controls">
-                                <button class="quantity-btn decrease-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" onchange="updateQuantity('${item.id}', this.value)">
-                                <button class="quantity-btn increase-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                            </div>
-                        </div>
-                        <button class="remove-btn" onclick="removeItem('${item.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `).join('');
-
-                placeOrderBtn.disabled = false;
-                updateOrderSummary();
-            }
-
-            // Update order summary
-            function updateOrderSummary() {
-                const cartItems = cartManager.getItems();
-                const subtotal = cartManager.getTotalPrice();
-                const fee = selectedPaymentMethod === 'cod' ? 50 : 0;
-                const total = subtotal + fee;
-                
-                orderSummary.innerHTML = cartItems.map(item => `
-                    <div class="summary-item">
-                        <span>${item.name} (${item.quantity} days)</span>
-                        <span>₹${item.price * item.quantity}</span>
-                    </div>
-                `).join('');
-                
-                subtotalAmount.textContent = `₹${subtotal}`;
-                processingFee.textContent = `₹${fee}`;
-                totalAmount.textContent = `₹${total}`;
-            }
-
-            // Initialize payment methods
-            function initializePaymentMethods() {
-                // Set default payment method
-                selectPaymentMethod('card');
-
-                // Add click event listeners to payment methods
-                paymentMethods.forEach(method => {
-                    method.addEventListener('click', function() {
-                        const methodType = this.getAttribute('data-method');
-                        selectPaymentMethod(methodType);
-                    });
-                });
-            }
-
-            // Select payment method
             function selectPaymentMethod(method) {
                 selectedPaymentMethod = method;
-                
-                // Update payment method UI
-                paymentMethods.forEach(methodElement => {
-                    if (methodElement.getAttribute('data-method') === method) {
-                        methodElement.classList.add('selected');
+                paymentMethods.forEach(m => {
+                    if (m.getAttribute('data-method') === method) {
+                        m.classList.add('selected');
                     } else {
-                        methodElement.classList.remove('selected');
+                        m.classList.remove('selected');
                     }
                 });
-
-                // Show corresponding payment details
                 paymentDetails.forEach(detail => {
                     if (detail.id === `${method}Details`) {
                         detail.classList.add('active');
@@ -1268,236 +1160,82 @@
                         detail.classList.remove('active');
                     }
                 });
-
-                // Update order summary with processing fees
                 updateOrderSummary();
             }
 
-            // Update item quantity
+            function initializePaymentMethods() {
+                selectPaymentMethod('card');
+                paymentMethods.forEach(method => {
+                    method.addEventListener('click', function() {
+                        selectPaymentMethod(this.getAttribute('data-method'));
+                    });
+                });
+            }
+
+            function renderCartItems() {
+                const cartItems = cartManager.getItems();
+                if (cartItems.length === 0) {
+                    cartItemsList.innerHTML = `
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h3>${translations[currentLang].emptyCart}</h3>
+                            <p>${translations[currentLang].emptyCartMsg}</p>
+                            <a href="machinery.html" class="btn-primary mt-20" style="display: inline-block; padding: 12px 24px; text-decoration: none;">${translations[currentLang].browseMachinery}</a>
+                        </div>
+                    `;
+                    placeOrderBtn.disabled = true;
+                    return;
+                }
+                cartItemsList.innerHTML = cartItems.map(item => `
+                    <div class="cart-item" data-id="${item.id}">
+                        <div class="cart-item-image">
+                            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/80x80?text=Image'">
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-type">${item.type}</div>
+                            <div class="cart-item-price">₹${item.price}/day</div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" onchange="updateQuantity('${item.id}', this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-btn" onclick="removeItem('${item.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+                placeOrderBtn.disabled = false;
+                updateOrderSummary();
+            }
+
+            function updateOrderSummary() {
+                const cartItems = cartManager.getItems();
+                const subtotal = cartManager.getTotalPrice();
+                const fee = selectedPaymentMethod === 'cod' ? 50 : 0;
+                const total = subtotal + fee;
+                orderSummary.innerHTML = cartItems.map(item => `
+                    <div class="summary-item">
+                        <span>${item.name} (${item.quantity} days)</span>
+                        <span>₹${item.price * item.quantity}</span>
+                    </div>
+                `).join('');
+                subtotalAmount.textContent = `₹${subtotal}`;
+                processingFeeEl.textContent = `₹${fee}`;
+                totalAmount.textContent = `₹${total}`;
+            }
+
             window.updateQuantity = function(itemId, quantity) {
                 cartManager.updateQuantity(itemId, parseInt(quantity));
                 renderCartItems();
             }
 
-            // Remove item from cart
             window.removeItem = function(itemId) {
                 cartManager.removeItem(itemId);
                 renderCartItems();
             }
 
-            // Handle order placement
-            placeOrderBtn.addEventListener('click', function() {
-                // Check login before placing order
-                const currentUser = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
-                if (!currentUser) {
-                    alert('Please login or register to complete your booking.');
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                if (cartManager.getItems().length === 0) {
-                    alert('Please add items to your cart before placing an order.');
-                    return;
-                }
-
-                // Validate form
-                const formData = new FormData(checkoutForm);
-                const customerData = Object.fromEntries(formData);
-                
-                for (let key in customerData) {
-                    if (!customerData[key].trim()) {
-                        alert('Please fill in all customer information fields.');
-                        return;
-                    }
-                }
-
-                // Validate booking dates
-                const bookingFrom = new Date(customerData.bookingFrom);
-                const bookingTo = new Date(customerData.bookingTo);
-                if (bookingTo <= bookingFrom) {
-                    alert('Booking "To" date must be after Booking "From" date.');
-                    return;
-                }
-
-                // Validate payment method specific fields
-                if (!validatePaymentMethod()) {
-                    return;
-                }
-
-                const orderData = {
-                    customer: customerData,
-                    items: cartManager.getItems(),
-                    payment: {
-                        method: selectedPaymentMethod,
-                        amount: cartManager.getTotalPrice() + (selectedPaymentMethod === 'cod' ? 50 : 0)
-                    },
-                    total: cartManager.getTotalPrice() + (selectedPaymentMethod === 'cod' ? 50 : 0),
-                    orderId: 'FC' + Date.now(),
-                    orderDate: new Date().toISOString(),
-                    status: 'pending'
-                };
-
-                // Add payment details based on method
-                if (selectedPaymentMethod === 'upi') {
-                    orderData.payment.upiId = document.getElementById('upiId').value;
-                } else if (selectedPaymentMethod === 'netbanking') {
-                    orderData.payment.bank = document.getElementById('bankSelect').value;
-                    orderData.payment.bankName = document.getElementById('bankSelect').options[document.getElementById('bankSelect').selectedIndex].text;
-                }
-
-                console.log('Placing order with payment method:', selectedPaymentMethod);
-                
-                // Process payment based on selected method
-                if (selectedPaymentMethod === 'card') {
-                    // Use fake Razorpay for CARD payments only
-                    initiateRazorpayPayment(orderData);
-                } else {
-                    // For UPI, Net Banking, COD - process directly without Razorpay
-                    processManualPayment(orderData);
-                }
-            });
-
-            // Validate payment method specific fields
-            function validatePaymentMethod() {
-                switch (selectedPaymentMethod) {
-                    case 'upi':
-                        const upiId = document.getElementById('upiId').value;
-                        if (!upiId || !upiId.includes('@')) {
-                            alert('Please enter a valid UPI ID (e.g., yourname@upi).');
-                            return false;
-                        }
-                        break;
-                    case 'netbanking':
-                        const bank = document.getElementById('bankSelect').value;
-                        if (!bank) {
-                            alert('Please select your bank.');
-                            return false;
-                        }
-                        break;
-                }
-                return true;
-            }
-
-            // Process manual payments for UPI, Net Banking, COD
-            function processManualPayment(orderData) {
-                console.log('Processing manual payment for:', selectedPaymentMethod);
-                
-                // Show processing message
-                const originalText = placeOrderBtn.innerHTML;
-                placeOrderBtn.innerHTML = '<div class="spinner"></div> Processing...';
-                placeOrderBtn.disabled = true;
-
-                // Simulate processing delay
-                setTimeout(() => {
-                    orderData.payment.status = 'pending';
-                    orderData.status = 'confirmed';
-                    
-                    // For UPI and Net Banking, simulate payment processing
-                    if (selectedPaymentMethod === 'upi') {
-                        orderData.payment.instructions = 'Payment request sent to your UPI app';
-                        orderData.payment.paymentId = 'upi_' + Math.random().toString(36).substr(2, 10);
-                    } else if (selectedPaymentMethod === 'netbanking') {
-                        orderData.payment.instructions = 'Redirecting to bank portal';
-                        orderData.payment.paymentId = 'netbank_' + Math.random().toString(36).substr(2, 10);
-                    }
-                    
-                    completeOrder(orderData);
-                }, 2000);
-            }
-
-            // Initiate Razorpay payment - ONLY FOR CARD PAYMENTS
-            function initiateRazorpayPayment(orderData) {
-                console.log('Initiating Razorpay payment for card...');
-                
-                const options = {
-                    key: 'rzp_test_farmconnect_key', // Fake key for demo
-                    amount: orderData.total * 100, // Amount in paise
-                    currency: 'INR',
-                    name: 'FarmConnect',
-                    description: 'Agricultural Services Booking',
-                    order_id: 'order_' + Math.random().toString(36).substr(2, 14),
-                    handler: function(response) {
-                        console.log('Razorpay response:', response);
-                        if (response.razorpay_payment_id) {
-                            // Payment successful
-                            orderData.payment.paymentId = response.razorpay_payment_id;
-                            orderData.payment.status = 'completed';
-                            orderData.status = 'confirmed';
-                            completeOrder(orderData);
-                        } else {
-                            // Payment failed
-                            alert('Payment failed: ' + (response.error?.description || 'Unknown error'));
-                            placeOrderBtn.disabled = false;
-                            placeOrderBtn.innerHTML = '<i class="fas fa-shopping-bag"></i> Place Order';
-                        }
-                    },
-                    prefill: {
-                        name: orderData.customer.fullName,
-                        email: orderData.customer.email,
-                        contact: orderData.customer.phone
-                    },
-                    theme: {
-                        color: '#4CAF50'
-                    }
-                };
-
-                console.log('Razorpay options:', options);
-
-                // Check if Razorpay is available
-                if (typeof Razorpay === 'undefined') {
-                    console.error('Razorpay is not loaded.');
-                    alert('Payment gateway not available. Please try again.');
-                    return;
-                }
-
-                try {
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-                } catch (error) {
-                    console.error('Error opening Razorpay:', error);
-                    alert('Error initiating payment. Please try again.');
-                }
-            }
-
-            // Complete order process
-            function completeOrder(orderData) {
-                console.log('Completing order:', orderData);
-                
-                // Save order to localStorage
-                const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || [];
-                orders.push(orderData);
-                localStorage.setItem('farmconnect_orders', JSON.stringify(orders));
-
-                // Clear cart
-                cartManager.clearCart();
-
-                // Show success message based on payment method
-                let successMessage = `✅ Order placed successfully!\n\nOrder ID: ${orderData.orderId}\nTotal Amount: ₹${orderData.total}\nPayment Method: ${getPaymentMethodName(selectedPaymentMethod)}\nStatus: ${orderData.status}`;
-                
-                if (selectedPaymentMethod === 'upi' || selectedPaymentMethod === 'netbanking') {
-                    successMessage += '\n\nOur team will contact you shortly for payment instructions.';
-                } else if (selectedPaymentMethod === 'cod') {
-                    successMessage += '\n\nPlease have exact cash ready when our service provider arrives.';
-                }
-
-                alert(successMessage);
-
-                // Redirect to success page
-                window.location.href = 'payment-success.html?order_id=' + orderData.orderId + '&amount=' + orderData.total + '&payment_method=' + selectedPaymentMethod;
-            }
-
-            // Get payment method display name
-            function getPaymentMethodName(method) {
-                const names = {
-                    'card': 'Credit/Debit Card',
-                    'upi': 'UPI Payment',
-                    'netbanking': 'Net Banking',
-                    'cod': 'Cash on Delivery'
-                };
-                return names[method] || method;
-            }
-
-            // Calculate duration automatically
             function updateDuration() {
                 const from = document.getElementById('bookingFrom').value;
                 const to = document.getElementById('bookingTo').value;
@@ -1507,26 +1245,19 @@
                     const toDate = new Date(to);
                     const diff = Math.round((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
                     durationInput.value = diff > 0 ? diff : 1;
-                    
-                    // Update cart item quantities based on duration
                     const cartItems = cartManager.getItems();
                     cartItems.forEach(item => {
                         item.quantity = diff;
                     });
                     localStorage.setItem('farmconnect_cart', JSON.stringify(cartItems));
                     renderCartItems();
-                } else {
-                    durationInput.value = 1;
                 }
             }
 
-            // Set minimum date for booking
             function setMinDates() {
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('bookingFrom').min = today;
                 document.getElementById('bookingTo').min = today;
-                
-                // Set default dates (today and tomorrow)
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 document.getElementById('bookingFrom').value = today;
@@ -1534,93 +1265,167 @@
                 updateDuration();
             }
 
-            // Event listeners for date inputs
             document.getElementById('bookingFrom').addEventListener('change', updateDuration);
             document.getElementById('bookingTo').addEventListener('change', updateDuration);
 
-            // User profile management
-            const userProfileNav = document.getElementById('userProfileNav');
-            
             function checkUserLoginState() {
-                // Support multiple session/storage keys and normalize fields
-                let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user') || localStorage.getItem('farmconnect_remembered_user');
+                let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user');
                 let currentUser = null;
-                try { currentUser = raw ? JSON.parse(raw) : null; } catch (e) { currentUser = null; }
-
+                try { currentUser = raw ? JSON.parse(raw) : null; } catch(e) {}
+                const userProfileNav = document.getElementById('userProfileNav');
                 if (currentUser && userProfileNav) {
                     userProfileNav.style.display = 'flex';
-                    // Update user info
-                    const userAvatar = document.getElementById('userAvatar');
                     const userDisplayName = document.getElementById('userDisplayName');
                     const userDisplayRole = document.getElementById('userDisplayRole');
-
-                    const displayName = currentUser.fullname || currentUser.name || currentUser.username || 'User';
-                    const role = currentUser.userType || currentUser.role || '';
-
-                    const imageUrl = currentUser.profileImage || currentUser.avatar || currentUser.image || null;
-                    if (userAvatar) {
-                        if (imageUrl) {
-                            userAvatar.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-                        } else {
-                            const names = (displayName || 'User').split(' ');
-                            const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
-                            userAvatar.innerHTML = initials;
-                        }
+                    if (userDisplayName) userDisplayName.textContent = currentUser.fullname || currentUser.name || 'User';
+                    if (userDisplayRole) userDisplayRole.textContent = currentUser.userType || currentUser.role || 'Farmer';
+                    if (document.querySelector('input[name="fullName"]')) {
+                        document.querySelector('input[name="fullName"]').value = currentUser.fullname || '';
                     }
-
-                    if (userDisplayName) userDisplayName.textContent = displayName;
-                    if (userDisplayRole) userDisplayRole.textContent = formatUserType(role);
-
-                    // Pre-fill customer information
-                    if (currentUser.fullname) {
-                        document.querySelector('input[name="fullName"]').value = currentUser.fullname;
+                    if (document.querySelector('input[name="email"]')) {
+                        document.querySelector('input[name="email"]').value = currentUser.email || '';
                     }
-                    if (currentUser.email) {
-                        document.querySelector('input[name="email"]').value = currentUser.email;
-                    }
-                    if (currentUser.phone) {
-                        document.querySelector('input[name="phone"]').value = currentUser.phone;
+                    if (document.querySelector('input[name="phone"]')) {
+                        document.querySelector('input[name="phone"]').value = currentUser.phone || '';
                     }
                 } else if (userProfileNav) {
                     userProfileNav.style.display = 'none';
                 }
             }
 
-            function formatUserType(userType) {
-                const typeMap = {
-                    'farmer': 'Farmer',
-                    'machinery_owner': 'Machinery Owner',
-                    'labour': 'Labour Provider',
-                    'admin': 'Administrator'
+            function validatePaymentMethod() {
+                switch (selectedPaymentMethod) {
+                    case 'upi':
+                        const upiId = document.getElementById('upiId');
+                        if (upiId && (!upiId.value || !upiId.value.includes('@'))) {
+                            alert('Please enter a valid UPI ID (e.g., yourname@upi).');
+                            return false;
+                        }
+                        break;
+                    case 'netbanking':
+                        const bank = document.getElementById('bankSelect');
+                        if (bank && !bank.value) {
+                            alert('Please select your bank.');
+                            return false;
+                        }
+                        break;
+                }
+                return true;
+            }
+
+            function initiateRazorpayPayment(orderData) {
+                const options = {
+                    key: 'rzp_test_farmconnect_key',
+                    amount: orderData.total * 100,
+                    currency: 'INR',
+                    name: 'FarmConnect',
+                    description: 'Agricultural Services Booking',
+                    order_id: 'order_' + Math.random().toString(36).substr(2, 14),
+                    handler: function(response) {
+                        if (response.razorpay_payment_id) {
+                            orderData.payment = { paymentId: response.razorpay_payment_id, status: 'completed' };
+                            completeOrder(orderData);
+                        } else {
+                            alert('Payment failed. Please try again.');
+                            placeOrderBtn.disabled = false;
+                            placeOrderBtn.innerHTML = '<i class="fas fa-shopping-bag"></i> Place Order';
+                        }
+                    },
+                    prefill: {
+                        name: orderData.customer.fullName,
+                        email: orderData.customer.email,
+                        contact: orderData.customer.phone
+                    },
+                    theme: { color: '#4CAF50' }
                 };
-                return typeMap[userType] || userType;
+                const rzp = new Razorpay(options);
+                rzp.open();
             }
 
-            // Logout function
-            window.logout = function() {
-                localStorage.removeItem('farmconnect_current_user');
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
+            function processManualPayment(orderData) {
+                placeOrderBtn.innerHTML = '<div class="spinner"></div> Processing...';
+                placeOrderBtn.disabled = true;
+                setTimeout(() => {
+                    if (selectedPaymentMethod === 'upi') {
+                        orderData.payment = { paymentId: 'upi_' + Math.random().toString(36).substr(2, 10), status: 'pending' };
+                    } else if (selectedPaymentMethod === 'netbanking') {
+                        orderData.payment = { paymentId: 'netbank_' + Math.random().toString(36).substr(2, 10), status: 'pending' };
+                    } else if (selectedPaymentMethod === 'cod') {
+                        orderData.payment = { method: 'cod', status: 'pending' };
+                    }
+                    completeOrder(orderData);
+                }, 2000);
             }
 
-            // Mobile menu toggle
+            function completeOrder(orderData) {
+                const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || [];
+                orders.push(orderData);
+                localStorage.setItem('farmconnect_orders', JSON.stringify(orders));
+                cartManager.clearCart();
+                
+                let successMsg = `✅ Order placed successfully!\n\nOrder ID: ${orderData.orderId}\nTotal Amount: ₹${orderData.total}\nPayment Method: ${selectedPaymentMethod.toUpperCase()}`;
+                alert(successMsg);
+                window.location.href = 'payment-success.html?order_id=' + orderData.orderId;
+            }
+
+            placeOrderBtn.addEventListener('click', function() {
+                const currentUser = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
+                if (!currentUser) {
+                    alert('Please login or register to complete your booking.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                if (cartManager.getItems().length === 0) {
+                    alert('Please add items to your cart before placing an order.');
+                    return;
+                }
+                const formData = new FormData(checkoutForm);
+                const customerData = {};
+                for (let [key, value] of formData.entries()) {
+                    if (!value.trim()) {
+                        alert('Please fill in all customer information fields.');
+                        return;
+                    }
+                    customerData[key] = value;
+                }
+                const bookingFrom = new Date(customerData.bookingFrom);
+                const bookingTo = new Date(customerData.bookingTo);
+                if (bookingTo <= bookingFrom) {
+                    alert('Booking "To" date must be after Booking "From" date.');
+                    return;
+                }
+                if (!validatePaymentMethod()) return;
+
+                const orderData = {
+                    customer: customerData,
+                    items: cartManager.getItems(),
+                    payment: { method: selectedPaymentMethod },
+                    total: cartManager.getTotalPrice() + (selectedPaymentMethod === 'cod' ? 50 : 0),
+                    orderId: 'FC' + Date.now(),
+                    orderDate: new Date().toISOString(),
+                    status: 'confirmed'
+                };
+
+                if (selectedPaymentMethod === 'card') {
+                    initiateRazorpayPayment(orderData);
+                } else {
+                    processManualPayment(orderData);
+                }
+            });
+
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.querySelector('.nav-menu');
             if (hamburger && navMenu) {
                 hamburger.addEventListener('click', function() {
                     navMenu.classList.toggle('active');
-                    hamburger.classList.toggle('active');
                 });
             }
 
-            // Initial setup
             setMinDates();
             renderCartItems();
             checkUserLoginState();
             cartManager.updateCartCount();
-            
-            console.log('Billing page initialized successfully');
-            console.log('Cart items:', cartManager.getItems());
+            initializePaymentMethods();
         });
     </script>
 </body>

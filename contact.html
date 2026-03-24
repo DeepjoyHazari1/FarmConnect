@@ -1,36 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - FarmConnect</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="auth.js"></script>
     <style>
-        /* Enhanced Contact Page Styles */
+        /* Color Variables */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #F57C00;
+            --accent: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #1B5E20;
+            --text: #212121;
+            --text-light: #757575;
+            --white: #FFFFFF;
+            --gray-bg: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            gap: 5px;
+            margin-left: 15px;
+            background: var(--light);
+            padding: 5px 10px;
+            border-radius: 40px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+
+        .lang-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-brand h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-brand i {
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            border-radius: 8px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background-color: var(--light);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 3px 0;
+            transition: var(--transition);
+        }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 1rem;
+            border: 2px solid transparent;
+        }
+
+        .auth-login {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .auth-login:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .auth-register {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: var(--white);
+        }
+
+        /* User Profile */
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info-nav {
+            text-align: right;
+        }
+
+        .user-name-nav {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .user-role-nav {
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-avatar-nav {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar-nav:hover {
+            transform: scale(1.05);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 8px 0;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        /* Contact Hero */
         .contact-hero {
-            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white;
             padding: 80px 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
         }
 
         .contact-hero h1 {
             font-size: 3rem;
             margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .contact-hero p {
             font-size: 1.2rem;
             max-width: 600px;
             margin: 0 auto;
-            opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
+        /* Contact Info Section */
         .contact-info-section {
             padding: 80px 0;
-            background: #f8f9fa;
+            background: var(--gray-bg);
         }
 
         .contact-grid {
@@ -41,13 +379,12 @@
         }
 
         .contact-card {
-            background: white;
+            background: var(--white);
             padding: 40px 30px;
-            border-radius: 15px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            border: 1px solid #f0f0f0;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
@@ -59,18 +396,18 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A, #FF9800);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
         .contact-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(46, 125, 50, 0.15);
+            box-shadow: var(--shadow-lg);
         }
 
         .contact-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -78,7 +415,12 @@
             margin: 0 auto 25px;
             color: white;
             font-size: 2rem;
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .contact-card h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
         }
 
         .contact-details {
@@ -90,25 +432,25 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #555;
+            color: var(--text-light);
         }
 
         .contact-details i {
-            color: #4CAF50;
+            color: var(--primary);
             width: 20px;
         }
 
+        /* Contact Form Section */
         .contact-form-section {
             padding: 80px 0;
-            background: white;
+            background: var(--white);
         }
 
         .form-container {
-            background: #f8f9fa;
+            background: var(--gray-bg);
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
         }
 
         .form-row {
@@ -126,7 +468,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #2E7D32;
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -134,18 +476,18 @@
 
         .form-control {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #E0E0E0;
-            border-radius: 10px;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             background: white;
         }
 
         .form-control:focus {
-            border-color: #4CAF50;
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
         }
 
         textarea.form-control {
@@ -167,141 +509,201 @@
             z-index: 1000;
             backdrop-filter: blur(5px);
         }
-        
+
         .popup-content {
             background-color: white;
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 24px;
             text-align: center;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-lg);
             animation: popIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
-        
+
         .popup-icon {
             font-size: 80px;
-            color: #4CAF50;
+            color: var(--primary);
             margin-bottom: 20px;
             animation: bounce 1s ease;
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
         }
-        
+
         .popup-content h3 {
             margin-bottom: 15px;
-            color: #2E7D32;
+            color: var(--primary);
             font-size: 1.8rem;
         }
-        
+
         .popup-content p {
             margin-bottom: 15px;
             line-height: 1.6;
-            color: #555;
+            color: var(--text-light);
         }
 
-        /* Responsive Design */
+        /* Footer */
+        .footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 50px 0 20px;
+        }
+
         @media (max-width: 768px) {
             .contact-hero h1 {
                 font-size: 2.2rem;
             }
-            
+
             .form-row {
                 grid-template-columns: 1fr;
                 gap: 0;
             }
-            
+
             .form-container {
                 padding: 25px;
             }
-            
+
             .contact-grid {
                 grid-template-columns: 1fr;
             }
+
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .language-switcher {
+                margin-left: 0;
+                margin-top: 10px;
+            }
         }
     </style>
-    <!-- Add this to index.html, machinery.html, labour.html, contact.html, billing.html, login.html -->
-     <script src="api-client.js"></script>
-<script src="dashboard.js"></script>
-<script src="database.js"></script>
+    <script src="api-client.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="database.js"></script>
 </head>
-<body>
-   <header class="header">
-    <nav class="navbar">
-        <div class="nav-brand">
-            <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
-        </div>
-        
-        <ul class="nav-menu">
-            <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> Machinery</a></li>
-            <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> Labour</a></li>
-                <span id="cartCount">0</span>
-            </a></li>
-        </ul>
-        
-        <!-- User Profile (shown when logged in) -->
-        <div id="userProfileNav" class="user-profile-nav" style="display: none;">
-            <div class="user-dropdown">
-                <div class="user-avatar-nav" id="userAvatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="dropdown-menu" id="userDropdown">
-                    <a href="dashboard.html" class="dropdown-item">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
-                    <a href="dashboard.html#profile" class="dropdown-item">
-                        <i class="fas fa-user-cog"></i> Profile Settings
-                    </a>
-                    <a href="dashboard.html#orders" class="dropdown-item">
-                        <i class="fas fa-shopping-bag"></i> My Orders
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
-            </div>
-            <div class="user-info-nav">
-                <div class="user-name-nav" id="userDisplayName">User Name</div>
-                <div class="user-role-nav" id="userDisplayRole">Farmer</div>
-            </div>
-        </div>
-        
-        <!-- Login/Register (shown when not logged in) -->
-        <div id="authButtons" class="auth-buttons">
-            <a href="login.html" class="auth-btn auth-login">Login</a>
-            <a href="register.html" class="auth-btn auth-register">Register</a>
-        </div>
-        
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
-</header>
 
-    <!-- Success Message Popup (Initially Hidden) -->
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> <span
+                            data-key="home">Home</span></a></li>
+                <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> <span
+                            data-key="machinery">Machinery</span></a></li>
+                <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> <span
+                            data-key="labour">Labour</span></a></li>
+                <li><a href="contact.html" class="nav-link active"><i class="fas fa-envelope"></i> <span
+                            data-key="contact">Contact</span></a></li>
+
+                <!-- Language Switcher -->
+                <div class="language-switcher">
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                    <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+                    <button class="lang-btn" data-lang="bn">🇧🇩 বাংলা</button>
+                </div>
+
+                <div id="userProfileNav" class="user-profile-nav" style="display: none;">
+                    <div class="user-dropdown">
+                        <div class="user-avatar-nav" id="userAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="dropdown-menu" id="userDropdown">
+                            <a href="dashboard.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i> <span data-key="dashboard">Dashboard</span>
+                            </a>
+                            <a href="dashboard.html#profile" class="dropdown-item">
+                                <i class="fas fa-user-cog"></i> <span data-key="profileSettings">Profile Settings</span>
+                            </a>
+                            <a href="dashboard.html#orders" class="dropdown-item">
+                                <i class="fas fa-shopping-bag"></i> <span data-key="myOrders">My Orders</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i> <span data-key="logout">Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="user-info-nav">
+                        <div class="user-name-nav" id="userDisplayName">User Name</div>
+                        <div class="user-role-nav" id="userDisplayRole"><span data-key="farmer">Farmer</span></div>
+                    </div>
+                </div>
+            </ul>
+
+            <div id="authButtons" class="auth-buttons">
+                <a href="login.html" class="auth-btn auth-login"><span data-key="login">Login</span></a>
+                <a href="register.html" class="auth-btn auth-register"><span data-key="register">Register</span></a>
+            </div>
+
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Success Message Popup -->
     <div id="successMessage" class="success-popup" style="display: none;">
         <div class="popup-content">
             <div class="popup-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h3>Message Sent Successfully!</h3>
-            <p>Thank you for contacting us. We have received your message and will get back to you as soon as possible.</p>
-            <p><strong>Our team will contact you within 24 hours.</strong></p>
+            <h3 data-key="successTitle">Message Sent Successfully!</h3>
+            <p data-key="successMsg">Thank you for contacting us. We have received your message and will get back to you
+                as soon as possible.</p>
+            <p><strong data-key="responseTime">Our team will contact you within 24 hours.</strong></p>
             <button onclick="closeSuccessMessage()" class="btn btn-primary" style="margin-top: 20px;">
-                <i class="fas fa-thumbs-up"></i> Got It!
+                <i class="fas fa-thumbs-up"></i> <span data-key="gotIt">Got It!</span>
             </button>
         </div>
     </div>
@@ -309,45 +711,52 @@
     <!-- Contact Hero Section -->
     <section class="contact-hero">
         <div class="container">
-            <h1>Get In Touch</h1>
-            <p>Have questions or need assistance? We're here to help you with all your agricultural needs.</p>
+            <h1 data-key="contactHeroTitle">Get In Touch</h1>
+            <p data-key="contactHeroSubtitle">Have questions or need assistance? We're here to help you with all your
+                agricultural needs.</p>
         </div>
     </section>
 
     <!-- Contact Information Section -->
     <section class="contact-info-section">
         <div class="container">
-            <h2 class="section-title">Our Contact Information</h2>
-            <p class="section-subtitle" style="text-align: center; color: #666; margin-bottom: 40px;">
+            <h2 class="section-title" data-key="contactInfoTitle">Our Contact Information</h2>
+            <p class="section-subtitle" data-key="contactInfoSubtitle">
                 Reach out to us through any of these channels
             </p>
-            
+
             <div class="contact-grid">
                 <div class="contact-card">
                     <div class="contact-icon">
                         <i class="fas fa-user-tie"></i>
                     </div>
-                    <h3>Primary Contact Person</h3>
+                    <h3 data-key="primaryContact">Primary Contact Person</h3>
                     <div class="contact-details">
-                        <p><i class="fas fa-user"></i> <strong>Deepjoy Hazari,Anurag Chakraborty,Kuntal Sonar & Shankhadeep Das</strong></p>
-                        <p><i class="fas fa-phone"></i> <a href="tel:+919861655134" style="color: #2E7D32; text-decoration: none;">+91 9861655134</a></p>
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:farmconnect@gmail.com" style="color: #2E7D32; text-decoration: none;">farmconnect@gmail.com</a></p>
-                        <p><i class="fas fa-graduation-cap"></i> 4th Year Student</p>
-                        <p><i class="fas fa-university"></i> Final Year Project</p>
+                        <p><i class="fas fa-user"></i> <strong>Deepjoy Hazari, Anurag Chakraborty, Kuntal Sonar &
+                                Shankhadeep Das</strong></p>
+                        <p><i class="fas fa-phone"></i> <a href="tel:+919861655134"
+                                style="color: var(--primary); text-decoration: none;">+91 9861655134</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:farmconnect@gmail.com"
+                                style="color: var(--primary); text-decoration: none;">farmconnect@gmail.com</a></p>
+                        <p><i class="fas fa-graduation-cap"></i> <span data-key="studentYear">4th Year Student</span>
+                        </p>
+                        <p><i class="fas fa-university"></i> <span data-key="finalYearProject">Final Year Project</span>
+                        </p>
                     </div>
                 </div>
-                
+
                 <div class="contact-card">
                     <div class="contact-icon">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
-                    <h3>College Address</h3>
+                    <h3 data-key="collegeAddress">College Address</h3>
                     <div class="contact-details">
                         <p><i class="fas fa-school"></i> <strong>JIS College of Engineering</strong></p>
                         <p><i class="fas fa-location-arrow"></i> Block A, Phase III, Kalyani</p>
                         <p><i class="fas fa-city"></i> Nadia, West Bengal</p>
                         <p><i class="fas fa-flag"></i> India - 741235</p>
-                        <p><i class="fas fa-code-branch"></i> Agricultural Engineering</p>
+                        <p><i class="fas fa-code-branch"></i> <span data-key="agriEngineering">Agricultural
+                                Engineering</span></p>
                     </div>
                 </div>
 
@@ -355,13 +764,14 @@
                     <div class="contact-icon">
                         <i class="fas fa-clock"></i>
                     </div>
-                    <h3>Availability</h3>
+                    <h3 data-key="availability">Availability</h3>
                     <div class="contact-details">
-                        <p><i class="fas fa-calendar-check"></i> <strong>Monday - Friday</strong></p>
+                        <p><i class="fas fa-calendar-check"></i> <strong data-key="weekdays">Monday - Friday</strong>
+                        </p>
                         <p><i class="fas fa-sun"></i> 9:00 AM - 6:00 PM</p>
-                        <p><i class="fas fa-calendar-day"></i> <strong>Saturday</strong></p>
+                        <p><i class="fas fa-calendar-day"></i> <strong data-key="saturday">Saturday</strong></p>
                         <p><i class="fas fa-sun"></i> 10:00 AM - 2:00 PM</p>
-                        <p><i class="fas fa-moon"></i> <strong>Sunday: Closed</strong></p>
+                        <p><i class="fas fa-moon"></i> <strong data-key="sunday">Sunday: Closed</strong></p>
                     </div>
                 </div>
             </div>
@@ -372,206 +782,413 @@
     <section class="contact-form-section">
         <div class="container">
             <div class="form-container">
-                <h2 style="text-align: center; color: #2E7D32; margin-bottom: 10px;">Send us a Message</h2>
-                <p style="text-align: center; color: #666; margin-bottom: 30px;">We'll get back to you within 24 hours</p>
-                
+                <h2 style="text-align: center; color: var(--primary); margin-bottom: 10px;" data-key="sendMessage">Send
+                    us a Message</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 30px;"
+                    data-key="responseTimeMsg">We'll get back to you within 24 hours</p>
+
                 <form id="contactForm" class="contact-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name" class="form-label">
-                                <i class="fas fa-user"></i> Your Name *
+                                <i class="fas fa-user"></i> <span data-key="yourName">Your Name</span> *
                             </label>
-                            <input type="text" id="name" name="name" class="form-control" required 
-                                   placeholder="Enter your full name">
+                            <input type="text" id="name" name="name" class="form-control" required
+                                data-key="namePlaceholder" placeholder="Enter your full name">
                         </div>
                         <div class="form-group">
                             <label for="phone" class="form-label">
-                                <i class="fas fa-phone"></i> Phone Number *
+                                <i class="fas fa-phone"></i> <span data-key="phoneNumber">Phone Number</span> *
                             </label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required 
-                                   placeholder="Enter your 10-digit phone number">
+                            <input type="tel" id="phone" name="phone" class="form-control" required
+                                data-key="phonePlaceholder" placeholder="Enter your 10-digit phone number">
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="email" class="form-label">
-                            <i class="fas fa-envelope"></i> Email Address *
+                            <i class="fas fa-envelope"></i> <span data-key="emailAddress">Email Address</span> *
                         </label>
-                        <input type="email" id="email" name="email" class="form-control" required 
-                               placeholder="Enter your email address">
+                        <input type="email" id="email" name="email" class="form-control" required
+                            data-key="emailPlaceholder" placeholder="Enter your email address">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="subject" class="form-label">
-                            <i class="fas fa-tag"></i> Subject *
+                            <i class="fas fa-tag"></i> <span data-key="subject">Subject</span> *
                         </label>
                         <select id="subject" name="subject" class="form-control" required>
-                            <option value="">Select a topic</option>
-                            <option value="general">General Inquiry</option>
-                            <option value="technical">Technical Support</option>
-                            <option value="booking">Booking Issues</option>
-                            <option value="partnership">Partnership Opportunity</option>
-                            <option value="feedback">Feedback & Suggestions</option>
-                            <option value="other">Other</option>
+                            <option value="" data-key="selectTopic">Select a topic</option>
+                            <option value="general" data-key="generalInquiry">General Inquiry</option>
+                            <option value="technical" data-key="technicalSupport">Technical Support</option>
+                            <option value="booking" data-key="bookingIssues">Booking Issues</option>
+                            <option value="partnership" data-key="partnership">Partnership Opportunity</option>
+                            <option value="feedback" data-key="feedback">Feedback & Suggestions</option>
+                            <option value="other" data-key="other">Other</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="message" class="form-label">
-                            <i class="fas fa-comment"></i> Your Message *
+                            <i class="fas fa-comment"></i> <span data-key="yourMessage">Your Message</span> *
                         </label>
-                        <textarea id="message" name="message" class="form-control" rows="5" 
-                                  placeholder="Please describe your inquiry in detail..." required></textarea>
+                        <textarea id="message" name="message" class="form-control" rows="5"
+                            data-key="messagePlaceholder" placeholder="Please describe your inquiry in detail..."
+                            required></textarea>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary btn-full">
-                        <i class="fas fa-paper-plane"></i> Send Message
+                        <i class="fas fa-paper-plane"></i> <span data-key="sendMessageBtn">Send Message</span>
                     </button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Enhanced Footer -->
-    <footer class="footer" style="background: #1B5E20; color: white; padding: 50px 0 20px; margin-top: 50px;">
+    <!-- Footer -->
+    <footer class="footer">
         <div class="container">
             <div style="text-align: center; margin-bottom: 30px;">
                 <h3 style="color: white; margin-bottom: 20px;">
                     <i class="fas fa-tractor"></i> FarmConnect
                 </h3>
-                <p style="opacity: 0.8;">Connecting farmers with agricultural machinery and skilled labor</p>
+                <p style="opacity: 0.8;" data-key="footerDesc">Connecting farmers with agricultural machinery and
+                    skilled labor</p>
             </div>
             <div style="text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
                 <p style="opacity: 0.7; font-size: 0.9rem;">
-                    &copy; 2025 FarmConnect. All rights reserved. | Final Year Project - JIS College of Engineering
+                    &copy; 2025 FarmConnect. <span data-key="allRights">All rights reserved.</span> | <span
+                        data-key="projectInfo">Final Year Project - JIS College of Engineering</span>
                 </p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Function to show the success message popup
+        // ========== COMPLETE LANGUAGE TRANSLATIONS ==========
+        const translations = {
+            en: {
+                // Navigation
+                home: "Home", machinery: "Machinery", labour: "Labour", contact: "Contact",
+                dashboard: "Dashboard", profileSettings: "Profile Settings", myOrders: "My Orders",
+                logout: "Logout", login: "Login", register: "Register", farmer: "Farmer",
+
+                // Contact Hero
+                contactHeroTitle: "Get In Touch",
+                contactHeroSubtitle: "Have questions or need assistance? We're here to help you with all your agricultural needs.",
+
+                // Contact Info
+                contactInfoTitle: "Our Contact Information",
+                contactInfoSubtitle: "Reach out to us through any of these channels",
+                primaryContact: "Primary Contact Person",
+                collegeAddress: "College Address",
+                availability: "Availability",
+                studentYear: "4th Year Student",
+                finalYearProject: "Final Year Project",
+                agriEngineering: "Agricultural Engineering",
+                weekdays: "Monday - Friday",
+                saturday: "Saturday",
+                sunday: "Sunday: Closed",
+
+                // Contact Form
+                sendMessage: "Send us a Message",
+                responseTimeMsg: "We'll get back to you within 24 hours",
+                yourName: "Your Name",
+                phoneNumber: "Phone Number",
+                emailAddress: "Email Address",
+                subject: "Subject",
+                yourMessage: "Your Message",
+                sendMessageBtn: "Send Message",
+                namePlaceholder: "Enter your full name",
+                phonePlaceholder: "Enter your 10-digit phone number",
+                emailPlaceholder: "Enter your email address",
+                messagePlaceholder: "Please describe your inquiry in detail...",
+                selectTopic: "Select a topic",
+                generalInquiry: "General Inquiry",
+                technicalSupport: "Technical Support",
+                bookingIssues: "Booking Issues",
+                partnership: "Partnership Opportunity",
+                feedback: "Feedback & Suggestions",
+                other: "Other",
+
+                // Success Popup
+                successTitle: "Message Sent Successfully!",
+                successMsg: "Thank you for contacting us. We have received your message and will get back to you as soon as possible.",
+                responseTime: "Our team will contact you within 24 hours.",
+                gotIt: "Got It!",
+
+                // Footer
+                footerDesc: "Connecting farmers with agricultural machinery and skilled labor",
+                allRights: "All rights reserved.",
+                projectInfo: "Final Year Project - JIS College of Engineering"
+            },
+            hi: {
+                home: "होम", machinery: "मशीनरी", labour: "श्रमिक", contact: "संपर्क",
+                dashboard: "डैशबोर्ड", profileSettings: "प्रोफ़ाइल सेटिंग्स", myOrders: "मेरे ऑर्डर",
+                logout: "लॉगआउट", login: "लॉगिन", register: "रजिस्टर", farmer: "किसान",
+
+                contactHeroTitle: "संपर्क करें",
+                contactHeroSubtitle: "प्रश्न हैं या सहायता चाहिए? हम आपकी सभी कृषि आवश्यकताओं में आपकी मदद के लिए यहाँ हैं।",
+
+                contactInfoTitle: "हमारी संपर्क जानकारी",
+                contactInfoSubtitle: "इनमें से किसी भी माध्यम से हमसे संपर्क करें",
+                primaryContact: "प्राथमिक संपर्क व्यक्ति",
+                collegeAddress: "कॉलेज का पता",
+                availability: "उपलब्धता",
+                studentYear: "चौथे वर्ष के छात्र",
+                finalYearProject: "अंतिम वर्ष परियोजना",
+                agriEngineering: "कृषि इंजीनियरिंग",
+                weekdays: "सोमवार - शुक्रवार",
+                saturday: "शनिवार",
+                sunday: "रविवार: बंद",
+
+                sendMessage: "हमें संदेश भेजें",
+                responseTimeMsg: "हम 24 घंटे के भीतर आपसे संपर्क करेंगे",
+                yourName: "आपका नाम",
+                phoneNumber: "फोन नंबर",
+                emailAddress: "ईमेल पता",
+                subject: "विषय",
+                yourMessage: "आपका संदेश",
+                sendMessageBtn: "संदेश भेजें",
+                namePlaceholder: "अपना पूरा नाम दर्ज करें",
+                phonePlaceholder: "अपना 10 अंकों का फोन नंबर दर्ज करें",
+                emailPlaceholder: "अपना ईमेल पता दर्ज करें",
+                messagePlaceholder: "कृपया अपनी पूछताछ का विवरण दें...",
+                selectTopic: "कोई विषय चुनें",
+                generalInquiry: "सामान्य पूछताछ",
+                technicalSupport: "तकनीकी सहायता",
+                bookingIssues: "बुकिंग समस्याएं",
+                partnership: "साझेदारी का अवसर",
+                feedback: "प्रतिक्रिया और सुझाव",
+                other: "अन्य",
+
+                successTitle: "संदेश सफलतापूर्वक भेजा गया!",
+                successMsg: "हमसे संपर्क करने के लिए धन्यवाद। हमने आपका संदेश प्राप्त कर लिया है और जल्द से जल्द आपसे संपर्क करेंगे।",
+                responseTime: "हमारी टीम 24 घंटे के भीतर आपसे संपर्क करेगी।",
+                gotIt: "समझ गए!",
+
+                footerDesc: "किसानों को कृषि मशीनरी और कुशल श्रम से जोड़ना",
+                allRights: "सभी अधिकार सुरक्षित।",
+                projectInfo: "अंतिम वर्ष परियोजना - जेआईएस कॉलेज ऑफ इंजीनियरिंग"
+            },
+            bn: {
+                home: "হোম", machinery: "যন্ত্রপাতি", labour: "শ্রমিক", contact: "যোগাযোগ",
+                dashboard: "ড্যাশবোর্ড", profileSettings: "প্রোফাইল সেটিংস", myOrders: "আমার অর্ডার",
+                logout: "লগআউট", login: "লগইন", register: "নিবন্ধন", farmer: "কৃষক",
+
+                contactHeroTitle: "যোগাযোগ করুন",
+                contactHeroSubtitle: "প্রশ্ন আছে বা সহায়তা প্রয়োজন? আমরা আপনার সমস্ত কৃষি প্রয়োজনীয়তায় আপনাকে সাহায্য করার জন্য এখানে আছি।",
+
+                contactInfoTitle: "আমাদের যোগাযোগের তথ্য",
+                contactInfoSubtitle: "এই চ্যানেলগুলির মাধ্যমে আমাদের সাথে যোগাযোগ করুন",
+                primaryContact: "প্রাথমিক যোগাযোগের ব্যক্তি",
+                collegeAddress: "কলেজের ঠিকানা",
+                availability: "প্রাপ্যতা",
+                studentYear: "চতুর্থ বর্ষের ছাত্র",
+                finalYearProject: "চূড়ান্ত বর্ষ প্রকল্প",
+                agriEngineering: "কৃষি প্রকৌশল",
+                weekdays: "সোমবার - শুক্রবার",
+                saturday: "শনিবার",
+                sunday: "রবিবার: বন্ধ",
+
+                sendMessage: "আমাদের একটি বার্তা পাঠান",
+                responseTimeMsg: "আমরা 24 ঘন্টার মধ্যে আপনার সাথে যোগাযোগ করব",
+                yourName: "আপনার নাম",
+                phoneNumber: "ফোন নম্বর",
+                emailAddress: "ইমেইল ঠিকানা",
+                subject: "বিষয়",
+                yourMessage: "আপনার বার্তা",
+                sendMessageBtn: "বার্তা পাঠান",
+                namePlaceholder: "আপনার পুরো নাম লিখুন",
+                phonePlaceholder: "আপনার 10 অঙ্কের ফোন নম্বর লিখুন",
+                emailPlaceholder: "আপনার ইমেইল ঠিকানা লিখুন",
+                messagePlaceholder: "অনুগ্রহ করে আপনার অনুসন্ধানের বিবরণ লিখুন...",
+                selectTopic: "একটি বিষয় নির্বাচন করুন",
+                generalInquiry: "সাধারণ অনুসন্ধান",
+                technicalSupport: "প্রযুক্তিগত সহায়তা",
+                bookingIssues: "বুকিং সংক্রান্ত সমস্যা",
+                partnership: "অংশীদারিত্বের সুযোগ",
+                feedback: "মতামত ও পরামর্শ",
+                other: "অন্যান্য",
+
+                successTitle: "বার্তা সফলভাবে পাঠানো হয়েছে!",
+                successMsg: "আমাদের সাথে যোগাযোগ করার জন্য ধন্যবাদ। আমরা আপনার বার্তা পেয়েছি এবং যত তাড়াতাড়ি সম্ভব আপনার সাথে যোগাযোগ করব।",
+                responseTime: "আমাদের টিম 24 ঘন্টার মধ্যে আপনার সাথে যোগাযোগ করবে।",
+                gotIt: "বুঝতে পেরেছি!",
+
+                footerDesc: "কৃষকদের কৃষি যন্ত্রপাতি এবং দক্ষ শ্রমের সাথে সংযুক্ত করা",
+                allRights: "সমস্ত অধিকার সংরক্ষিত।",
+                projectInfo: "চূড়ান্ত বর্ষ প্রকল্প - জেআইএস কলেজ অফ ইঞ্জিনিয়ারিং"
+            }
+        };
+
+        let currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('farmconnect_lang', lang);
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        if (el.hasAttribute('placeholder')) {
+                            el.placeholder = translations[lang][key];
+                        } else {
+                            el.textContent = translations[lang][key];
+                        }
+                    } else if (el.tagName === 'SELECT') {
+                        // For select options, we need to update options
+                        const options = el.options;
+                        for (let i = 0; i < options.length; i++) {
+                            const optionKey = options[i].getAttribute('data-key');
+                            if (optionKey && translations[lang][optionKey]) {
+                                options[i].textContent = translations[lang][optionKey];
+                            }
+                        }
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Language switcher event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const lang = btn.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
+        });
+
+        // Success Popup Functions
         function showSuccessMessage() {
             document.getElementById('successMessage').style.display = 'flex';
         }
-        
-        // Function to close the success message popup
+
         function closeSuccessMessage() {
             document.getElementById('successMessage').style.display = 'none';
         }
-        
-        // Function to handle form submission
+
+        // Form Submission Handler
         function handleFormSubmit(event) {
-            event.preventDefault(); // Prevent the default form submission
-            
-            // Basic form validation
+            event.preventDefault();
+
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
-            
+
             if (!name || !phone || !email || !subject || !message) {
-                alert('Please fill in all required fields.');
+                alert(translations[currentLang]?.fillAllFields || 'Please fill in all required fields.');
                 return;
             }
-            
-            // Email validation
+
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address.');
+                alert(translations[currentLang]?.validEmail || 'Please enter a valid email address.');
                 return;
             }
-            
-            // Phone validation
+
             const phoneRegex = /^\d{10}$/;
             if (!phoneRegex.test(phone.replace(/\D/g, ''))) {
-                alert('Please enter a valid 10-digit phone number.');
+                alert(translations[currentLang]?.validPhone || 'Please enter a valid 10-digit phone number.');
                 return;
             }
-            
-            // If all validations pass, show the success message
+
             showSuccessMessage();
-            
-            // Reset the form
             document.getElementById('contactForm').reset();
         }
-        
-        // Add event listener to the form
+
         document.getElementById('contactForm').addEventListener('submit', handleFormSubmit);
-        
-        // Close popup when clicking outside of it
-        document.getElementById('successMessage').addEventListener('click', function(event) {
+
+        document.getElementById('successMessage').addEventListener('click', function (event) {
             if (event.target === this) {
                 closeSuccessMessage();
             }
         });
 
-        // Initialize cart count
-        document.addEventListener('DOMContentLoaded', function() {
-            // This will be handled by cart.js
-            const cart = JSON.parse(localStorage.getItem('farmconnect_cart')) || [];
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cartCount').textContent = totalItems;
-            // Update nav for logged-in user if any
-            checkUserLoginState();
-        });
-
-        // Check user login state and populate nav
-        function checkUserLoginState() {
-            const userProfileNav = document.getElementById('userProfileNav');
-            const authButtons = document.getElementById('authButtons');
-            let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user') || localStorage.getItem('farmconnect_remembered_user');
-            let currentUser = null;
-            try { currentUser = raw ? JSON.parse(raw) : null; } catch (e) { currentUser = null; }
-
-            if (currentUser && userProfileNav) {
-                userProfileNav.style.display = 'flex';
-                if (authButtons) authButtons.style.display = 'none';
-                updateUserInfo(currentUser);
-            } else if (userProfileNav) {
-                userProfileNav.style.display = 'none';
-                if (authButtons) authButtons.style.display = 'flex';
-            }
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', function () {
+                navMenu.classList.toggle('active');
+            });
         }
 
-        function updateUserInfo(user) {
-            if (!user) return;
+        // Auth handling
+        document.addEventListener('DOMContentLoaded', function () {
+            updateLanguage(currentLang);
+
+            const userProfileNav = document.getElementById('userProfileNav');
+            const authButtons = document.getElementById('authButtons');
             const userAvatar = document.getElementById('userAvatar');
             const userDisplayName = document.getElementById('userDisplayName');
             const userDisplayRole = document.getElementById('userDisplayRole');
+            const userDropdown = document.getElementById('userDropdown');
 
-            const displayName = user.fullname || user.name || user.username || 'User';
-            const role = user.userType || user.role || '';
-
-            const imageUrl = user.profileImage || user.avatar || user.image || null;
-            if (userAvatar) {
-                if (imageUrl) {
-                    userAvatar.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-                } else {
-                    const names = (displayName || 'User').split(' ');
-                    const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
-                    userAvatar.textContent = initials;
-                }
+            let currentUser = null;
+            const stored = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
+            if (stored) {
+                try { currentUser = JSON.parse(stored); } catch (e) { currentUser = null; }
             }
 
-            if (userDisplayName) userDisplayName.textContent = displayName;
-            if (userDisplayRole) userDisplayRole.textContent = formatUserType(role);
-        }
+            if (currentUser && userProfileNav && authButtons) {
+                const displayName = currentUser.fullname || currentUser.name || currentUser.email || 'User';
+                const role = currentUser.userType || currentUser.role || '';
 
-        function formatUserType(userType) {
-            const typeMap = { 'farmer':'Farmer', 'machinery_owner':'Machinery Owner', 'labour':'Labour Provider', 'admin':'Administrator' };
-            return typeMap[userType] || (userType ? userType.toString().replace(/_/g,' ') : '');
-        }
+                if (userDisplayName) userDisplayName.textContent = displayName;
+                if (userDisplayRole) userDisplayRole.textContent = role.replace(/_/g, ' ');
 
-        // Global logout
-        window.logout = function() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('farmconnect_current_user');
-            localStorage.removeItem('farmconnect_remembered_user');
-            localStorage.removeItem('token');
-            window.location.reload();
+                if (userAvatar) {
+                    const imageUrl = currentUser.profileImage || currentUser.avatar || null;
+                    if (imageUrl) {
+                        userAvatar.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    } else {
+                        const names = displayName.split(' ');
+                        const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
+                        userAvatar.textContent = initials;
+                    }
+                }
+
+                userProfileNav.style.display = 'flex';
+                authButtons.style.display = 'none';
+
+                if (userAvatar) {
+                    userAvatar.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        userDropdown.classList.toggle('active');
+                    });
+
+                    document.addEventListener('click', function () {
+                        userDropdown.classList.remove('active');
+                    });
+                }
+            } else if (userProfileNav && authButtons) {
+                userProfileNav.style.display = 'none';
+                authButtons.style.display = 'flex';
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('farmconnect_current_user');
+                localStorage.removeItem('currentUser');
+                window.location.reload();
+            }
         }
     </script>
 </body>
+
 </html>

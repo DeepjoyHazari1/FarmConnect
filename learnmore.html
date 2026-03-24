@@ -4,32 +4,330 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How It Works - FarmConnect</title>
-    <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Color Variables */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #F57C00;
+            --accent: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #1B5E20;
+            --text: #212121;
+            --text-light: #757575;
+            --white: #FFFFFF;
+            --gray-bg: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 5px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .btn-large {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            gap: 5px;
+            margin-left: 15px;
+            background: var(--light);
+            padding: 5px 10px;
+            border-radius: 40px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+
+        .lang-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-brand h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .nav-brand i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            border-radius: 4px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background-color: var(--light);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background-color: var(--light);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 3px 0;
+            transition: var(--transition);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 1rem;
+            border: 2px solid transparent;
+        }
+
+        .auth-login {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .auth-login:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .auth-register {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: var(--white);
+        }
+
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info-nav {
+            text-align: right;
+        }
+
+        .user-name-nav {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .user-role-nav {
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+
+        /* Hero Section */
         .learn-hero {
-            background: linear-gradient(rgba(5, 163, 10, 0.8), rgba(56, 142, 60, 0.9)), ;
-            background-size: cover;
-            background-position: center;
-            color: rgb(8, 219, 61);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
             padding: 100px 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .learn-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
         }
 
         .learn-hero h1 {
             font-size: 3rem;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .learn-hero p {
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto 30px;
+            position: relative;
+            z-index: 1;
         }
 
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Steps Section */
         .steps-section {
             padding: 80px 0;
-            background: #02e289;
+            background: var(--gray-bg);
         }
 
         .steps-container {
@@ -40,67 +338,221 @@
 
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             margin-top: 50px;
         }
 
         .step-card {
             background: white;
-            border-radius: 10px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 35px 25px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
         .step-card:hover {
             transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
         }
 
         .step-icon {
-            width: 80px;
-            height: 80px;
-            background: #4CAF50;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            color: rgb(11, 226, 119);
-            font-size: 2rem;
+            margin: 0 auto 25px;
+            color: white;
+            font-size: 2.5rem;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
         }
 
-       
+        .step-number {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
+        .step-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Benefits Section */
         .benefits-section {
             padding: 80px 0;
         }
 
         .benefits-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-top: 50px;
         }
 
         .benefit-card {
             background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid #4CAF50;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
 
         .benefit-icon {
-            color: #4CAF50;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--light) 0%, #e8f5e9 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-size: 2rem;
+            transition: var(--transition);
         }
 
+        .benefit-card:hover .benefit-icon {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .benefit-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1%, transparent 1%);
+            background-size: 50px 50px;
+            animation: movePattern 30s linear infinite;
+        }
+
+        @keyframes movePattern {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .stats-section .section-title {
+            color: white;
+        }
+
+        .stats-section .section-title::after {
+            background: var(--secondary);
+        }
+
+        .stats-section .section-subtitle {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            padding: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        /* FAQ Section */
         .faq-section {
             padding: 80px 0;
-            background: #f8f9fa;
+            background: var(--gray-bg);
         }
 
         .faq-container {
@@ -110,35 +562,45 @@
 
         .faq-item {
             background: white;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            border-radius: 16px;
+            margin-bottom: 20px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
         }
 
         .faq-question {
-            padding: 20px;
+            padding: 20px 25px;
             cursor: pointer;
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             font-weight: 600;
+            font-size: 1.1rem;
+            background: white;
         }
 
         .faq-question i {
-            margin-left: auto;
             transition: transform 0.3s ease;
+            color: var(--primary);
+            font-size: 1.2rem;
         }
 
         .faq-answer {
-            padding: 0 20px;
+            padding: 0 25px;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-light);
+            line-height: 1.6;
         }
 
         .faq-item.active .faq-answer {
-            padding: 0 20px 20px;
+            padding: 0 25px 25px;
             max-height: 500px;
         }
 
@@ -146,94 +608,98 @@
             transform: rotate(180deg);
         }
 
-        .stats-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .stat-item {
-            padding: 20px;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
+        /* Testimonials Section */
         .testimonials-section {
             padding: 80px 0;
         }
 
         .testimonial-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
             margin-top: 50px;
         }
 
         .testimonial-card {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
             position: relative;
+            transition: var(--transition);
         }
 
-        .testimonial-card:before
-         {
-            content: "";
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .testimonial-card::before {
+            content: '"';
             font-size: 5rem;
-            color: #4CAF50;
-            opacity: 0.2;
+            color: var(--primary);
+            opacity: 0.1;
             position: absolute;
-            top: 10px;
-            left: 20px;
+            top: 20px;
+            left: 25px;
+            font-family: serif;
         }
 
-        .testimonial-text
-         {
+        .testimonial-text {
             font-style: italic;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             position: relative;
             z-index: 1;
+            line-height: 1.6;
+            color: var(--text);
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
         .author-avatar {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            overflow: hidden;
-            margin-right: 15px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
         }
 
-        .author-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .author-info h4 {
+            margin-bottom: 5px;
+            color: var(--dark);
         }
 
+        .author-info p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* CTA Section */
         .cta-section {
             padding: 100px 0;
-            background: linear-gradient(rgba(76, 175, 80, 0.9), rgba(56, 142, 60, 0.9)), url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             text-align: center;
+            position: relative;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
         }
 
         .cta-buttons {
@@ -246,11 +712,11 @@
 
         @media (max-width: 768px) {
             .learn-hero h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             .step-card, .benefit-card {
-                padding: 20px;
+                padding: 25px;
             }
             
             .cta-buttons {
@@ -262,23 +728,98 @@
                 width: 100%;
                 max-width: 300px;
             }
+            
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .language-switcher {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            .stats-grid {
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
         }
     </style>
-    <!-- Add this before your other script tags -->
-<script src="auth.js"></script>
-<script src="api-client.js"></script>
-<script src="dashboard.js"></script>
+    <script src="auth.js"></script>
 </head>
 <body>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> <span data-key="home">Home</span></a></li>
+                <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> <span data-key="machinery">Machinery</span></a></li>
+                <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> <span data-key="labour">Labour</span></a></li>
+                <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> <span data-key="contact">Contact</span></a></li>
+                <li><a href="learnmore.html" class="nav-link active"><i class="fas fa-info-circle"></i> <span data-key="howItWorks">How It Works</span></a></li>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                    <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+                    <button class="lang-btn" data-lang="bn">🇧🇩 বাংলা</button>
+                </div>
+                
+                <div id="userProfileNav" class="user-profile-nav" style="display: none;">
+                    <div class="user-info-nav">
+                        <div class="user-name-nav" id="userDisplayName"></div>
+                        <div class="user-role-nav" id="userDisplayRole"></div>
+                    </div>
+                    <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> <span data-key="dashboard">Dashboard</span></a></li>
+                    <li><a href="dashboard.html#profile" class="nav-link"><i class="fas fa-user-cog"></i> <span data-key="profileSettings">Profile Settings</span></a></li>
+                    <li><a href="dashboard.html#orders" class="nav-link"><i class="fas fa-shopping-bag"></i> <span data-key="myOrders">My Orders</span></a></li>
+                    <li><button class="nav-link logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span data-key="logout">Logout</span></button></li>
+                </div>
+            </ul>
+            
+            <div id="authButtons" class="auth-buttons">
+                <a href="login.html" class="auth-btn auth-login"><span data-key="login">Login</span></a>
+                <a href="register.html" class="auth-btn auth-register"><span data-key="register">Register</span></a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
 
     <!-- Hero Section -->
     <section class="learn-hero">
         <div class="container">
-            <h1>How FarmConnect Works</h1>
-            <p>Transforming agricultural resource sharing with our easy-to-use platform. Connect with machinery owners and skilled labour in just a few clicks.</p>
+            <h1 data-key="learnHeroTitle">How FarmConnect Works</h1>
+            <p data-key="learnHeroSubtitle">Transforming agricultural resource sharing with our easy-to-use platform. Connect with machinery owners and skilled labour in just a few clicks.</p>
             <div class="hero-buttons">
-                <a href="#steps" class="btn btn-primary">Get Started</a>
-                <a href="register.html" class="btn btn-secondary">Join Now</a>
+                <a href="#steps" class="btn btn-primary"><span data-key="getStartedBtn">Get Started</span></a>
+                <a href="register.html" class="btn btn-secondary"><span data-key="joinNowBtn">Join Now</span></a>
             </div>
         </div>
     </section>
@@ -286,8 +827,8 @@
     <!-- Steps Section -->
     <section id="steps" class="steps-section">
         <div class="steps-container">
-            <h2 class="section-title">Simple 4-Step Process</h2>
-            <p class="section-subtitle">From registration to completion, we've made the process straightforward for everyone</p>
+            <h2 class="section-title" data-key="stepsTitle">Simple 4-Step Process</h2>
+            <p class="section-subtitle" data-key="stepsSubtitle">From registration to completion, we've made the process straightforward for everyone</p>
             
             <div class="steps-grid">
                 <div class="step-card">
@@ -295,35 +836,35 @@
                         <i class="fas fa-user-plus"></i>
                         <div class="step-number">1</div>
                     </div>
-                    <h3>Create Account</h3>
-                    <p>Sign up as a farmer, machinery owner, or skilled labourer. It takes less than 2 minutes to get started.</p>
+                    <h3 data-key="step1Title">Create Account</h3>
+                    <p data-key="step1Desc">Sign up as a farmer, machinery owner, or skilled labourer. It takes less than 2 minutes to get started.</p>
                 </div>
                 
                 <div class="step-card">
                     <div class="step-icon">
-                        <i class="fas fa-search"></i>
+                        <i class="fas fa-search-location"></i>
                         <div class="step-number">2</div>
                     </div>
-                    <h3>Search & Select</h3>
-                    <p>Find the right machinery or labour based on your location, budget, and specific requirements.</p>
+                    <h3 data-key="step2Title">Search & Select</h3>
+                    <p data-key="step2Desc">Find the right machinery or labour based on your location, budget, and specific requirements.</p>
                 </div>
                 
                 <div class="step-card">
                     <div class="step-icon">
-                        <i class="fas fa-calendar-check"></i>
+                        <i class="fas fa-calendar-alt"></i>
                         <div class="step-number">3</div>
                     </div>
-                    <h3>Book & Confirm</h3>
-                    <p>Select dates, review pricing, and confirm your booking with secure payment options.</p>
+                    <h3 data-key="step3Title">Book & Confirm</h3>
+                    <p data-key="step3Desc">Select dates, review pricing, and confirm your booking with secure payment options.</p>
                 </div>
                 
                 <div class="step-card">
                     <div class="step-icon">
-                        <i class="fas fa-tasks"></i>
+                        <i class="fas fa-tractor"></i>
                         <div class="step-number">4</div>
                     </div>
-                    <h3>Get Work Done</h3>
-                    <p>Connect with the service provider, complete your agricultural tasks, and provide feedback.</p>
+                    <h3 data-key="step4Title">Get Work Done</h3>
+                    <p data-key="step4Desc">Connect with the service provider, complete your agricultural tasks, and provide feedback.</p>
                 </div>
             </div>
         </div>
@@ -332,56 +873,44 @@
     <!-- Benefits Section -->
     <section class="benefits-section">
         <div class="container">
-            <h2 class="section-title">Benefits of Using FarmConnect</h2>
-            <p class="section-subtitle">Why thousands of farmers trust our platform for their agricultural needs</p>
+            <h2 class="section-title" data-key="benefitsTitle">Benefits of Using FarmConnect</h2>
+            <p class="section-subtitle" data-key="benefitsSubtitle">Why thousands of farmers trust our platform for their agricultural needs</p>
             
             <div class="benefits-grid">
                 <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <h3>Cost Effective</h3>
-                    <p>Save up to 60% compared to purchasing expensive machinery. Pay only for what you need, when you need it.</p>
+                    <div class="benefit-icon"><i class="fas fa-rupee-sign"></i></div>
+                    <h3 data-key="benefit1Title">Cost Effective</h3>
+                    <p data-key="benefit1Desc">Save up to 60% compared to purchasing expensive machinery. Pay only for what you need, when you need it.</p>
                 </div>
                 
                 <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h3>Time Saving</h3>
-                    <p>Find and book resources in minutes instead of days. Our platform connects you with verified providers instantly.</p>
+                    <div class="benefit-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <h3 data-key="benefit2Title">Time Saving</h3>
+                    <p data-key="benefit2Desc">Find and book resources in minutes instead of days. Our platform connects you with verified providers instantly.</p>
                 </div>
                 
                 <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Verified Providers</h3>
-                    <p>All machinery owners and labourers are verified with proper documentation and user reviews.</p>
+                    <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 data-key="benefit3Title">Verified Providers</h3>
+                    <p data-key="benefit3Desc">All machinery owners and labourers are verified with proper documentation and user reviews.</p>
                 </div>
                 
                 <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Easy to Use</h3>
-                    <p>Simple interface designed specifically for farmers. No technical knowledge required.</p>
+                    <div class="benefit-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3 data-key="benefit4Title">Easy to Use</h3>
+                    <p data-key="benefit4Desc">Simple interface designed specifically for farmers. No technical knowledge required.</p>
                 </div>
                 
                 <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <h3>Location Based</h3>
-                    <p>Find resources available in your local area to minimize transportation costs and time.</p>
+                    <div class="benefit-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3 data-key="benefit5Title">Location Based</h3>
+                    <p data-key="benefit5Desc">Find resources available in your local area to minimize transportation costs and time.</p>
                 </div>
                 
                 <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>24/7 Support</h3>
-                    <p>Our dedicated support team is available round the clock to assist with any issues or queries.</p>
+                    <div class="benefit-icon"><i class="fas fa-headset"></i></div>
+                    <h3 data-key="benefit6Title">24/7 Support</h3>
+                    <p data-key="benefit6Desc">Our dedicated support team is available round the clock to assist with any issues or queries.</p>
                 </div>
             </div>
         </div>
@@ -390,21 +919,21 @@
     <!-- Stats Section -->
     <section class="stats-section">
         <div class="container">
-            <h2 class="section-title">FarmConnect in Numbers</h2>
-            <p class="section-subtitle">Our impact on the agricultural community</p>
+            <h2 class="section-title" data-key="statsTitle">FarmConnect in Numbers</h2>
+            <p class="section-subtitle" data-key="statsSubtitle">Our impact on the agricultural community</p>
             
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-number">750+</div>
-                    <p>Active Farmers</p>
+                    <div class="stat-number"><span data-key="statNumber1">750+</span></div>
+                    <p data-key="stat1Label">Active Farmers</p>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">200+</div>
-                    <p>Machinery Listings</p>
+                    <div class="stat-number"><span data-key="statNumber2">200+</span></div>
+                    <p data-key="stat2Label">Machinery Listings</p>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">250+</div>
-                    <p>Skilled Labourers</p>
+                    <div class="stat-number"><span data-key="statNumber3">250+</span></div>
+                    <p data-key="stat3Label">Skilled Labourers</p>
                 </div>
             </div>
         </div>
@@ -413,61 +942,59 @@
     <!-- FAQ Section -->
     <section class="faq-section">
         <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">Find answers to common questions about FarmConnect</p>
+            <h2 class="section-title" data-key="faqTitle">Frequently Asked Questions</h2>
+            <p class="section-subtitle" data-key="faqSubtitle">Find answers to common questions about FarmConnect</p>
             
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question">
-                        How do I register on FarmConnect?
+                        <span data-key="faq1Q">How do I register on FarmConnect?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>Registration is simple! Click on the "Register" button at the top right corner, select your user type (Farmer, Machinery Owner, or Labourer), fill in your details, and verify your phone number. Your account will be activated immediately.</p>
+                        <p data-key="faq1A">Registration is simple! Click on the "Register" button at the top right corner, select your user type (Farmer, Machinery Owner, or Labourer), fill in your details, and verify your phone number. Your account will be activated immediately.</p>
                     </div>
                 </div>
                 
                 <div class="faq-item">
                     <div class="faq-question">
-                        What types of machinery can I find on FarmConnect?
+                        <span data-key="faq2Q">What types of machinery can I find on FarmConnect?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>We have a wide range of agricultural machinery including tractors, harvesters, rotavators, ploughs, irrigation systems, sprayers, tillers, balers, and more. You can filter by type, power, location, and price range.</p>
+                        <p data-key="faq2A">We have a wide range of agricultural machinery including tractors, harvesters, rotavators, ploughs, irrigation systems, sprayers, tillers, balers, and more. You can filter by type, power, location, and price range.</p>
                     </div>
                 </div>
                 
                 <div class="faq-item">
                     <div class="faq-question">
-                        How are the labourers verified on your platform?
+                        <span data-key="faq3Q">How are the labourers verified on your platform?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>All labourers undergo a verification process that includes identity proof, skill certification checks, and background verification. We also have a rating system where farmers can review their experience.</p>
+                        <p data-key="faq3A">All labourers undergo a verification process that includes identity proof, skill certification checks, and background verification. We also have a rating system where farmers can review their experience.</p>
                     </div>
                 </div>
                 
                 <div class="faq-item">
                     <div class="faq-question">
-                        What payment methods are accepted?
+                        <span data-key="faq4Q">What payment methods are accepted?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>We accept multiple payment options including UPI, credit/debit cards, net banking, and cash payments. For online payments, we use secure payment gateways with SSL encryption.</p>
+                        <p data-key="faq4A">We accept multiple payment options including UPI, credit/debit cards, net banking, and cash payments. For online payments, we use secure payment gateways with SSL encryption.</p>
                     </div>
                 </div>
                 
                 <div class="faq-item">
                     <div class="faq-question">
-                        What if I need to cancel my booking?
+                        <span data-key="faq5Q">What if I need to cancel my booking?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>You can cancel your booking up to 24 hours before the scheduled date without any charges. For cancellations within 24 hours, a nominal fee may apply depending on the service provider's policy.</p>
+                        <p data-key="faq5A">You can cancel your booking up to 24 hours before the scheduled date without any charges. For cancellations within 24 hours, a nominal fee may apply depending on the service provider's policy.</p>
                     </div>
                 </div>
-                
-                
             </div>
         </div>
     </section>
@@ -475,45 +1002,39 @@
     <!-- Testimonials Section -->
     <section class="testimonials-section">
         <div class="container">
-            <h2 class="section-title">What Our Users Say</h2>
-            <p class="section-subtitle">Real stories from farmers who transformed their operations with FarmConnect</p>
+            <h2 class="section-title" data-key="testimonialsTitle">What Our Users Say</h2>
+            <p class="section-subtitle" data-key="testimonialsSubtitle">Real stories from farmers who transformed their operations with FarmConnect</p>
             
             <div class="testimonial-grid">
                 <div class="testimonial-card">
-                    <p class="testimonial-text">"FarmConnect has revolutionized how I manage my farm. I found a reliable tractor operator within 2 hours of posting my requirement. The platform is easy to use even for someone like me who isn't tech-savvy."</p>
+                    <p class="testimonial-text" data-key="testimonial1Text">"FarmConnect has revolutionized how I manage my farm. I found a reliable tractor operator within 2 hours of posting my requirement. The platform is easy to use even for someone like me who isn't tech-savvy."</p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Rajiv Mehta">
-                        </div>
-                        <div>
+                        <div class="author-avatar"><i class="fas fa-user-circle"></i></div>
+                        <div class="author-info">
                             <h4>Rajiv Mehta</h4>
-                            <p>Wheat Farmer, Nadia</p>
+                            <p data-key="testimonial1Role">Wheat Farmer, Nadia</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="testimonial-card">
-                    <p class="testimonial-text">"As a machinery owner, FarmConnect has helped me earn extra income from my equipment that was sitting idle most of the time. The booking system is straightforward, and payments are secure and timely."</p>
+                    <p class="testimonial-text" data-key="testimonial2Text">"As a machinery owner, FarmConnect has helped me earn extra income from my equipment that was sitting idle most of the time. The booking system is straightforward, and payments are secure and timely."</p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Amit Singh">
-                        </div>
-                        <div>
+                        <div class="author-avatar"><i class="fas fa-user-circle"></i></div>
+                        <div class="author-info">
                             <h4>Amit Singh</h4>
-                            <p>Machinery Owner, Kalyani</p>
+                            <p data-key="testimonial2Role">Machinery Owner, Kalyani</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="testimonial-card">
-                    <p class="testimonial-text">"I've been working as a farm labourer for 15 years, but finding consistent work was always a challenge. With FarmConnect, I get regular bookings and can showcase my skills to a wider audience."</p>
+                    <p class="testimonial-text" data-key="testimonial3Text">"I've been working as a farm labourer for 15 years, but finding consistent work was always a challenge. With FarmConnect, I get regular bookings and can showcase my skills to a wider audience."</p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Sunita Devi">
-                        </div>
-                        <div>
+                        <div class="author-avatar"><i class="fas fa-user-circle"></i></div>
+                        <div class="author-info">
                             <h4>Sunita Devi</h4>
-                            <p>Harvesting Expert, Krishnanagar</p>
+                            <p data-key="testimonial3Role">Harvesting Expert, Krishnanagar</p>
                         </div>
                     </div>
                 </div>
@@ -524,13 +1045,236 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
-            <h2>Ready to Transform Your Farming Experience?</h2>
-            <p>Join thousands of farmers who are already benefiting from FarmConnect</p>
+            <h2 data-key="ctaTitle">Ready to Transform Your Farming Experience?</h2>
+            <p data-key="ctaSubtitle">Join thousands of farmers who are already benefiting from FarmConnect</p>
             <div class="cta-buttons">
-                <a href="register.html" class="btn btn-primary btn-large">Sign Up Now</a>
-                <a href="contact.html" class="btn btn-secondary btn-large">Contact Us</a>
+                <a href="register.html" class="btn btn-primary btn-large"><span data-key="signUpNow">Sign Up Now</span></a>
+                <a href="contact.html" class="btn btn-secondary btn-large"><span data-key="contactUs">Contact Us</span></a>
             </div>
         </div>
     </section>
 
-   
+    <script>
+        // Language Translations
+        const translations = {
+            en: {
+                home: "Home", machinery: "Machinery", labour: "Labour", contact: "Contact", howItWorks: "How It Works",
+                dashboard: "Dashboard", profileSettings: "Profile Settings", myOrders: "My Orders", logout: "Logout",
+                login: "Login", register: "Register",
+                learnHeroTitle: "How FarmConnect Works",
+                learnHeroSubtitle: "Transforming agricultural resource sharing with our easy-to-use platform. Connect with machinery owners and skilled labour in just a few clicks.",
+                getStartedBtn: "Get Started", joinNowBtn: "Join Now",
+                stepsTitle: "Simple 4-Step Process",
+                stepsSubtitle: "From registration to completion, we've made the process straightforward for everyone",
+                step1Title: "Create Account", step1Desc: "Sign up as a farmer, machinery owner, or skilled labourer. It takes less than 2 minutes to get started.",
+                step2Title: "Search & Select", step2Desc: "Find the right machinery or labour based on your location, budget, and specific requirements.",
+                step3Title: "Book & Confirm", step3Desc: "Select dates, review pricing, and confirm your booking with secure payment options.",
+                step4Title: "Get Work Done", step4Desc: "Connect with the service provider, complete your agricultural tasks, and provide feedback.",
+                benefitsTitle: "Benefits of Using FarmConnect",
+                benefitsSubtitle: "Why thousands of farmers trust our platform for their agricultural needs",
+                benefit1Title: "Cost Effective", benefit1Desc: "Save up to 60% compared to purchasing expensive machinery.",
+                benefit2Title: "Time Saving", benefit2Desc: "Find and book resources in minutes instead of days.",
+                benefit3Title: "Verified Providers", benefit3Desc: "All machinery owners and labourers are verified with proper documentation.",
+                benefit4Title: "Easy to Use", benefit4Desc: "Simple interface designed specifically for farmers.",
+                benefit5Title: "Location Based", benefit5Desc: "Find resources available in your local area.",
+                benefit6Title: "24/7 Support", benefit6Desc: "Our dedicated support team is available round the clock.",
+                statsTitle: "FarmConnect in Numbers", statsSubtitle: "Our impact on the agricultural community",
+                statNumber1: "750+", statNumber2: "200+", statNumber3: "250+",
+                stat1Label: "Active Farmers", stat2Label: "Machinery Listings", stat3Label: "Skilled Labourers",
+                faqTitle: "Frequently Asked Questions", faqSubtitle: "Find answers to common questions about FarmConnect",
+                faq1Q: "How do I register on FarmConnect?", faq2Q: "What types of machinery can I find on FarmConnect?",
+                faq3Q: "How are the labourers verified on your platform?", faq4Q: "What payment methods are accepted?",
+                faq5Q: "What if I need to cancel my booking?",
+                faq1A: "Registration is simple! Click on the 'Register' button at the top right corner, select your user type, fill in your details, and verify your phone number.",
+                faq2A: "We have a wide range of agricultural machinery including tractors, harvesters, rotavators, ploughs, irrigation systems, sprayers, tillers, balers, and more.",
+                faq3A: "All labourers undergo a verification process that includes identity proof, skill certification checks, and background verification.",
+                faq4A: "We accept multiple payment options including UPI, credit/debit cards, net banking, and cash payments.",
+                faq5A: "You can cancel your booking up to 24 hours before the scheduled date without any charges.",
+                testimonialsTitle: "What Our Users Say", testimonialsSubtitle: "Real stories from farmers who transformed their operations",
+                testimonial1Text: "FarmConnect has revolutionized how I manage my farm. I found a reliable tractor operator within 2 hours.",
+                testimonial1Role: "Wheat Farmer, Nadia",
+                testimonial2Text: "As a machinery owner, FarmConnect has helped me earn extra income from my equipment that was sitting idle.",
+                testimonial2Role: "Machinery Owner, Kalyani",
+                testimonial3Text: "With FarmConnect, I get regular bookings and can showcase my skills to a wider audience.",
+                testimonial3Role: "Harvesting Expert, Krishnanagar",
+                ctaTitle: "Ready to Transform Your Farming Experience?", ctaSubtitle: "Join thousands of farmers who are already benefiting from FarmConnect",
+                signUpNow: "Sign Up Now", contactUs: "Contact Us"
+            },
+            hi: {
+                home: "होम", machinery: "मशीनरी", labour: "श्रमिक", contact: "संपर्क", howItWorks: "यह कैसे काम करता है",
+                dashboard: "डैशबोर्ड", profileSettings: "प्रोफ़ाइल सेटिंग्स", myOrders: "मेरे ऑर्डर", logout: "लॉगआउट",
+                login: "लॉगिन", register: "रजिस्टर",
+                learnHeroTitle: "FarmConnect कैसे काम करता है",
+                learnHeroSubtitle: "हमारे आसान-से-उपयोग प्लेटफॉर्म के साथ कृषि संसाधन साझाकरण को बदलना।",
+                getStartedBtn: "शुरू करें", joinNowBtn: "अभी जुड़ें",
+                stepsTitle: "सरल 4-चरणीय प्रक्रिया",
+                stepsSubtitle: "पंजीकरण से लेकर पूर्णता तक, हमने सभी के लिए प्रक्रिया सीधी बना दी है",
+                step1Title: "खाता बनाएं", step2Title: "खोजें और चुनें", step3Title: "बुक करें और पुष्टि करें", step4Title: "काम पूरा करें",
+                step1Desc: "किसान, मशीनरी मालिक, या कुशल श्रमिक के रूप में साइन अप करें।", step2Desc: "अपने स्थान, बजट और विशिष्ट आवश्यकताओं के आधार पर सही मशीनरी या श्रम खोजें।",
+                step3Desc: "तिथियां चुनें, मूल्य निर्धारण की समीक्षा करें, और सुरक्षित भुगतान विकल्पों के साथ अपनी बुकिंग की पुष्टि करें।",
+                step4Desc: "सेवा प्रदाता से जुड़ें, अपने कृषि कार्य पूरा करें, और प्रतिक्रिया दें।",
+                benefitsTitle: "FarmConnect का उपयोग करने के लाभ",
+                benefitsSubtitle: "हजारों किसान हमारे प्लेटफॉर्म पर क्यों भरोसा करते हैं",
+                benefit1Title: "लागत प्रभावी", benefit2Title: "समय की बचत", benefit3Title: "सत्यापित प्रदाता",
+                benefit4Title: "उपयोग में आसान", benefit5Title: "स्थान आधारित", benefit6Title: "24/7 सहायता",
+                benefit1Desc: "महंगी मशीनरी खरीदने की तुलना में 60% तक की बचत करें।",
+                benefit2Desc: "दिनों की बजाय मिनटों में संसाधन खोजें और बुक करें।",
+                benefit3Desc: "सभी मशीनरी मालिक और श्रमिक उचित दस्तावेज और उपयोगकर्ता समीक्षाओं के साथ सत्यापित हैं।",
+                benefit4Desc: "विशेष रूप से किसानों के लिए डिज़ाइन किया गया सरल इंटरफेस।",
+                benefit5Desc: "परिवहन लागत और समय को कम करने के लिए अपने स्थानीय क्षेत्र में उपलब्ध संसाधन खोजें।",
+                benefit6Desc: "हमारी समर्पित सहायता टीम किसी भी मुद्दे या प्रश्न में सहायता के लिए चौबीसों घंटे उपलब्ध है।",
+                statsTitle: "आंकड़ों में FarmConnect", statsSubtitle: "कृषि समुदाय पर हमारा प्रभाव",
+                statNumber1: "७५०+", statNumber2: "२००+", statNumber3: "२५०+",
+                stat1Label: "सक्रिय किसान", stat2Label: "मशीनरी सूची", stat3Label: "कुशल श्रमिक",
+                faqTitle: "अक्सर पूछे जाने वाले प्रश्न", faqSubtitle: "FarmConnect के बारे में सामान्य प्रश्नों के उत्तर खोजें",
+                faq1Q: "मैं FarmConnect पर कैसे रजिस्टर करूं?", faq2Q: "मैं FarmConnect पर किस प्रकार की मशीनरी पा सकता हूं?",
+                faq3Q: "आपके प्लेटफॉर्म पर श्रमिकों को कैसे सत्यापित किया जाता है?",
+                faq4Q: "कौन से भुगतान विधियां स्वीकार की जाती हैं?", faq5Q: "अगर मुझे अपनी बुकिंग रद्द करनी हो तो क्या होगा?",
+                faq1A: "पंजीकरण सरल है! ऊपर दाएं कोने में 'रजिस्टर' बटन पर क्लिक करें।",
+                faq2A: "हमारे पास ट्रैक्टर, हार्वेस्टर, रोटावेटर, हल, सिंचाई प्रणाली, स्प्रेयर, टिलर, बेलर और बहुत कुछ सहित कृषि मशीनरी की एक विस्तृत श्रृंखला है।",
+                faq3A: "सभी श्रमिक पहचान प्रमाण, कौशल प्रमाणन जांच और पृष्ठभूमि सत्यापन सहित एक सत्यापन प्रक्रिया से गुजरते हैं।",
+                faq4A: "हम यूपीआई, क्रेडिट/डेबिट कार्ड, नेट बैंकिंग और नकद भुगतान सहित कई भुगतान विकल्प स्वीकार करते हैं।",
+                faq5A: "आप निर्धारित तिथि से 24 घंटे पहले बिना किसी शुल्क के अपनी बुकिंग रद्द कर सकते हैं।",
+                testimonialsTitle: "हमारे उपयोगकर्ता क्या कहते हैं", testimonialsSubtitle: "उन किसानों की वास्तविक कहानियां",
+                testimonial1Text: "FarmConnect ने मेरे खेत के प्रबंधन के तरीके को बदल दिया है।",
+                testimonial1Role: "गेहूं किसान, नदिया",
+                testimonial2Text: "FarmConnect ने मुझे अपने उपकरणों से अतिरिक्त आय अर्जित करने में मदद की है।",
+                testimonial2Role: "मशीनरी मालिक, कल्याणी",
+                testimonial3Text: "FarmConnect के साथ, मुझे नियमित बुकिंग मिलती है।",
+                testimonial3Role: "फसल कटाई विशेषज्ञ, कृष्णानगर",
+                ctaTitle: "अपने खेती के अनुभव को बदलने के लिए तैयार?", ctaSubtitle: "हजारों किसानों से जुड़ें",
+                signUpNow: "अभी साइन अप करें", contactUs: "संपर्क करें"
+            },
+            bn: {
+                home: "হোম", machinery: "যন্ত্রপাতি", labour: "শ্রমিক", contact: "যোগাযোগ", howItWorks: "কিভাবে কাজ করে",
+                dashboard: "ড্যাশবোর্ড", profileSettings: "প্রোফাইল সেটিংস", myOrders: "আমার অর্ডার", logout: "লগআউট",
+                login: "লগইন", register: "নিবন্ধন",
+                learnHeroTitle: "FarmConnect কিভাবে কাজ করে",
+                learnHeroSubtitle: "আমাদের ব্যবহার-সহজ প্ল্যাটফর্মের সাথে কৃষি সম্পদ ভাগাভাগি রূপান্তর করা।",
+                getStartedBtn: "শুরু করুন", joinNowBtn: "এখনই যোগ দিন",
+                stepsTitle: "সহজ ৪-ধাপ প্রক্রিয়া",
+                stepsSubtitle: "নিবন্ধন থেকে সম্পূর্ণতা পর্যন্ত, আমরা সবার জন্য প্রক্রিয়াটি সরল করে দিয়েছি",
+                step1Title: "অ্যাকাউন্ট তৈরি করুন", step2Title: "অনুসন্ধান ও নির্বাচন", step3Title: "বুক ও নিশ্চিতকরণ", step4Title: "কাজ সম্পন্ন করুন",
+                step1Desc: "কৃষক, যন্ত্রপাতির মালিক, বা দক্ষ শ্রমিক হিসাবে সাইন আপ করুন।",
+                step2Desc: "আপনার অবস্থান, বাজেট এবং নির্দিষ্ট প্রয়োজনীয়তার ভিত্তিতে সঠিক যন্ত্রপাতি বা শ্রম খুঁজুন।",
+                step3Desc: "তারিখ নির্বাচন করুন, মূল্য পর্যালোচনা করুন এবং নিরাপদ অর্থপ্রদানের বিকল্পগুলির সাথে আপনার বুকিং নিশ্চিত করুন।",
+                step4Desc: "পরিষেবা প্রদানকারীর সাথে সংযোগ করুন, আপনার কৃষি কাজ সম্পূর্ণ করুন এবং প্রতিক্রিয়া দিন।",
+                benefitsTitle: "FarmConnect ব্যবহারের সুবিধা",
+                benefitsSubtitle: "কেন হাজার হাজার কৃষক আমাদের প্ল্যাটফর্মে বিশ্বাস করেন",
+                benefit1Title: "সাশ্রয়ী", benefit2Title: "সময় সাশ্রয়ী", benefit3Title: "যাচাইকৃত প্রদানকারী",
+                benefit4Title: "ব্যবহার সহজ", benefit5Title: "অবস্থান ভিত্তিক", benefit6Title: "24/7 সহায়তা",
+                benefit1Desc: "ব্যয়বহুল যন্ত্রপাতি কেনার তুলনায় 60% পর্যন্ত সাশ্রয় করুন।",
+                benefit2Desc: "দিনের পরিবর্তে মিনিটের মধ্যে সম্পদ খুঁজুন এবং বুক করুন।",
+                benefit3Desc: "সমস্ত যন্ত্রপাতির মালিক এবং শ্রমিক সঠিক ডকুমেন্টেশন এবং ব্যবহারকারী পর্যালোচনা সহ যাচাইকৃত।",
+                benefit4Desc: "বিশেষভাবে কৃষকদের জন্য ডিজাইন করা সরল ইন্টারফেস।",
+                benefit5Desc: "পরিবহন ব্যয় এবং সময় কমাতে আপনার স্থানীয় এলাকায় উপলব্ধ সম্পদ খুঁজুন।",
+                benefit6Desc: "আমাদের নিবেদিত সহায়তা দল যেকোনো সমস্যা বা প্রশ্নে সহায়তা করতে 24 ঘন্টা উপলব্ধ।",
+                statsTitle: "সংখ্যায় FarmConnect", statsSubtitle: "কৃষি সম্প্রদায়ের উপর আমাদের প্রভাব",
+                statNumber1: "৭৫০+", statNumber2: "২০০+", statNumber3: "২৫০+",
+                stat1Label: "সক্রিয় কৃষক", stat2Label: "যন্ত্রপাতির তালিকা", stat3Label: "দক্ষ শ্রমিক",
+                faqTitle: "প্রায়শই জিজ্ঞাসিত প্রশ্ন", faqSubtitle: "FarmConnect সম্পর্কে সাধারণ প্রশ্নের উত্তর খুঁজুন",
+                faq1Q: "আমি কিভাবে FarmConnect এ নিবন্ধন করব?", faq2Q: "FarmConnect এ আমি কি ধরনের যন্ত্রপাতি পেতে পারি?",
+                faq3Q: "আপনার প্ল্যাটফর্মে শ্রমিকরা কিভাবে যাচাইকৃত হয়?", faq4Q: "কোন অর্থপ্রদানের পদ্ধতি গ্রহণ করা হয়?",
+                faq5Q: "যদি আমার বুকিং বাতিল করতে হয়?",
+                faq1A: "নিবন্ধন সহজ! উপরের ডানদিকে 'নিবন্ধন' বোতামে ক্লিক করুন।",
+                faq2A: "আমাদের কাছে ট্রাক্টর, হারভেস্টার, রোটাভেটর, লাঙ্গল, সেচ ব্যবস্থা, স্প্রেয়ার, টিলার, বেলার সহ কৃষি যন্ত্রপাতির বিস্তৃত পরিসর রয়েছে।",
+                faq3A: "সমস্ত শ্রমিক পরিচয় প্রমাণ, দক্ষতা সার্টিফিকেশন চেক এবং পটভূমি যাচাই সহ একটি যাচাইকরণ প্রক্রিয়ার মধ্য দিয়ে যায়।",
+                faq4A: "আমরা UPI, ক্রেডিট/ডেবিট কার্ড, নেট ব্যাংকিং এবং নগদ অর্থ প্রদান সহ একাধিক অর্থপ্রদানের বিকল্প গ্রহণ করি।",
+                faq5A: "আপনি নির্ধারিত তারিখের 24 ঘন্টা আগে কোন চার্জ ছাড়াই আপনার বুকিং বাতিল করতে পারেন।",
+                testimonialsTitle: "আমাদের ব্যবহারকারীরা কি বলেন", testimonialsSubtitle: "কৃষকদের প্রকৃত গল্প",
+                testimonial1Text: "FarmConnect আমার খামার পরিচালনার পদ্ধতি পরিবর্তন করেছে।",
+                testimonial1Role: "গম কৃষক, নদিয়া",
+                testimonial2Text: "FarmConnect আমাকে আমার সরঞ্জাম থেকে অতিরিক্ত আয় উপার্জন করতে সাহায্য করেছে।",
+                testimonial2Role: "যন্ত্রপাতির মালিক, কল্যাণী",
+                testimonial3Text: "FarmConnect এর সাথে, আমি নিয়মিত বুকিং পাই।",
+                testimonial3Role: "ফসল কাটা বিশেষজ্ঞ, কৃষ্ণনগর",
+                ctaTitle: "আপনার চাষের অভিজ্ঞতা রূপান্তর করতে প্রস্তুত?", ctaSubtitle: "হাজার হাজার কৃষকের সাথে যোগ দিন",
+                signUpNow: "এখনই সাইন আপ করুন", contactUs: "যোগাযোগ করুন"
+            }
+        };
+
+        let currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('farmconnect_lang', lang);
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const lang = btn.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
+        });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const question = item.querySelector('.faq-question');
+            if (question) {
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            }
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', function () {
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Auth handling
+        document.addEventListener('DOMContentLoaded', function () {
+            updateLanguage(currentLang);
+
+            const userProfileNav = document.getElementById('userProfileNav');
+            const authButtons = document.getElementById('authButtons');
+            const userDisplayName = document.getElementById('userDisplayName');
+            const userDisplayRole = document.getElementById('userDisplayRole');
+
+            let currentUser = null;
+            const stored = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
+            if (stored) {
+                try { currentUser = JSON.parse(stored); } catch (e) { currentUser = null; }
+            }
+
+            if (currentUser && userProfileNav && authButtons) {
+                if (userDisplayName) userDisplayName.textContent = currentUser.fullname || currentUser.name || currentUser.email || '';
+                if (userDisplayRole) userDisplayRole.textContent = (currentUser.userType || currentUser.role || '').replace(/_/g, ' ');
+                userProfileNav.style.display = 'flex';
+                authButtons.style.display = 'none';
+            } else if (userProfileNav && authButtons) {
+                userProfileNav.style.display = 'none';
+                authButtons.style.display = 'flex';
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('farmconnect_current_user');
+                localStorage.removeItem('currentUser');
+                window.location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

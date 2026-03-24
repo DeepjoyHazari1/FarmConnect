@@ -2,262 +2,694 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FarmConnect SMS Booking Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Booking Guide - FarmConnect</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="auth.js"></script>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-attachment: fixed;
-            color: #333; 
+        /* Color Variables */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #F57C00;
+            --accent: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #1B5E20;
+            --text: #212121;
+            --text-light: #757575;
+            --white: #FFFFFF;
+            --gray-bg: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 5px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-            line-height: 1.6;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background-attachment: fixed;
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .container { 
-            max-width: 700px; 
-            margin: 20px auto; 
-            background: rgba(19, 216, 209, 0.95);
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            border-radius: 24px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.1); 
-            padding: 40px; 
-            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
             transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
+
         .container:hover {
             transform: translateY(-5px);
         }
-        h1 { 
-            background: linear-gradient(45deg, #2E7D32, #4CAF50);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px; 
-            font-weight: 700;
-            font-size: 2.2rem;
-            border-left: 4px solid #16130f;
-            padding-left: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        h2 { 
-            color: #FF9800; 
-            margin-top: 35px;
-            margin-bottom: 15px;
-            font-weight: 600;
-            border-bottom: 3px solid rgba(255,152,0,0.2);
-            padding-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.4rem;
-        }
-        h2 i {
-            background: #FF9800;
-            color: white;
-            padding: 8px;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-        .command-example { 
-            background: linear-gradient(145deg, #e8f5e8, #d0ebd0);
-            border-left: 6px solid #4CAF50; 
-            padding: 14px 18px; 
-            border-radius: 12px; 
-            margin: 10px 0; 
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            display: inline-block;
-            width: auto;
-            color: #1e3a2f;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(76,175,80,0.2);
-        }
-        .command-example:hover {
-            transform: translateX(5px);
-            box-shadow: 0 6px 12px rgba(76,175,80,0.2);
-            border-left-width: 8px;
-        }
-        ul { 
-            margin-bottom: 20px; 
-            padding-left: 20px;
-            background: rgba(241, 244, 242, 0.6);
-            padding: 15px 25px;
-            border-radius: 16px;
-            backdrop-filter: blur(5px);
-        }
-        li { 
-            margin-bottom: 12px; 
-            list-style-type: none;
-            padding-left: 25px;
-            position: relative;
-        }
-        li:before {
-            content: "\f00c"; /* FontAwesome check icon */
-            position: absolute;
-            left: 0;
-            color: #4CAF50;
-            font-size: 1rem;
-        }
-        li:last-child {
-            margin-bottom: 0;
-        }
-        .back-link { 
+
+        /* Back Link */
+        .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px; 
-            color: white; 
-            text-decoration: none; 
-            font-weight: 500;
-            background: linear-gradient(45deg, #2E7D32, #4CAF50);
-            padding: 10px 20px;
+            margin-bottom: 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 12px 24px;
             border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(46,125,50,0.3);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
         }
-        .back-link:hover { 
+
+        .back-link:hover {
             transform: translateX(-5px);
-            box-shadow: 0 6px 15px rgba(46,125,50,0.4);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
             text-decoration: none;
             color: white;
-            background: linear-gradient(45deg, #1b5e20, #2E7D32);
         }
-        strong {
-            color: #2E7D32;
-            font-weight: 700;
+
+        /* Header */
+        h1 {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 800;
+            font-size: 2.2rem;
+            border-left: 5px solid var(--secondary);
+            padding-left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .sms-note {
-            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
-            border-left: 6px solid #FF9800;
-            padding: 20px;
-            border-radius: 16px;
-            margin: 30px 0 20px;
+
+        h1 i {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+        }
+
+        .subtitle {
             font-size: 1.1rem;
-            box-shadow: 0 10px 20px rgba(255,152,0,0.2);
-            border: 1px solid rgba(255,152,0,0.3);
-            transition: transform 0.3s ease;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            padding-left: 25px;
         }
+
+        /* SMS Note */
+        .sms-note {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
+            border-left: 5px solid var(--secondary);
+            padding: 20px 25px;
+            border-radius: 20px;
+            margin: 25px 0;
+            transition: var(--transition);
+        }
+
         .sms-note:hover {
             transform: scale(1.02);
+            box-shadow: var(--shadow-sm);
         }
+
         .sms-note i {
-            color: #FF9800;
+            color: var(--secondary);
             font-size: 1.3rem;
+            margin-right: 10px;
         }
-        .fa-arrow-left {
-            margin-right: 5px;
-        }
+
         .badge {
-            background: rgba(255,255,255,0.2);
+            background: var(--secondary);
+            color: white;
             padding: 4px 12px;
             border-radius: 30px;
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 0.75rem;
             display: inline-block;
             margin-left: 10px;
-        }
-        .highlight {
-            background: rgba(255,152,0,0.1);
-            color: #FF9800;
             font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 20px;
         }
+
+        /* Section Headers */
+        h2 {
+            color: var(--primary);
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 3px solid rgba(76, 175, 80, 0.2);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+        }
+
+        h2 i {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Command Examples */
+        .command-example {
+            background: linear-gradient(135deg, var(--light), #e8f5e9);
+            border-left: 5px solid var(--primary);
+            padding: 14px 20px;
+            border-radius: 16px;
+            margin: 12px 0;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-weight: 600;
+            display: inline-block;
+            width: auto;
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .command-example:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-md);
+            border-left-width: 8px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        }
+
+        /* Lists */
+        ul {
+            margin-bottom: 20px;
+            padding: 20px 25px;
+            background: rgba(241, 244, 242, 0.6);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        li {
+            margin-bottom: 12px;
+            list-style-type: none;
+            padding-left: 28px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        li:before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Skill Tags */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, var(--light), #e8f5e9);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: var(--transition);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-tag i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+        }
+
+        .skill-tag-orange {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
+            border-color: rgba(255, 152, 0, 0.3);
+        }
+
+        .skill-tag-orange i {
+            color: var(--secondary);
+        }
+
+        .skill-tag-orange:hover {
+            background: linear-gradient(135deg, #ffe0b2, #ffcc80);
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: rgba(46, 125, 50, 0.05);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            transition: var(--transition);
+            border: 1px solid rgba(46, 125, 50, 0.1);
+        }
+
+        .info-card:hover {
+            background: rgba(46, 125, 50, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .info-card-orange {
+            background: rgba(255, 152, 0, 0.05);
+            border-color: rgba(255, 152, 0, 0.1);
+        }
+
+        .info-card-orange:hover {
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        .help-section {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .help-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .help-command {
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            background: var(--light);
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+
+        .lang-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 20px; margin: 10px; }
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.2rem; }
-            h2 i { width: 25px; height: 25px; font-size: 0.9rem; }
-            .command-example { 
-                font-size: 0.9rem;
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            h1 {
+                font-size: 1.6rem;
+                padding-left: 12px;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            h2 i {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            .command-example {
+                font-size: 0.85rem;
                 padding: 10px 12px;
                 display: block;
                 overflow-x: auto;
                 white-space: nowrap;
+            }
+            .help-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .help-text {
+                justify-content: center;
+            }
+            .language-switcher {
+                justify-content: center;
+                margin-bottom: 15px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
-        <h1><i class="fas fa-comment-alt" style="color: #FF9800; background: none; -webkit-text-fill-color: #FF9800; margin-right: 10px;"></i>SMS Booking Guide</h1>
-        <p style="font-size: 1.1rem; color: #555;">FarmConnect allows you to book machinery and labour via SMS. Send your booking SMS to <strong class="highlight">FARMCON (+1 7402674969)</strong>.</p>
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+            <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+            <button class="lang-btn" data-lang="bn">🇧🇩 বাংলা</button>
+        </div>
+
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> <span data-key="backToHome">Back to Home</span></a>
+        
+        <h1>
+            <i class="fas fa-comment-dots"></i>
+            <span data-key="pageTitle">SMS Booking Guide</span>
+        </h1>
+        <p class="subtitle" data-key="subtitle">FarmConnect allows you to book machinery and labour via SMS. Send your booking SMS to <strong class="highlight" style="color: var(--secondary);">FARMCON (+1 7402674969)</strong>.</p>
         
         <div class="sms-note">
-            <i class="fas fa-mobile-alt" style="margin-right: 10px;"></i>
-            <strong>Quick Tip:</strong> Copy any command below and send it as an SMS message.
-            <span class="badge">24/7 Service</span>
+            <i class="fas fa-mobile-alt"></i>
+            <strong data-key="quickTip">Quick Tip:</strong> <span data-key="quickTipText">Copy any command below and send it as an SMS message.</span>
+            <span class="badge" data-key="serviceBadge">24/7 Service</span>
         </div>
 
         <h2>
             <i class="fas fa-tractor"></i>
-            Machinery Booking
+            <span data-key="machineryBooking">Machinery Booking</span>
         </h2>
         <ul>
-            <li><span style="font-weight: 500;">Format:</span> <span class="command-example">BOOK [MACHINERY] [DATE] [LOCATION]</span></li>
-            <li><span style="font-weight: 500;">Example:</span> <span class="command-example">BOOK TRACTOR 2026-03-15 KALYANI</span></li>
+            <li><span data-key="machineryFormat">Format:</span> <span class="command-example" data-key="machineryCommand">BOOK [MACHINERY] [DATE] [LOCATION]</span></li>
+            <li><span data-key="machineryExample">Example:</span> <span class="command-example" data-key="machineryExampleText">BOOK TRACTOR 2026-03-15 KALYANI</span></li>
         </ul>
 
         <h2>
             <i class="fas fa-users"></i>
-            Labour Booking
+            <span data-key="labourBooking">Labour Booking</span>
         </h2>
         <ul>
-            <li><span style="font-weight: 500;">Format:</span> <span class="command-example">LABOR [SKILL] [QUANTITY] [DATE]</span></li>
-            <li><span style="font-weight: 500;">Example:</span> <span class="command-example">LABOR HARVESTING 5 2026-03-20</span></li>
+            <li><span data-key="labourFormat">Format:</span> <span class="command-example" data-key="labourCommand">LABOR [SKILL] [QUANTITY] [DATE]</span></li>
+            <li><span data-key="labourExample">Example:</span> <span class="command-example" data-key="labourExampleText">LABOR HARVESTING 5 2026-03-20</span></li>
         </ul>
 
         <h2>
             <i class="fas fa-cogs"></i>
-            Supported Machinery Types
+            <span data-key="machineryTypes">Supported Machinery Types</span>
         </h2>
-        <ul style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">TRACTOR</li>
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">HARVESTER</li>
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">PLOUGH</li>
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">CULTIVATOR</li>
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">IRRIGATION</li>
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">SPRAYER</li>
-            <li style="background: #e8f5e8; padding: 8px 15px; border-radius: 30px; margin: 0;">DRONE</li>
-        </ul>
+        <div class="skills-grid">
+            <span class="skill-tag"><i class="fas fa-tractor"></i> <span data-key="tractor">TRACTOR</span></span>
+            <span class="skill-tag"><i class="fas fa-wheat-alt"></i> <span data-key="harvester">HARVESTER</span></span>
+            <span class="skill-tag"><i class="fas fa-tachometer-alt"></i> <span data-key="plough">PLOUGH</span></span>
+            <span class="skill-tag"><i class="fas fa-seedling"></i> <span data-key="cultivator">CULTIVATOR</span></span>
+            <span class="skill-tag"><i class="fas fa-water"></i> <span data-key="irrigation">IRRIGATION</span></span>
+            <span class="skill-tag"><i class="fas fa-spray-can"></i> <span data-key="sprayer">SPRAYER</span></span>
+            <span class="skill-tag"><i class="fas fa-drone"></i> <span data-key="drone">DRONE</span></span>
+            <span class="skill-tag"><i class="fas fa-seedling"></i> <span data-key="rotavator">ROTAVATOR</span></span>
+            <span class="skill-tag"><i class="fas fa-tint"></i> <span data-key="pump">PUMP</span></span>
+        </div>
 
         <h2>
             <i class="fas fa-briefcase"></i>
-            Supported Labour Skills
+            <span data-key="labourSkills">Supported Labour Skills</span>
         </h2>
-        <ul style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">HARVESTING</li>
-            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">PLANTING</li>
-            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">IRRIGATION</li>
-            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">SPRAYING</li>
-            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">TRACTOR</li>
-            <li style="background: #fff3e0; padding: 8px 15px; border-radius: 30px; margin: 0;">ORGANIC</li>
-        </ul>
+        <div class="skills-grid">
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-cut"></i> <span data-key="harvesting">HARVESTING</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-seedling"></i> <span data-key="planting">PLANTING</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-water"></i> <span data-key="irrigationSkill">IRRIGATION</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-spray-can"></i> <span data-key="spraying">SPRAYING</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-tractor"></i> <span data-key="tractorOperator">TRACTOR OPERATOR</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-leaf"></i> <span data-key="organicFarming">ORGANIC FARMING</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-apple-alt"></i> <span data-key="fruitPicking">FRUIT PICKING</span></span>
+            <span class="skill-tag skill-tag-orange"><i class="fas fa-tools"></i> <span data-key="repair">REPAIR</span></span>
+        </div>
 
         <h2>
             <i class="fas fa-check-circle"></i>
-            Confirmation
+            <span data-key="confirmation">Confirmation</span>
         </h2>
-        <p style="background: rgba(46,125,50,0.05); padding: 15px; border-radius: 12px;">After sending your SMS, you will receive a confirmation reply with booking details and contact info.</p>
+        <div class="info-card">
+            <i class="fas fa-envelope" style="color: var(--primary); margin-right: 10px;"></i>
+            <span data-key="confirmationText">After sending your SMS, you will receive a confirmation reply with booking details and contact information within 2-3 minutes.</span>
+        </div>
 
         <h2>
             <i class="fas fa-question-circle"></i>
-            Help
+            <span data-key="helpTitle">Need Help?</span>
         </h2>
-        <p style="background: rgba(255,152,0,0.05); padding: 15px; border-radius: 12px;">Send <span class="command-example" style="display: inline; margin: 0;">HELP</span> to receive instructions via SMS.</p>
+        <div class="help-section">
+            <div class="help-text">
+                <i class="fas fa-question-circle" style="font-size: 1.5rem; color: var(--secondary);"></i>
+                <span data-key="helpText">Send</span>
+                <span class="help-command">HELP</span>
+                <span data-key="helpInstruction">to receive instructions via SMS instantly</span>
+            </div>
+            <div class="help-text">
+                <i class="fas fa-phone-alt" style="font-size: 1.3rem; color: var(--primary);"></i>
+                <span data-key="callSupport">Call us at</span>
+                <strong>+91 9862165134</strong>
+            </div>
+        </div>
+
+        <h2>
+            <i class="fas fa-language"></i>
+            <span data-key="languageSupport">Language Support</span>
+        </h2>
+        <div class="info-card info-card-orange">
+            <i class="fas fa-comment-dots" style="color: var(--secondary); margin-right: 10px;"></i>
+            <span data-key="languageSupportText">SMS booking supports English, Hindi, and Bengali. Send commands in your preferred language!</span>
+        </div>
     </div>
+
+    <script>
+        // Multi-language translations for SMS Guide
+        const translations = {
+            en: {
+                backToHome: "Back to Home",
+                pageTitle: "SMS Booking Guide",
+                subtitle: "FarmConnect allows you to book machinery and labour via SMS. Send your booking SMS to FARMCON (+1 7402674969).",
+                quickTip: "Quick Tip:",
+                quickTipText: "Copy any command below and send it as an SMS message.",
+                serviceBadge: "24/7 Service",
+                machineryBooking: "Machinery Booking",
+                machineryFormat: "Format:",
+                machineryCommand: "BOOK [MACHINERY] [DATE] [LOCATION]",
+                machineryExample: "Example:",
+                machineryExampleText: "BOOK TRACTOR 2026-03-15 KALYANI",
+                labourBooking: "Labour Booking",
+                labourFormat: "Format:",
+                labourCommand: "LABOR [SKILL] [QUANTITY] [DATE]",
+                labourExample: "Example:",
+                labourExampleText: "LABOR HARVESTING 5 2026-03-20",
+                machineryTypes: "Supported Machinery Types",
+                tractor: "TRACTOR",
+                harvester: "HARVESTER",
+                plough: "PLOUGH",
+                cultivator: "CULTIVATOR",
+                irrigation: "IRRIGATION",
+                sprayer: "SPRAYER",
+                drone: "DRONE",
+                rotavator: "ROTAVATOR",
+                pump: "PUMP",
+                labourSkills: "Supported Labour Skills",
+                harvesting: "HARVESTING",
+                planting: "PLANTING",
+                irrigationSkill: "IRRIGATION",
+                spraying: "SPRAYING",
+                tractorOperator: "TRACTOR OPERATOR",
+                organicFarming: "ORGANIC FARMING",
+                fruitPicking: "FRUIT PICKING",
+                repair: "REPAIR",
+                confirmation: "Confirmation",
+                confirmationText: "After sending your SMS, you will receive a confirmation reply with booking details and contact information within 2-3 minutes.",
+                helpTitle: "Need Help?",
+                helpText: "Send",
+                helpInstruction: "to receive instructions via SMS instantly",
+                callSupport: "Call us at",
+                languageSupport: "Language Support",
+                languageSupportText: "SMS booking supports English, Hindi, and Bengali. Send commands in your preferred language!"
+            },
+            hi: {
+                backToHome: "होम पर वापस जाएं",
+                pageTitle: "एसएमएस बुकिंग गाइड",
+                subtitle: "FarmConnect आपको एसएमएस के माध्यम से मशीनरी और श्रम बुक करने की सुविधा देता है। अपनी बुकिंग एसएमएस FARMCON (+1 7402674969) पर भेजें।",
+                quickTip: "त्वरित टिप:",
+                quickTipText: "नीचे दिए गए किसी भी कमांड को कॉपी करें और इसे एसएमएस संदेश के रूप में भेजें।",
+                serviceBadge: "24/7 सेवा",
+                machineryBooking: "मशीनरी बुकिंग",
+                machineryFormat: "प्रारूप:",
+                machineryCommand: "BOOK [MACHINERY] [DATE] [LOCATION]",
+                machineryExample: "उदाहरण:",
+                machineryExampleText: "BOOK TRACTOR 2026-03-15 KALYANI",
+                labourBooking: "श्रम बुकिंग",
+                labourFormat: "प्रारूप:",
+                labourCommand: "LABOR [SKILL] [QUANTITY] [DATE]",
+                labourExample: "उदाहरण:",
+                labourExampleText: "LABOR HARVESTING 5 2026-03-20",
+                machineryTypes: "समर्थित मशीनरी प्रकार",
+                tractor: "ट्रैक्टर",
+                harvester: "हार्वेस्टर",
+                plough: "हल",
+                cultivator: "कल्टीवेटर",
+                irrigation: "सिंचाई प्रणाली",
+                sprayer: "स्प्रेयर",
+                drone: "ड्रोन",
+                rotavator: "रोटावेटर",
+                pump: "पंप",
+                labourSkills: "समर्थित श्रम कौशल",
+                harvesting: "कटाई",
+                planting: "रोपाई",
+                irrigationSkill: "सिंचाई",
+                spraying: "स्प्रेइंग",
+                tractorOperator: "ट्रैक्टर ऑपरेटर",
+                organicFarming: "जैविक खेती",
+                fruitPicking: "फल तोड़ना",
+                repair: "मरम्मत",
+                confirmation: "पुष्टिकरण",
+                confirmationText: "अपना एसएमएस भेजने के बाद, आपको 2-3 मिनट के भीतर बुकिंग विवरण और संपर्क जानकारी के साथ एक पुष्टिकरण उत्तर प्राप्त होगा।",
+                helpTitle: "सहायता चाहिए?",
+                helpText: "भेजें",
+                helpInstruction: "एसएमएस के माध्यम से तुरंत निर्देश प्राप्त करने के लिए",
+                callSupport: "हमें कॉल करें",
+                languageSupport: "भाषा समर्थन",
+                languageSupportText: "एसएमएस बुकिंग अंग्रेजी, हिंदी और बंगाली का समर्थन करती है। अपनी पसंदीदा भाषा में कमांड भेजें!"
+            },
+            bn: {
+                backToHome: "হোম এ ফিরে যান",
+                pageTitle: "এসএমএস বুকিং গাইড",
+                subtitle: "FarmConnect আপনাকে এসএমএস এর মাধ্যমে যন্ত্রপাতি এবং শ্রম বুক করার সুবিধা দেয়। আপনার বুকিং এসএমএস FARMCON (+1 7402674969) এ পাঠান।",
+                quickTip: "দ্রুত টিপ:",
+                quickTipText: "নিচের যেকোনো কমান্ড কপি করুন এবং এটি একটি এসএমএস বার্তা হিসাবে পাঠান।",
+                serviceBadge: "24/7 সেবা",
+                machineryBooking: "যন্ত্রপাতি বুকিং",
+                machineryFormat: "বিন্যাস:",
+                machineryCommand: "BOOK [MACHINERY] [DATE] [LOCATION]",
+                machineryExample: "উদাহরণ:",
+                machineryExampleText: "BOOK TRACTOR 2026-03-15 KALYANI",
+                labourBooking: "শ্রম বুকিং",
+                labourFormat: "বিন্যাস:",
+                labourCommand: "LABOR [SKILL] [QUANTITY] [DATE]",
+                labourExample: "উদাহরণ:",
+                labourExampleText: "LABOR HARVESTING 5 2026-03-20",
+                machineryTypes: "সমর্থিত যন্ত্রপাতির ধরন",
+                tractor: "ট্রাক্টর",
+                harvester: "হারভেস্টার",
+                plough: "লাঙ্গল",
+                cultivator: "কাল্টিভেটর",
+                irrigation: "সেচ ব্যবস্থা",
+                sprayer: "স্প্রেয়ার",
+                drone: "ড্রোন",
+                rotavator: "রোটাভেটর",
+                pump: "পাম্প",
+                labourSkills: "সমর্থিত শ্রম দক্ষতা",
+                harvesting: "ফসল কাটা",
+                planting: "রোপণ",
+                irrigationSkill: "সেচ",
+                spraying: "স্প্রে করা",
+                tractorOperator: "ট্রাক্টর অপারেটর",
+                organicFarming: "জৈব চাষ",
+                fruitPicking: "ফল তোলা",
+                repair: "মেরামত",
+                confirmation: "নিশ্চিতকরণ",
+                confirmationText: "আপনার এসএমএস পাঠানোর পরে, আপনি 2-3 মিনিটের মধ্যে বুকিং বিবরণ এবং যোগাযোগের তথ্য সহ একটি নিশ্চিতকরণ উত্তর পাবেন।",
+                helpTitle: "সাহায্য প্রয়োজন?",
+                helpText: "পাঠান",
+                helpInstruction: "এসএমএস এর মাধ্যমে তাত্ক্ষণিকভাবে নির্দেশনা পেতে",
+                callSupport: "আমাদের কল করুন",
+                languageSupport: "ভাষা সমর্থন",
+                languageSupportText: "এসএমএস বুকিং ইংরেজি, হিন্দি এবং বাংলা সমর্থন করে। আপনার পছন্দের ভাষায় কমান্ড পাঠান!"
+            }
+        };
+
+        let currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('farmconnect_lang', lang);
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        if (el.hasAttribute('placeholder')) {
+                            el.placeholder = translations[lang][key];
+                        } else {
+                            el.textContent = translations[lang][key];
+                        }
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Language switcher event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const lang = btn.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
+        });
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLanguage(currentLang);
+        });
+    </script>
 </body>
 </html>

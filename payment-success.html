@@ -5,49 +5,510 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Success - FarmConnect</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
         .success-container {
             max-width: 500px;
-            margin: 100px auto;
+            width: 100%;
+            margin: 20px auto;
             padding: 40px;
             text-align: center;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.5s ease;
         }
-        
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .success-icon {
-            font-size: 64px;
+            font-size: 80px;
             color: #4CAF50;
             margin-bottom: 20px;
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .checkmark {
+            font-size: 50px;
+            color: white;
+        }
+
+        h2 {
+            color: #2E7D32;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .success-message {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .payment-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: left;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .detail-value {
+            color: #2E7D32;
+            font-weight: 500;
+        }
+
+        .order-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .order-info p {
+            margin: 8px 0;
+            color: #2E7D32;
+        }
+
+        .order-info strong {
+            color: #1B5E20;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 30px 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="success-container">
-        <div class="success-icon">✅</div>
-        <h2>Payment Successful!</h2>
-        <p>Your labour booking has been confirmed.</p>
-        <p>Payment ID: <span id="paymentId"></span></p>
-        <button onclick="window.location.href = 'dashboard.html'" 
-                style="padding: 12px 30px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px;">
-            Go to Dashboard
-        </button>
+        <div class="checkmark-circle">
+            <div class="checkmark">✓</div>
+        </div>
+        
+        <h2 id="successTitle">Payment Successful!</h2>
+        
+        <div class="success-message" id="successMessage">
+            Your booking has been confirmed successfully.
+        </div>
+        
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="detail-label" id="paymentIdLabel">Payment ID:</span>
+                <span class="detail-value" id="paymentId">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label" id="orderIdLabel">Order ID:</span>
+                <span class="detail-value" id="orderId">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label" id="amountLabel">Amount Paid:</span>
+                <span class="detail-value" id="amount">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label" id="paymentMethodLabel">Payment Method:</span>
+                <span class="detail-value" id="paymentMethod">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label" id="dateLabel">Transaction Date:</span>
+                <span class="detail-value" id="transactionDate">-</span>
+            </div>
+        </div>
+        
+        <div class="order-info" id="orderInfo">
+            <p><strong id="orderStatus">✓ Payment Confirmed</strong></p>
+            <p id="nextSteps">Your service provider will contact you shortly with confirmation details.</p>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="window.location.href = 'dashboard.html'" class="btn-primary" id="dashboardBtn">
+                Go to Dashboard
+            </button>
+            <button onclick="window.location.href = 'index.html'" class="btn-secondary" id="homeBtn">
+                Back to Home
+            </button>
+        </div>
+        
+        <div class="footer-note" id="footerNote">
+            A confirmation email has been sent to your registered email address.
+        </div>
     </div>
 
     <script>
-        // Get payment ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('payment_id');
-        document.getElementById('paymentId').textContent = paymentId;
+        // ========== MULTI-LANGUAGE SUPPORT ==========
+        // Get the user's selected language from localStorage
+        const currentLang = localStorage.getItem('farmconnect_lang') || 'en';
         
-        // Save to localStorage
+        // Translations for payment success page
+        const translations = {
+            en: {
+                successTitle: "Payment Successful! 🎉",
+                successMessage: "Your booking has been confirmed successfully.",
+                paymentIdLabel: "Payment ID:",
+                orderIdLabel: "Order ID:",
+                amountLabel: "Amount Paid:",
+                paymentMethodLabel: "Payment Method:",
+                dateLabel: "Transaction Date:",
+                orderStatus: "✓ Payment Confirmed",
+                nextSteps: "Your service provider will contact you shortly with confirmation details.",
+                dashboardBtn: "Go to Dashboard",
+                homeBtn: "Back to Home",
+                footerNote: "A confirmation email has been sent to your registered email address.",
+                paymentMethodCard: "Credit/Debit Card",
+                paymentMethodUPI: "UPI Payment",
+                paymentMethodNetbanking: "Net Banking",
+                paymentMethodCOD: "Cash on Delivery"
+            },
+            hi: {
+                successTitle: "भुगतान सफल! 🎉",
+                successMessage: "आपकी बुकिंग सफलतापूर्वक पुष्टि कर दी गई है।",
+                paymentIdLabel: "भुगतान आईडी:",
+                orderIdLabel: "ऑर्डर आईडी:",
+                amountLabel: "भुगतान की गई राशि:",
+                paymentMethodLabel: "भुगतान विधि:",
+                dateLabel: "लेनदेन तिथि:",
+                orderStatus: "✓ भुगतान पुष्टि हुआ",
+                nextSteps: "आपका सेवा प्रदाता शीघ्र ही पुष्टिकरण विवरण के साथ आपसे संपर्क करेगा।",
+                dashboardBtn: "डैशबोर्ड पर जाएं",
+                homeBtn: "होम पर वापस जाएं",
+                footerNote: "एक पुष्टिकरण ईमेल आपके पंजीकृत ईमेल पते पर भेज दिया गया है।",
+                paymentMethodCard: "क्रेडिट/डेबिट कार्ड",
+                paymentMethodUPI: "यूपीआई भुगतान",
+                paymentMethodNetbanking: "नेट बैंकिंग",
+                paymentMethodCOD: "कैश ऑन डिलीवरी"
+            },
+            bn: {
+                successTitle: "পেমেন্ট সফল! 🎉",
+                successMessage: "আপনার বুকিং সফলভাবে নিশ্চিত করা হয়েছে।",
+                paymentIdLabel: "পেমেন্ট আইডি:",
+                orderIdLabel: "অর্ডার আইডি:",
+                amountLabel: "পরিশোধিত পরিমাণ:",
+                paymentMethodLabel: "পেমেন্ট পদ্ধতি:",
+                dateLabel: "লেনদেনের তারিখ:",
+                orderStatus: "✓ পেমেন্ট নিশ্চিত হয়েছে",
+                nextSteps: "আপনার পরিষেবা প্রদানকারী শীঘ্রই নিশ্চিতকরণ বিবরণ সহ আপনার সাথে যোগাযোগ করবে।",
+                dashboardBtn: "ড্যাশবোর্ডে যান",
+                homeBtn: "হোমে ফিরে যান",
+                footerNote: "একটি নিশ্চিতকরণ ইমেল আপনার নিবন্ধিত ইমেল ঠিকানায় পাঠানো হয়েছে।",
+                paymentMethodCard: "ক্রেডিট/ডেবিট কার্ড",
+                paymentMethodUPI: "ইউপিআই পেমেন্ট",
+                paymentMethodNetbanking: "নেট ব্যাংকিং",
+                paymentMethodCOD: "ক্যাশ অন ডেলিভারি"
+            }
+        };
+        
+        // Get payment method display name
+        function getPaymentMethodDisplayName(method, lang) {
+            const methodMap = {
+                'card': translations[lang].paymentMethodCard,
+                'upi': translations[lang].paymentMethodUPI,
+                'netbanking': translations[lang].paymentMethodNetbanking,
+                'cod': translations[lang].paymentMethodCOD
+            };
+            return methodMap[method] || method;
+        }
+        
+        // Update page content based on selected language
+        function updatePageLanguage() {
+            const lang = localStorage.getItem('farmconnect_lang') || 'en';
+            const t = translations[lang];
+            
+            if (t) {
+                document.getElementById('successTitle').textContent = t.successTitle;
+                document.getElementById('successMessage').textContent = t.successMessage;
+                document.getElementById('paymentIdLabel').textContent = t.paymentIdLabel;
+                document.getElementById('orderIdLabel').textContent = t.orderIdLabel;
+                document.getElementById('amountLabel').textContent = t.amountLabel;
+                document.getElementById('paymentMethodLabel').textContent = t.paymentMethodLabel;
+                document.getElementById('dateLabel').textContent = t.dateLabel;
+                document.getElementById('orderStatus').textContent = t.orderStatus;
+                document.getElementById('nextSteps').textContent = t.nextSteps;
+                document.getElementById('dashboardBtn').textContent = t.dashboardBtn;
+                document.getElementById('homeBtn').textContent = t.homeBtn;
+                document.getElementById('footerNote').textContent = t.footerNote;
+            }
+        }
+        
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id') || urlParams.get('paymentId');
+        const orderId = urlParams.get('order_id') || urlParams.get('orderId');
+        const amount = urlParams.get('amount') || urlParams.get('total');
+        const paymentMethod = urlParams.get('payment_method') || urlParams.get('method');
+        
+        // Get current language for display
+        const currentLangPage = localStorage.getItem('farmconnect_lang') || 'en';
+        
+        // Display payment details
+        if (paymentId) {
+            document.getElementById('paymentId').textContent = paymentId;
+        } else {
+            // Generate a fake payment ID if not provided
+            const fakePaymentId = 'PAY_' + Math.random().toString(36).substr(2, 10).toUpperCase();
+            document.getElementById('paymentId').textContent = fakePaymentId;
+        }
+        
+        if (orderId) {
+            document.getElementById('orderId').textContent = orderId;
+        } else {
+            // Generate a fake order ID if not provided
+            const fakeOrderId = 'FC' + Date.now();
+            document.getElementById('orderId').textContent = fakeOrderId;
+        }
+        
+        if (amount) {
+            document.getElementById('amount').textContent = '₹' + amount;
+        } else {
+            // Get amount from localStorage
+            const lastPayment = localStorage.getItem('last_payment');
+            if (lastPayment) {
+                try {
+                    const paymentData = JSON.parse(lastPayment);
+                    document.getElementById('amount').textContent = '₹' + (paymentData.amount || '590');
+                } catch(e) {
+                    document.getElementById('amount').textContent = '₹590';
+                }
+            } else {
+                document.getElementById('amount').textContent = '₹590';
+            }
+        }
+        
+        if (paymentMethod) {
+            document.getElementById('paymentMethod').textContent = getPaymentMethodDisplayName(paymentMethod, currentLangPage);
+        } else {
+            // Check localStorage for payment method
+            const lastPayment = localStorage.getItem('last_payment');
+            if (lastPayment) {
+                try {
+                    const paymentData = JSON.parse(lastPayment);
+                    const method = paymentData.method || 'card';
+                    document.getElementById('paymentMethod').textContent = getPaymentMethodDisplayName(method, currentLangPage);
+                } catch(e) {
+                    document.getElementById('paymentMethod').textContent = getPaymentMethodDisplayName('card', currentLangPage);
+                }
+            } else {
+                document.getElementById('paymentMethod').textContent = getPaymentMethodDisplayName('card', currentLangPage);
+            }
+        }
+        
+        // Format and display transaction date
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString(currentLangPage === 'hi' ? 'hi-IN' : (currentLangPage === 'bn' ? 'bn-BD' : 'en-IN'), {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        document.getElementById('transactionDate').textContent = formattedDate;
+        
+        // Save payment data to localStorage
         const paymentData = {
-            id: paymentId,
-            amount: 590,
+            id: paymentId || document.getElementById('paymentId').textContent,
+            orderId: orderId || document.getElementById('orderId').textContent,
+            amount: amount ? parseInt(amount) : 590,
+            method: paymentMethod || 'card',
             date: new Date().toISOString(),
-            status: 'completed'
+            status: 'completed',
+            language: currentLangPage
         };
         localStorage.setItem('last_payment', JSON.stringify(paymentData));
+        
+        // Also save to orders array if not already present
+        const existingOrders = JSON.parse(localStorage.getItem('farmconnect_orders')) || [];
+        const orderExists = existingOrders.some(order => order.orderId === paymentData.orderId);
+        
+        if (!orderExists) {
+            existingOrders.push({
+                orderId: paymentData.orderId,
+                paymentId: paymentData.id,
+                amount: paymentData.amount,
+                paymentMethod: paymentData.method,
+                date: paymentData.date,
+                status: 'confirmed',
+                items: JSON.parse(localStorage.getItem('farmconnect_cart')) || []
+            });
+            localStorage.setItem('farmconnect_orders', JSON.stringify(existingOrders));
+        }
+        
+        // Clear cart after successful payment
+        if (localStorage.getItem('farmconnect_cart')) {
+            // Only clear if we have a valid payment ID
+            if (paymentId || orderId) {
+                localStorage.removeItem('farmconnect_cart');
+            }
+        }
+        
+        // Update page language
+        updatePageLanguage();
+        
+        // Add event listener for language change (in case user navigates back)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'farmconnect_lang') {
+                updatePageLanguage();
+                // Update payment method display when language changes
+                const currentMethod = document.getElementById('paymentMethod').textContent;
+                const methodKey = Object.keys(translations.en).find(key => 
+                    translations.en[key] === currentMethod || 
+                    translations.hi[key] === currentMethod || 
+                    translations.bn[key] === currentMethod
+                );
+                if (methodKey) {
+                    const newLang = e.newValue || 'en';
+                    document.getElementById('paymentMethod').textContent = getPaymentMethodDisplayName(methodKey, newLang);
+                }
+            }
+        });
+        
+        // Optional: Add a small delay to show animation
+        setTimeout(() => {
+            console.log('Payment success page loaded with language:', currentLangPage);
+        }, 100);
     </script>
 </body>
 </html>

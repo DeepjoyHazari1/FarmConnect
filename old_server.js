@@ -43,7 +43,7 @@ const connectDB = async () => {
 
 // User Schema
 const userSchema = new mongoose.Schema({
-     _id: { type: String }, 
+    _id: { type: String },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -120,7 +120,7 @@ const smsSchema = new mongoose.Schema({
 
 // Enhanced Booking Schema with Date Ranges
 const bookingSchema = new mongoose.Schema({
-    customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    customerId: { type: String, ref: 'User', required: true },
     machineryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Machinery', required: true },
     items: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Machinery', required: true },
@@ -228,7 +228,7 @@ const labourAvailabilitySchema = new mongoose.Schema({
 
 // Labour Booking Schema
 const labourBookingSchema = new mongoose.Schema({
-    customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    customerId: { type: String, ref: 'User', required: true },
     labourId: { type: mongoose.Schema.Types.ObjectId, ref: 'Labour', required: true },
     slots: { type: Number, default: 1 },
     totalAmount: { type: Number, required: true },
@@ -1085,87 +1085,48 @@ app.get('/api/orders', async (req, res) => {
 // Receive SMS webhook (Twilio)
 // app.post('/api/sms/incoming', express.json(), async (req, res) => {
 app.post('/api/sms/incoming',
-  express.urlencoded({ extended: false }),
-  async (req, res) => {
-    try {
-      console.log("📱 Incoming SMS:", req.body);
+    express.urlencoded({ extended: false }),
+    async (req, res) => {
+        try {
 
-      const from = req.body.From;
-      const body = req.body.Body;
+            console.log("📱 Incoming SMS:", req.body);
 
-      if (!from || !body) {
-        return res.status(400).send('<Response><Message>Invalid SMS</Message></Response>');
-      }
+            const from = req.body.From;
+            const body = req.body.Body;
 
-     const parsed = await smsBooking.handleSMSBooking(body, from);
+            if (!from || !body) {
+                return res.send('<Response><Message>Invalid SMS format</Message></Response>');
+            }
 
-      if (!parsed.success) {
-        await twilioClient.messages.create({
-          body: parsed.message,
-          from: TWILIO_PHONE,
-          to: from
-        });
+            // Process booking ONLY ONCE
+            const result = await smsBooking.handleSMSBooking(body, from);
 
-        return res.send('<Response></Response>');
-      }
+            // Save SMS in DB
+            await SMS.create({
+                phoneNumber: from,
+                message: body,
+                direction: 'incoming',
+                status: 'received'
+            });
 
-      let createdBooking = null;
+            // Reply back to user
+            const reply = result?.message || "Request received. We will contact you shortly.";
 
-      if (parsed.type === 'machinery') {
-        const machinery = await Machinery.findOne({
-          name: { $regex: parsed.item, $options: 'i' }
-        });
+            await twilioClient.messages.create({
+                body: reply,
+                from: TWILIO_PHONE,
+                to: from
+            });
 
-        if (!machinery) {
-          await twilioClient.messages.create({
-            body: "Machinery not found.",
-            from: TWILIO_PHONE,
-            to: from
-          });
-          return res.send('<Response></Response>');
+
+            res.send('<Response></Response>');
+
+        } catch (error) {
+            console.error("SMS ERROR:", error);
+            res.send('<Response><Message>Server error while processing booking</Message></Response>');
         }
+    });
 
-        createdBooking = await Booking.create({
-          customerId: null, // optional: link user by phone
-          machineryId: machinery._id,
-          items: [{
-            productId: machinery._id,
-            quantity: 1,
-            price: machinery.price
-          }],
-          totalAmount: machinery.price,
-          startDate: new Date(parsed.date),
-          endDate: new Date(parsed.date),
-          duration: 1,
-          status: 'pending',
-          paymentStatus: 'pending'
-        });
-      }
-
-      await SMS.create({
-        phoneNumber: from,
-        message: body,
-        direction: 'incoming',
-        status: 'received',
-        bookingId: createdBooking ? createdBooking._id : null
-      });
-
-      const result = await smsBooking.handleSMSBooking(body, from);
-
-await twilioClient.messages.create({
-    body: result.message,
-    from: TWILIO_PHONE,
-    to: from
-});
-
-
-      res.send('<Response></Response>');
-
-    } catch (error) {
-      console.error("SMS ERROR:", error);
-      res.status(500).send('<Response><Message>Error</Message></Response>');
-    }
-});
 
 
 // Send SMS notification
@@ -1245,7 +1206,7 @@ app.get('/api/sms/booking/:bookingId', async (req, res) => {
         const { bookingId } = req.params;
 
         const booking = await Booking.findById(bookingId)
-            .populate('customerId machineryId');
+            .populate('machineryId');
 
         if (!booking) {
             return res.status(404).json({
@@ -1423,16 +1384,17 @@ async function sendBookingReminders() {
         const upcomingBookings = await Booking.find({
             startDate: { $gte: tomorrow, $lt: dayAfter },
             status: 'confirmed'
-        }).populate('customerId machineryId');
+        }).populate('machineryId');
+
 
         for (const booking of upcomingBookings) {
-            if (booking.customerId && booking.customerId.phone) {
+            if (booking.customerId) {
                 const message = `🔔 Booking Reminder!\nBooking ID: ${booking._id}\nMachinery: ${booking.machineryId?.name}\nDate: ${booking.startDate.toDateString()}\nTime: ${booking.pickupTime || '9:00 AM'}\nPlease be ready!`;
 
                 await twilioClient.messages.create({
                     body: message,
                     from: TWILIO_PHONE,
-                    to: booking.customerId.phone
+                    to: booking.customerId
                 });
 
                 const smsRecord = new SMS({
@@ -1715,7 +1677,7 @@ app.get('/api/bookings/machinery/:machineryId', async (req, res) => {
             query.$or = [{ startDate: { $lte: new Date(endDate) }, endDate: { $gte: new Date(startDate) } }];
         }
         const bookings = await Booking.find(query)
-            .populate('customerId', 'name email phone')
+            // .populate('customerId', 'name email phone')
             .sort({ startDate: 1 });
         res.json({
             success: true,
