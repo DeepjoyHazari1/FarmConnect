@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FarmConnect - Agricultural Machinery & Labour Booking</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* All your existing CSS styles remain exactly the same */
         /* Color Variables */
         :root {
             --primary: #2E7D32;
@@ -19,11 +21,13 @@
             --text: #212121;
             --text-light: #757575;
             --white: #FFFFFF;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gray-bg: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
             --transition: all 0.3s ease;
         }
 
-        /* Global Styles */
         * {
             margin: 0;
             padding: 0;
@@ -62,6 +66,16 @@
             border-radius: 2px;
         }
 
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .btn {
             display: inline-block;
             padding: 12px 30px;
@@ -76,28 +90,61 @@
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: var(--white);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-dark);
             transform: translateY(-3px);
-            box-shadow: var(--shadow);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
         }
 
         .btn-secondary {
-            background-color: var(--secondary);
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             color: var(--white);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
         }
 
         .btn-secondary:hover {
-            background-color: var(--secondary-dark);
             transform: translateY(-3px);
-            box-shadow: var(--shadow);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
         }
 
-        /* Updated Auth Button Styles */
+        /* Language Switcher Styles */
+        .language-switcher {
+            display: flex;
+            gap: 5px;
+            margin-left: 15px;
+            background: var(--light);
+            padding: 5px 10px;
+            border-radius: 40px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+
+        .lang-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Auth Button Styles */
         .auth-buttons {
             display: flex;
             gap: 15px;
@@ -130,14 +177,11 @@
         }
 
         .auth-register {
-            background-color: var(--secondary);
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             color: var(--white);
-            border-color: var(--secondary);
         }
 
         .auth-register:hover {
-            background-color: var(--secondary-dark);
-            border-color: var(--secondary-dark);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
         }
@@ -145,7 +189,7 @@
         /* Header Styles */
         .header {
             background-color: var(--white);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -156,15 +200,18 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
+            flex-wrap: wrap;
         }
 
         .nav-brand h2 {
             color: var(--primary);
             font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .nav-brand i {
-            margin-right: 10px;
             color: var(--secondary);
         }
 
@@ -172,6 +219,7 @@
             display: flex;
             list-style: none;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-link {
@@ -180,11 +228,11 @@
             color: var(--text);
             font-weight: 500;
             transition: var(--transition);
-            border-radius: 4px;
+            border-radius: 8px;
             margin: 0 5px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .nav-link:hover {
@@ -214,7 +262,7 @@
             transition: var(--transition);
         }
 
-        /* User Profile Navigation Styles */
+        /* User Profile Navigation */
         .user-profile-nav {
             display: flex;
             align-items: center;
@@ -247,11 +295,28 @@
             padding: 100px 0;
             display: flex;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
         }
 
         .hero-content {
             flex: 1;
             padding-right: 50px;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-content h1 {
@@ -294,19 +359,23 @@
         .hero-image {
             flex: 1;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-image img {
             max-width: 100%;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
         }
 
-        /* SMS Booking Section - NEW */
+        /* SMS Booking Section */
         .sms-booking {
             padding: 100px 0;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
             color: var(--white);
+            position: relative;
+            overflow: hidden;
         }
 
         .sms-booking .section-title {
@@ -354,8 +423,9 @@
         .sms-commands {
             background: rgba(255, 255, 255, 0.1);
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 16px;
             margin-top: 30px;
+            backdrop-filter: blur(10px);
         }
 
         .sms-commands h4 {
@@ -366,7 +436,7 @@
         .command-example {
             background: rgba(0, 0, 0, 0.3);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-family: monospace;
             margin-bottom: 10px;
             border-left: 4px solid var(--secondary);
@@ -379,16 +449,16 @@
 
         .sms-phone {
             background: var(--white);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 20px;
             display: inline-block;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-lg);
             position: relative;
         }
 
         .sms-screen {
             background: var(--light);
-            border-radius: 10px;
+            border-radius: 20px;
             padding: 15px;
             min-height: 300px;
             text-align: left;
@@ -411,21 +481,10 @@
             margin-left: auto;
         }
 
-        .patent-badge {
-            display: inline-block;
-            background: var(--secondary);
-            color: var(--white);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
         /* Services Section */
         .services {
             padding: 100px 0;
-            background-color: var(--light);
+            background-color: var(--gray-bg);
         }
 
         .services-grid {
@@ -435,17 +494,29 @@
         }
 
         .service-card {
-            background-color: var(--white);
+            background: var(--white);
             padding: 40px 30px;
-            border-radius: 10px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-md);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
         .service-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
 
         .service-card i {
@@ -489,7 +560,7 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
 
@@ -497,8 +568,9 @@
             display: flex;
             align-items: flex-start;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 16px;
             transition: var(--transition);
+            background: var(--gray-bg);
         }
 
         .feature-item:hover {
@@ -507,7 +579,7 @@
         }
 
         .feature-icon {
-            background-color: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
             color: var(--white);
             width: 60px;
             height: 60px;
@@ -544,6 +616,7 @@
             position: relative;
             max-width: 1000px;
             margin: 0 auto;
+            flex-wrap: wrap;
         }
 
         .steps-container::before {
@@ -563,12 +636,13 @@
             z-index: 2;
             flex: 1;
             padding: 0 15px;
+            min-width: 200px;
         }
 
         .step-number {
             width: 80px;
             height: 80px;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: var(--white);
             border-radius: 50%;
             display: flex;
@@ -577,7 +651,7 @@
             font-size: 2rem;
             font-weight: bold;
             margin: 0 auto 20px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-md);
         }
 
         .step-content h3 {
@@ -592,7 +666,7 @@
         /* Testimonials Section */
         .testimonials {
             padding: 100px 0;
-            background-color: var(--light);
+            background-color: var(--gray-bg);
         }
 
         .testimonials-grid {
@@ -601,6 +675,7 @@
             flex-wrap: nowrap;
             overflow-x: auto;
             margin-bottom: 0;
+            padding-bottom: 20px;
         }
 
         .testimonial-card {
@@ -608,30 +683,32 @@
             flex: 0 0 350px;
             background-color: var(--white);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
             transition: var(--transition);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 5rem;
+            color: var(--primary);
+            opacity: 0.1;
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            font-family: serif;
         }
 
         .testimonial-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
 
         .testimonial-content {
             margin-bottom: 20px;
             position: relative;
-        }
-
-        .testimonial-content::before {
-            content: '"';
-            font-size: 4rem;
-            color: var(--primary-light);
-            position: absolute;
-            top: -20px;
-            left: -10px;
-            opacity: 0.3;
-            line-height: 1;
+            z-index: 1;
         }
 
         .testimonial-content p {
@@ -647,7 +724,7 @@
         .author-avatar {
             width: 60px;
             height: 60px;
-            background-color: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -682,8 +759,9 @@
         .faq-item {
             background-color: var(--light);
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 16px;
             transition: var(--transition);
+            border-left: 4px solid var(--primary);
         }
 
         .faq-item:hover {
@@ -707,6 +785,35 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: var(--white);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1%, transparent 1%);
+            background-size: 50px 50px;
+            animation: movePattern 30s linear infinite;
+        }
+
+        @keyframes movePattern {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
         }
 
         .cta-content h2 {
@@ -743,7 +850,8 @@
             margin-bottom: 50px;
         }
 
-        .footer-column h3, .footer-column h4 {
+        .footer-column h3,
+        .footer-column h4 {
             margin-bottom: 20px;
             color: var(--white);
         }
@@ -756,28 +864,6 @@
         .footer-column p {
             margin-bottom: 20px;
             opacity: 0.8;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--white);
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            background-color: var(--secondary);
-            transform: translateY(-3px);
         }
 
         .footer-column ul {
@@ -822,13 +908,14 @@
         /* Image Gallery Section */
         .image-gallery-section {
             width: 100%;
-            background: #f8f9fa;
+            background: var(--gray-bg);
             padding: 60px 0 40px 0;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
+
         .image-gallery-wrapper {
             position: relative;
             width: 100%;
@@ -837,11 +924,12 @@
             align-items: center;
             justify-content: center;
         }
+
         .image-gallery-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: #4CAF50;
+            background: var(--primary);
             color: #fff;
             border: none;
             border-radius: 50%;
@@ -850,22 +938,26 @@
             font-size: 2.3rem;
             cursor: pointer;
             z-index: 2;
-            box-shadow: 0 2px 10px rgba(46,125,50,0.15);
+            box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.85;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
+
         .image-gallery-arrow:hover {
-            background: #2E7D32;
+            background: var(--primary-dark);
+            transform: translateY(-50%) scale(1.1);
         }
+
         .image-gallery-arrow.left {
             left: -70px;
         }
+
         .image-gallery-arrow.right {
             right: -70px;
         }
+
         .image-gallery-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -873,29 +965,270 @@
             gap: 40px;
             overflow-x: auto;
             scrollbar-width: thin;
-            scrollbar-color: #4CAF50 #f8f9fa;
+            scrollbar-color: var(--primary) var(--gray-bg);
             scroll-behavior: smooth;
             padding: 0 10px;
         }
+
         .gallery-image {
             width: 520px;
             height: 340px;
             border-radius: 22px;
             object-fit: cover;
-            box-shadow: 0 6px 24px rgba(46,125,50,0.15);
-            border: 4px solid #e8f5e8;
-            transition: transform 0.3s, border-color 0.3s;
+            box-shadow: var(--shadow-md);
+            border: 4px solid var(--light);
+            transition: var(--transition);
         }
+
         .gallery-image:hover {
-            transform: scale(1.08);
-            box-shadow: 0 12px 40px rgba(46,125,50,0.22);
-            border-color: #4CAF50;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
+
+        /* Chatbox Styles */
+        #chatbot-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 0;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(46, 125, 50, 0.4);
+            transition: var(--transition);
+            z-index: 1001;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(46, 125, 50, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+            }
+        }
+
+        #chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        #chatbot-toggle i {
+            font-size: 28px;
+        }
+
+        #chatbot-container {
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            width: 380px;
+            height: 520px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #chatbot-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .chatbot-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .chatbot-title h3 {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .chatbot-title p {
+            font-size: 0.7rem;
+            margin: 2px 0 0;
+            opacity: 0.9;
+        }
+
+        #chatbot-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        #chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            word-wrap: break-word;
+            animation: fadeInUp 0.2s ease;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background: white;
+            color: var(--text);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 18px;
+            align-self: flex-start;
+            display: inline-flex;
+            gap: 6px;
+        }
+
+        .typing-indicator span {
+            animation: blink 1.4s infinite;
+            font-size: 1.2rem;
+        }
+
+        @keyframes blink {
+
+            0%,
+            60%,
+            100% {
+                opacity: 0.3;
+            }
+
+            30% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #chatbot-input-area {
+            display: flex;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            padding: 12px 16px;
+            gap: 12px;
+        }
+
+        #chatbot-input {
+            flex: 1;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            padding: 10px 16px;
+            outline: none;
+        }
+
+        #chatbot-input:focus {
+            border-color: var(--primary);
+        }
+
+        #chatbot-send {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #chatbot-send:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
         @media (max-width: 992px) {
             .gallery-image {
                 width: 320px;
                 height: 200px;
             }
+
             .image-gallery-arrow {
                 width: 40px;
                 height: 40px;
@@ -903,15 +1236,50 @@
                 left: -30px;
                 right: -30px;
             }
+
             .image-gallery-container {
                 gap: 20px;
             }
+
+            .language-switcher {
+                margin-left: 10px;
+                padding: 3px 8px;
+            }
+
+            .lang-btn {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+
+            .sms-container {
+                flex-direction: column;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
         }
+
         @media (max-width: 768px) {
             .gallery-image {
                 width: 160px;
                 height: 90px;
             }
+
             .image-gallery-arrow {
                 width: 28px;
                 height: 28px;
@@ -919,46 +1287,119 @@
                 left: -10px;
                 right: -10px;
             }
+
             .image-gallery-container {
                 gap: 8px;
             }
+
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .stat h3 {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #chatbot-container {
+                width: calc(100vw - 32px);
+                right: 16px;
+                bottom: 90px;
+                height: 500px;
+            }
+
+            #chatbot-toggle {
+                bottom: 16px;
+                right: 16px;
+                width: 52px;
+                height: 52px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+                max-width: 250px;
+            }
         }
     </style>
-<script src="auth.js"></script>
+    <script src="auth.js"></script>
 </head>
+
 <body>
-    <!-- Navigation Header -->
+    <!-- Navigation Header with Language Switcher -->
     <header class="header">
         <nav class="navbar">
             <div class="nav-brand">
                 <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
             </div>
-            
+
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> Machinery</a></li>
-                <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> Labour</a></li>
-                <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
-                
-                <!-- User Profile Navigation - Will be shown when logged in -->
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> <span
+                            data-key="home">Home</span></a></li>
+                <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> <span
+                            data-key="machinery">Machinery</span></a></li>
+                <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> <span
+                            data-key="labour">Labour</span></a></li>
+                <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> <span
+                            data-key="contact">Contact</span></a></li>
+
+                <!-- Language Switcher -->
+                <div class="language-switcher">
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                    <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+                    <button class="lang-btn" data-lang="bn">🇧🇩 বাংলা</button>
+                </div>
+
                 <div id="userProfileNav" class="user-profile-nav" style="display: none;">
-                        <div class="user-info-nav">
-                            <div class="user-name-nav" id="userDisplayName"></div>
-                            <div class="user-role-nav" id="userDisplayRole"></div>
-                        </div>
-                    <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="dashboard.html#profile" class="nav-link"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
-                    <li><a href="dashboard.html#orders" class="nav-link"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-                    <li><button class="nav-link logout" onclick="logout()" style="background: none; border: none; cursor: pointer;"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                    <div class="user-info-nav">
+                        <div class="user-name-nav" id="userDisplayName"></div>
+                        <div class="user-role-nav" id="userDisplayRole"></div>
+                    </div>
+                    <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> <span
+                                data-key="dashboard">Dashboard</span></a></li>
+                    <li><a href="dashboard.html#profile" class="nav-link"><i class="fas fa-user-cog"></i> <span
+                                data-key="profileSettings">Profile Settings</span></a></li>
+                    <li><a href="dashboard.html#orders" class="nav-link"><i class="fas fa-shopping-bag"></i> <span
+                                data-key="myOrders">My Orders</span></a></li>
+                    <li><button class="nav-link logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span
+                                data-key="logout">Logout</span></button></li>
                 </div>
             </ul>
-            
-            <!-- Login/Register buttons (shown when not logged in) -->
+
             <div id="authButtons" class="auth-buttons">
-                <a href="login.html" class="auth-btn auth-login">Login</a>
-                <a href="register.html" class="auth-btn auth-register">Register</a>
+                <a href="login.html" class="auth-btn auth-login"><span data-key="login">Login</span></a>
+                <a href="register.html" class="auth-btn auth-register"><span data-key="register">Register</span></a>
             </div>
-            
+
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -967,25 +1408,23 @@
         </nav>
     </header>
 
-    <!-- Image Gallery Section (Top Middle) -->
+    <!-- Image Gallery Section -->
     <section class="image-gallery-section">
         <div class="image-gallery-wrapper">
-            <button class="image-gallery-arrow left" id="galleryLeft" aria-label="Previous image">&#8592;</button>
+            <button class="image-gallery-arrow left" id="galleryLeft">&#8592;</button>
             <div class="image-gallery-container" id="imageGallery">
-                <img src="assets/gallery1.jpg" alt="Tractor in field" class="gallery-image"
-                     onerror="this.src='https://cdn.tractorsdekho.com/in/john-deere/5050-d/john-deere-5050-d-53440.jpg'">
-                <img src="assets/gallery2.jpg" alt="Farmers working" class="gallery-image"
-                     onerror="this.src='https://kj1bcdn.b-cdn.net/media/54112/hy09farmer-1.jpg'">
-                <img src="assets/gallery3.jpg" alt="Harvesting crops" class="gallery-image"
-                     onerror="this.src='https://mahindrafarmmachinery.com/sites/default/files/2024-12/8.%20Combine%20Harvester%20Working%2C%20Uses%2C%20and%20Importance-min%20%281%29_0.jpg'">
-                <img src="assets/gallery4.jpg" alt="Irrigation system" class="gallery-image"
-                     onerror="this.src='https://cpimg.tistatic.com/09971481/b/4/Kirloskar-Make-Diesel-Run-Supermono-Pumpset..jpg'">
-                <img src="assets/gallery5.jpg" alt="Labour team" class="gallery-image"
-                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR29IyiVKoKAkzCoYny1BgNhCElt44rMcm85w&s'">
-                      <img src="assets/gallery5.jpg" alt="Labour team" class="gallery-image"
-                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReiedeSU19IbxytNiet8K0Kj97a-o4LJ0mxQ&s'">
+                <img src="assets/gallery1.jpg" class="gallery-image"
+                    onerror="this.src='https://cdn.tractorsdekho.com/in/john-deere/5050-d/john-deere-5050-d-53440.jpg'">
+                <img src="assets/gallery2.jpg" class="gallery-image"
+                    onerror="this.src='https://kj1bcdn.b-cdn.net/media/54112/hy09farmer-1.jpg'">
+                <img src="assets/gallery3.jpg" class="gallery-image"
+                    onerror="this.src='https://mahindrafarmmachinery.com/sites/default/files/2024-12/8.%20Combine%20Harvester%20Working%2C%20Uses%2C%20and%20Importance-min%20%281%29_0.jpg'">
+                <img src="assets/gallery4.jpg" class="gallery-image"
+                    onerror="this.src='https://cpimg.tistatic.com/09971481/b/4/Kirloskar-Make-Diesel-Run-Supermono-Pumpset..jpg'">
+                <img src="assets/gallery5.jpg" class="gallery-image"
+                    onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR29IyiVKoKAkzCoYny1BgNhCElt44rMcm85w&s'">
             </div>
-            <button class="image-gallery-arrow right" id="galleryRight" aria-label="Next image">&#8594;</button>
+            <button class="image-gallery-arrow right" id="galleryRight">&#8594;</button>
         </div>
     </section>
 
@@ -993,61 +1432,69 @@
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Connect, Book, Farm Smarter</h1>
-                <p>Book agricultural machinery and skilled labour with just a few clicks. Make your farming operations more efficient and cost-effective.</p>
+                <h1 data-key="heroTitle">Connect, Book, Farm Smarter</h1>
+                <p data-key="heroSubtitle">Book agricultural machinery and skilled labour with just a few clicks. Make
+                    your farming operations more efficient and cost-effective.</p>
                 <div class="hero-buttons">
-                    <a href="register.html" class="btn btn-primary">Get Started</a>
-                    <a href="learnmore.html" class="btn btn-secondary">Learn More</a>
+                    <a href="register.html" class="btn btn-primary"><span data-key="getStarted">Get Started</span></a>
+                    <a href="learnmore.html" class="btn btn-secondary"><span data-key="learnMore">Learn More</span></a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
                         <h3>500+</h3>
-                        <p>Happy Farmers</p>
+                        <p data-key="happyFarmers">Happy Farmers</p>
                     </div>
                     <div class="stat">
                         <h3>200+</h3>
-                        <p>Machines Available</p>
+                        <p data-key="machinesAvailable">Machines Available</p>
                     </div>
                     <div class="stat">
                         <h3>100+</h3>
-                        <p>Villages Served</p>
+                        <p data-key="villagesServed">Villages Served</p>
                     </div>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="assets/hero-farmer.png" alt="Farmer with technology" onerror="this.style.display='none'">
+                <img src="assets/hero-farmer.png" onerror="this.style.display='none'">
             </div>
         </div>
     </section>
 
-    <!-- SMS Booking Section - NEW -->
+    <!-- SMS Booking Section -->
     <section id="sms-booking" class="sms-booking">
         <div class="container">
-
-            <h2 class="section-title">Offline SMS Booking</h2>
-            <p style="text-align: center; margin-bottom: 50px; font-size: 1.2rem; opacity: 0.9;">Revolutionizing agricultural access for farmers without smartphones</p>
+            <h2 class="section-title" data-key="smsTitle">Offline SMS Booking</h2>
+            <p class="section-subtitle" data-key="smsDesc">Revolutionizing agricultural access for farmers without
+                smartphones</p>
             <div class="sms-container">
                 <div class="sms-content">
-                    <h3>Book Machinery or Labour with Simple SMS Commands</h3>
-                    <p>FarmConnect enables booking via SMS for farmers with basic mobile phones. Just send a text to <strong>FARMCON (+1 7402674969)</strong></p>
+                    <h3 data-key="smsBook">Book Machinery or Labour with Simple SMS Commands</h3>
+                    <p data-key="smsText">FarmConnect enables booking via SMS for farmers with basic mobile phones. Just
+                        send a text to <strong>FARMCON (+1 7402674969)</strong></p>
                     <ul class="sms-features">
-                        <li><i class="fas fa-check-circle"></i> No smartphone required</li>
-                        <li><i class="fas fa-check-circle"></i> Simple SMS commands</li>
-                        <li><i class="fas fa-check-circle"></i> Instant confirmation via SMS</li>
-                        <li><i class="fas fa-check-circle"></i> Multi-language support</li>
+                        <li><i class="fas fa-check-circle"></i> <span data-key="noSmartphone">No smartphone
+                                required</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-key="simpleSMS">Simple SMS commands</span>
+                        </li>
+                        <li><i class="fas fa-check-circle"></i> <span data-key="instantConfirm">Instant confirmation via
+                                SMS</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-key="multiLangSupport">Multi-language
+                                support</span></li>
                     </ul>
                     <div class="sms-commands">
-                        <h4>Sample SMS Commands:</h4>
+                        <h4 data-key="sampleCommands">Sample SMS Commands:</h4>
                         <div class="command-example">BOOK [TRACTOR NAME] [DATE] [PLACE]</div>
                         <div class="command-example">LABOR [TASK NAME] [NO OF LABOUR NEED] [DATE]</div>
                     </div>
-                    <a href="sms-guide.html" class="btn btn-secondary" style="margin-top:20px;">SMS Booking Guide</a>
+                    <a href="sms-guide.html" class="btn btn-secondary" style="margin-top:20px;"><span
+                            data-key="smsGuide">SMS Booking Guide</span></a>
                 </div>
                 <div class="sms-visual">
                     <div class="sms-phone">
                         <div class="sms-screen">
                             <div class="sms-message">BOOK John Deere 5050D 2026-02-20 kalyani</div>
-                            <div class="sms-message incoming">✅ Booking confirmed! Tractor(Jonh Deere 5050D) booked for 2026-02-20 at kalyani.</div>
+                            <div class="sms-message incoming">✅ Booking confirmed! Tractor(John Deere 5050D) booked for
+                                2026-02-20 at kalyani.</div>
                             <div class="sms-message">LABOR HARVESTING 3 2026-02-20</div>
                             <div class="sms-message incoming">✅ 3 labourers for harvesting booked for 2026-02-20.</div>
                         </div>
@@ -1060,176 +1507,170 @@
     <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
-            <h2 class="section-title">Our Services</h2>
+            <h2 class="section-title" data-key="ourServices">Our Services</h2>
             <div class="services-grid">
                 <div class="service-card">
                     <i class="fas fa-tractor"></i>
-                    <h3>Machinery Rental</h3>
-                    <p>Rent tractors, harvesters, ploughs, and other agricultural equipment from trusted owners in your area.</p>
+                    <h3 data-key="machineryRental">Machinery Rental</h3>
+                    <p data-key="machineryDesc">Rent tractors, harvesters, ploughs, and other agricultural equipment
+                        from trusted owners in your area.</p>
                     <ul>
-                        <li><i class="fas fa-check"></i> Verified equipment owners</li>
-                        <li><i class="fas fa-check"></i> Competitive pricing</li>
-                        <li><i class="fas fa-check"></i> Delivery options available</li>
+                        <li><i class="fas fa-check"></i> <span data-key="verifiedEquipment">Verified equipment
+                                owners</span></li>
+                        <li><i class="fas fa-check"></i> <span data-key="competitivePricing">Competitive pricing</span>
+                        </li>
+                        <li><i class="fas fa-check"></i> <span data-key="deliveryOptions">Delivery options
+                                available</span></li>
                     </ul>
                 </div>
-                
                 <div class="service-card">
                     <i class="fas fa-users"></i>
-                    <h3>Skilled Labour</h3>
-                    <p>Find experienced farm workers for planting, harvesting, irrigation, and other agricultural tasks.</p>
+                    <h3 data-key="skilledLabour">Skilled Labour</h3>
+                    <p data-key="labourDesc">Find experienced farm workers for planting, harvesting, irrigation, and
+                        other agricultural tasks.</p>
                     <ul>
-                        <li><i class="fas fa-check"></i> Background verified workers</li>
-                        <li><i class="fas fa-check"></i> Skill-based matching</li>
-                        <li><i class="fas fa-check"></i> Daily/weekly/monthly hiring</li>
+                        <li><i class="fas fa-check"></i> <span data-key="verifiedWorkers">Background verified
+                                workers</span></li>
+                        <li><i class="fas fa-check"></i> <span data-key="skillMatching">Skill-based matching</span></li>
+                        <li><i class="fas fa-check"></i> <span data-key="flexibleHiring">Daily/weekly/monthly
+                                hiring</span></li>
                     </ul>
                 </div>
-                
                 <div class="service-card">
                     <i class="fas fa-calendar-check"></i>
-                    <h3>Easy Booking</h3>
-                    <p>Simple online booking system with date selection, price transparency, and secure payments.</p>
+                    <h3 data-key="easyBooking">Easy Booking</h3>
+                    <p data-key="bookingDesc">Simple online booking system with date selection, price transparency, and
+                        secure payments.</p>
                     <ul>
-                        <li><i class="fas fa-check"></i> Real-time availability</li>
-                        <li><i class="fas fa-check"></i> Instant confirmation</li>
-                        <li><i class="fas fa-check"></i> Multiple payment options</li>
+                        <li><i class="fas fa-check"></i> <span data-key="realTimeAvail">Real-time availability</span>
+                        </li>
+                        <li><i class="fas fa-check"></i> <span data-key="instantConfirmation">Instant
+                                confirmation</span></li>
+                        <li><i class="fas fa-check"></i> <span data-key="multiplePayments">Multiple payment
+                                options</span></li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-           <!-- Features Section -->
+    <!-- Features Section -->
     <section id="features" class="features">
         <div class="container">
-            <h2 class="section-title">Why Choose FarmConnect</h2>
+            <h2 class="section-title" data-key="whyChoose">Why Choose FarmConnect</h2>
             <div class="features-grid">
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-rupee-sign"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-rupee-sign"></i></div>
                     <div class="feature-content">
-                        <h3>Cost-Effective</h3>
-                        <p>Save up to 40% compared to traditional rental methods with our competitive pricing.</p>
+                        <h3 data-key="costEffective">Cost-Effective</h3>
+                        <p data-key="costDesc">Save up to 40% compared to traditional rental methods with our
+                            competitive pricing.</p>
                     </div>
                 </div>
-                
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
                     <div class="feature-content">
-                        <h3>Verified Partners</h3>
-                        <p>All machinery owners and laborers are thoroughly verified for your safety and peace of mind.</p>
+                        <h3 data-key="verifiedPartners">Verified Partners</h3>
+                        <p data-key="verifiedDesc">All machinery owners and laborers are thoroughly verified for your
+                            safety and peace of mind.</p>
                     </div>
                 </div>
-                
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
                     <div class="feature-content">
-                        <h3>Time-Saving</h3>
-                        <p>Find and book equipment or labor in minutes, not days. Focus on farming, not searching.</p>
+                        <h3 data-key="timeSaving">Time-Saving</h3>
+                        <p data-key="timeDesc">Find and book equipment or labor in minutes, not days. Focus on farming,
+                            not searching.</p>
                     </div>
                 </div>
-                
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
                     <div class="feature-content">
-                        <h3>Easy to Use</h3>
-                        <p>Simple interface designed specifically for farmers with varying levels of tech experience.</p>
+                        <h3 data-key="easyToUse">Easy to Use</h3>
+                        <p data-key="easyDesc">Simple interface designed specifically for farmers with varying levels of
+                            tech experience.</p>
                     </div>
                 </div>
-                
-                <!-- NEW: Machinery Repair Feature -->
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-tools"></i></div>
                     <div class="feature-content">
-                        <h3>Machinery Repair</h3>
-                        <p>Expert repair services for all agricultural equipment with quick response times and genuine parts.</p>
+                        <h3 data-key="machineryRepair">Machinery Repair</h3>
+                        <p data-key="repairDesc">Expert repair services for all agricultural equipment with quick
+                            response times and genuine parts.</p>
                     </div>
                 </div>
-                
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
                     <div class="feature-content">
-                        <h3>24/7 Support</h3>
-                        <p>Our dedicated support team is available round the clock to assist with any issues.</p>
+                        <h3 data-key="support247">24/7 Support</h3>
+                        <p data-key="supportDesc">Our dedicated support team is available round the clock to assist with
+                            any issues.</p>
                     </div>
                 </div>
-                
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-language"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-language"></i></div>
                     <div class="feature-content">
-                        <h3>Multi-Language</h3>
-                        <p>Available in Hindi, English, and regional languages to serve diverse farming communities.</p>
+                        <h3 data-key="multiLanguage">Multi-Language</h3>
+                        <p data-key="langDesc">Available in Hindi, English, and Bengali to serve diverse farming
+                            communities.</p>
                     </div>
                 </div>
-                
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-truck"></i></div>
                     <div class="feature-content">
-                        <h3>On-Site Service</h3>
-                        <p>Get machinery repairs done at your farm location to minimize downtime during critical seasons.</p>
+                        <h3 data-key="onSiteService">On-Site Service</h3>
+                        <p data-key="onSiteDesc">Get machinery repairs done at your farm location to minimize downtime
+                            during critical seasons.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- How It Works Section -->
     <section id="how-it-works" class="how-it-works">
         <div class="container">
-            <h2 class="section-title">How FarmConnect Works</h2>
+            <h2 class="section-title" data-key="howItWorks">How FarmConnect Works</h2>
             <div class="steps-container">
                 <div class="step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <h3>Create Your Account</h3>
-                        <p>Sign up as a farmer looking for services or as a provider offering machinery or labor.</p>
+                        <h3 data-key="step1">Create Your Account</h3>
+                        <p data-key="step1Desc">Sign up as a farmer looking for services or as a provider offering
+                            machinery or labor.</p>
                     </div>
                 </div>
-                
                 <div class="step">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3>Browse & Select</h3>
-                        <p>Search for available machinery or labor in your area based on your specific requirements.</p>
+                        <h3 data-key="step2">Browse & Select</h3>
+                        <p data-key="step2Desc">Search for available machinery or labor in your area based on your
+                            specific requirements.</p>
                     </div>
                 </div>
-                
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3>Book & Confirm</h3>
-                        <p>Select your dates, review pricing, and confirm your booking with secure payment options.</p>
+                        <h3 data-key="step3">Book & Confirm</h3>
+                        <p data-key="step3Desc">Select your dates, review pricing, and confirm your booking with secure
+                            payment options.</p>
                     </div>
                 </div>
-                
                 <div class="step">
                     <div class="step-number">4</div>
                     <div class="step-content">
-                        <h3>Get to Work</h3>
-                        <p>Your machinery or labor will arrive as scheduled. Focus on what matters - your farm.</p>
+                        <h3 data-key="step4">Get to Work</h3>
+                        <p data-key="step4Desc">Your machinery or labor will arrive as scheduled. Focus on what matters
+                            - your farm.</p>
                     </div>
                 </div>
             </div>
-            
             <div style="text-align: center; margin-top: 50px;">
-                <h3 style="color: var(--primary); margin-bottom: 20px;">SMS Booking Alternative</h3>
-                <p style="max-width: 800px; margin: 0 auto; color: var(--text-light);">
-                    For farmers without internet access, simply send an SMS to <strong>FARMCON (+1 7402674969)</strong> with your registered booking numbers. 
-                    Our system will process your request and send confirmation via SMS within minutes.
-                </p>
+                <h3 style="color: var(--primary); margin-bottom: 20px;" data-key="smsAlt">SMS Booking Alternative</h3>
+                <p style="max-width: 800px; margin: 0 auto; color: var(--text-light);" data-key="smsAltDesc">For farmers
+                    without internet access, simply send an SMS to <strong>FARMCON (+1 7402674969)</strong> with your
+                    registered booking numbers. Our system will process your request and send confirmation via SMS
+                    within minutes.</p>
             </div>
         </div>
     </section>
@@ -1237,49 +1678,44 @@
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials">
         <div class="container">
-            <h2 class="section-title">What Farmers Say About Us</h2>
+            <h2 class="section-title" data-key="testimonialsTitle">What Farmers Say About Us</h2>
             <div class="testimonials-grid">
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        <p>"FarmConnect has transformed how I manage my farm operations. I can now easily find tractors during peak season without any hassle."</p>
+                        <p data-key="testimonial1">"FarmConnect has transformed how I manage my farm operations. I can
+                            now easily find tractors during peak season without any hassle."</p>
                     </div>
                     <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
                         <div class="author-info">
                             <h4>Rajesh Kumar</h4>
-                            <p>Farm Owner, Punjab</p>
+                            <p data-key="farmer1">Farm Owner, Punjab</p>
                         </div>
                     </div>
                 </div>
-                
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        <p>"As a machinery owner, FarmConnect has helped me earn extra income from my equipment during idle periods. The payment system is secure and timely."</p>
+                        <p data-key="testimonial2">"As a machinery owner, FarmConnect has helped me earn extra income
+                            from my equipment during idle periods. The payment system is secure and timely."</p>
                     </div>
                     <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
                         <div class="author-info">
-                            <h4>karan Singh</h4>
-                            <p>Tractor Owner, Uttar Pradesh</p>
+                            <h4>Karan Singh</h4>
+                            <p data-key="owner1">Tractor Owner, Uttar Pradesh</p>
                         </div>
                     </div>
                 </div>
-                
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        <p>"The SMS booking feature is revolutionary! I don't have a smartphone, but I can still book laborers for my farm with a simple text message."</p>
+                        <p data-key="testimonial3">"The SMS booking feature is revolutionary! I don't have a smartphone,
+                            but I can still book laborers for my farm with a simple text message."</p>
                     </div>
                     <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
                         <div class="author-info">
                             <h4>Baldev Singh</h4>
-                            <p>Traditional Farmer, Rajasthan</p>
+                            <p data-key="farmer2">Traditional Farmer, Rajasthan</p>
                         </div>
                     </div>
                 </div>
@@ -1290,36 +1726,38 @@
     <!-- FAQ Section -->
     <section id="faq" class="faq">
         <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
+            <h2 class="section-title" data-key="faqTitle">Frequently Asked Questions</h2>
             <div class="faq-grid">
                 <div class="faq-item">
-                    <h3>How do I register on FarmConnect?</h3>
-                    <p>Registration is simple! Click on the "Register" button at the top of the page, fill in your details, and verify your phone number. You'll be ready to book in minutes.</p>
+                    <h3 data-key="faq1">How do I register on FarmConnect?</h3>
+                    <p data-key="faq1Ans">Registration is simple! Click on the "Register" button at the top of the page,
+                        fill in your details, and verify your phone number. You'll be ready to book in minutes.</p>
                 </div>
-                
                 <div class="faq-item">
-                    <h3>What types of machinery can I rent?</h3>
-                    <p>We offer a wide range of agricultural equipment including tractors, harvesters, ploughs, seeders, irrigation systems, and more specialized farming tools.</p>
+                    <h3 data-key="faq2">What types of machinery can I rent?</h3>
+                    <p data-key="faq2Ans">We offer a wide range of agricultural equipment including tractors,
+                        harvesters, ploughs, seeders, irrigation systems, and more specialized farming tools.</p>
                 </div>
-                
                 <div class="faq-item">
-                    <h3>How does the SMS booking work?</h3>
-                    <p>Simply send an SMS with your booking request to FARMCON (+1 7402674969). Use simple commands like "BOOK TRACTOR [date]" or "FIND LABOR [type]". Our system will process your request and send confirmation.</p>
+                    <h3 data-key="faq3">How does the SMS booking work?</h3>
+                    <p data-key="faq3Ans">Simply send an SMS with your booking request to FARMCON (+1 7402674969). Use
+                        simple commands like "BOOK TRACTOR [date]" or "FIND LABOR [type]". Our system will process your
+                        request and send confirmation.</p>
                 </div>
-                
                 <div class="faq-item">
-                    <h3>What if I need to cancel a booking?</h3>
-                    <p>You can cancel bookings through your dashboard. Cancellation policies vary by provider, so please check the specific terms before confirming your booking.</p>
+                    <h3 data-key="faq4">What if I need to cancel a booking?</h3>
+                    <p data-key="faq4Ans">You can cancel bookings through your dashboard. Cancellation policies vary by
+                        provider, so please check the specific terms before confirming your booking.</p>
                 </div>
-
                 <div class="faq-item">
-                    <h3>How are payments processed for SMS bookings?</h3>
-                    <p>For SMS bookings, payments can be made in cash directly to the service provider. We also support payment via UPI for those who have digital payment access.</p>
+                    <h3 data-key="faq5">How are payments processed for SMS bookings?</h3>
+                    <p data-key="faq5Ans">For SMS bookings, payments can be made in cash directly to the service
+                        provider. We also support payment via UPI for those who have digital payment access.</p>
                 </div>
-                
                 <div class="faq-item">
-                    <h3>Is the SMS service available in regional languages?</h3>
-                    <p>No! Our SMS service supports only English right now.</p>
+                    <h3 data-key="faq6">Is the SMS service available in regional languages?</h3>
+                    <p data-key="faq6Ans">Yes! Our SMS service supports English, Hindi, and Bengali. Just send commands
+                        in your preferred language.</p>
                 </div>
             </div>
         </div>
@@ -1329,15 +1767,17 @@
     <section class="cta">
         <div class="container">
             <div class="cta-content">
-                <h2>Ready to Transform Your Farming Experience?</h2>
-                <p>Join thousands of farmers who are already benefiting from FarmConnect's services - both online and via SMS.</p>
+                <h2 data-key="ctaTitle">Ready to Transform Your Farming Experience?</h2>
+                <p data-key="ctaDesc">Join thousands of farmers who are already benefiting from FarmConnect's services -
+                    both online and via SMS.</p>
                 <div class="cta-buttons">
-                    <a href="register.html" class="btn btn-primary">Sign Up Now</a>
-                    <a href="sms-guide.html" class="btn btn-secondary">SMS Booking Guide</a>
+                    <a href="register.html" class="btn btn-primary"><span data-key="signUpNow">Sign Up Now</span></a>
+                    <a href="sms-guide.html" class="btn btn-secondary"><span data-key="smsGuideBtn">SMS Booking
+                            Guide</span></a>
                 </div>
-                <p style="margin-top: 20px; font-size: 1rem;">
-                    <strong>No smartphone? No problem!</strong> Text <strong>[BOOKING FORMAT]</strong> to <strong>FARMCON (+1 7402674969)</strong> to get started with SMS booking.
-                </p>
+                <p style="margin-top: 20px; font-size: 1rem;"><strong data-key="noSmartphoneMsg">No smartphone? No
+                        problem!</strong> <span data-key="smsInstruction">Text [BOOKING FORMAT] to FARMCON (+1
+                        7402674969) to get started with SMS booking.</span></p>
             </div>
         </div>
     </section>
@@ -1348,126 +1788,580 @@
             <div class="footer-grid">
                 <div class="footer-column">
                     <h3><i class="fas fa-tractor"></i> FarmConnect</h3>
-                    <p>Connecting farmers with agricultural machinery and skilled labor to make farming more efficient and profitable.</p>
-                    <div class="sms-info" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <h4 style="color: var(--secondary); margin-bottom: 10px;">SMS Booking</h4>
-                        <p style="font-size: 0.9rem; margin-bottom: 5px;">Text <strong>FARMCON</strong> to</p>
+                    <p data-key="footerDesc">Connecting farmers with agricultural machinery and skilled labor to make
+                        farming more efficient and profitable.</p>
+                    <div class="sms-info"
+                        style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; margin-top: 15px;">
+                        <h4 style="color: var(--secondary); margin-bottom: 10px;" data-key="smsBookingTitle">SMS Booking
+                        </h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 5px;"><span data-key="textTo">Text</span>
+                            <strong>FARMCON</strong> <span data-key="to">to</span></p>
                         <p style="font-size: 1.1rem; font-weight: bold;">+1 7402674969</p>
                     </div>
                 </div>
-                
                 <div class="footer-column">
-                    <h4>Quick Links</h4>
+                    <h4 data-key="quickLinks">Quick Links</h4>
                     <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#sms-booking">SMS Booking</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#home"><span data-key="home">Home</span></a></li>
+                        <li><a href="#services"><span data-key="services">Services</span></a></li>
+                        <li><a href="#sms-booking"><span data-key="smsBooking">SMS Booking</span></a></li>
+                        <li><a href="#how-it-works"><span data-key="howItWorksLink">How It Works</span></a></li>
+                        <li><a href="#faq"><span data-key="faqLink">FAQ</span></a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-column">
-                    <h4>Services</h4>
+                    <h4 data-key="servicesTitle">Services</h4>
                     <ul>
-                        <li><a href="machinery.html">Machinery Rental</a></li>
-                        <li><a href="labour.html">Labor Hiring</a></li>
-                        <li><a href="billing.html">Checkout</a></li>
-                        <li><a href="sms-booking.html">SMS Booking Guide</a></li>
-                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="machinery.html"><span data-key="machineryRentalLink">Machinery Rental</span></a>
+                        </li>
+                        <li><a href="labour.html"><span data-key="laborHiring">Labor Hiring</span></a></li>
+                        <li><a href="billing.html"><span data-key="checkout">Checkout</span></a></li>
+                        <li><a href="sms-booking.html"><span data-key="smsGuideLink">SMS Booking Guide</span></a></li>
+                        <li><a href="contact.html"><span data-key="contactSupport">Contact Support</span></a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-column">
-                    <h4>Contact Info</h4>
+                    <h4 data-key="contactInfo">Contact Info</h4>
                     <ul class="contact-info">
                         <li><i class="fas fa-envelope"></i> farmconnect@gmail.com</li>
                         <li><i class="fas fa-phone"></i> +91 9862165134</li>
-                        <li><i class="fas fa-sms"></i> SMS: BOOKING FORMAT to +1 7402674969</li>
+                        <li><i class="fas fa-sms"></i> <span data-key="smsFormat">SMS: BOOKING FORMAT to +1
+                                7402674969</span></li>
                         <li><i class="fas fa-map-marker-alt"></i> JIS College of Engineering, Kalyani, West Bengal</li>
                     </ul>
                 </div>
             </div>
-            
             <div class="footer-bottom">
-                <p>&copy; 2025 FarmConnect. All rights reserved. | Final Year Project - JIS College of Engineering </p>
+                <p>&copy; 2025 FarmConnect. All rights reserved. | <span data-key="project">Final Year Project - JIS
+                        College of Engineering</span></p>
             </div>
         </div>
     </footer>
 
+    <!-- Chatbot -->
+    <button id="chatbot-toggle"><i class="fas fa-comment-dots"></i></button>
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar"><i class="fas fa-seedling"></i></div>
+                <div class="chatbot-title">
+                    <h3 id="chatbot-title">FarmConnect Assistant</h3>
+                    <p id="chatbot-status">Online • Usually replies instantly</p>
+                </div>
+            </div>
+            <button id="chatbot-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="chatbot-messages">
+            <div class="message-bubble bot-message" id="welcome-message">
+                🌾 <strong>Namaste!</strong> I'm your FarmConnect assistant. Ask me about machinery, labour, SMS
+                booking, pricing, and more!
+            </div>
+        </div>
+        <div id="chatbot-input-area">
+            <input type="text" id="chatbot-input" placeholder="Type your message..." autocomplete="off">
+            <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <script>
-        // Simple script for mobile menu toggle
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            document.querySelector('.nav-menu').classList.toggle('active');
+        // ========== COMPLETE LANGUAGE TRANSLATIONS WITH ALL SECTIONS ==========
+        const translations = {
+            en: {
+                // Navigation
+                home: "Home", machinery: "Machinery", labour: "Labour", contact: "Contact",
+                dashboard: "Dashboard", profileSettings: "Profile Settings", myOrders: "My Orders",
+                logout: "Logout", login: "Login", register: "Register", services: "Services",
+                
+                // Hero Section
+                heroTitle: "Connect, Book, Farm Smarter",
+                heroSubtitle: "Book agricultural machinery and skilled labour with just a few clicks. Make your farming operations more efficient and cost-effective.",
+                getStarted: "Get Started", learnMore: "Learn More",
+                happyFarmers: "Happy Farmers", machinesAvailable: "Machines Available", villagesServed: "Villages Served",
+                
+                // SMS Booking Section
+                smsTitle: "Offline SMS Booking", smsDesc: "Revolutionizing agricultural access for farmers without smartphones",
+                smsBook: "Book Machinery or Labour with Simple SMS Commands",
+                smsText: "FarmConnect enables booking via SMS for farmers with basic mobile phones. Just send a text to FARMCON (+1 7402674969)",
+                noSmartphone: "No smartphone required", simpleSMS: "Simple SMS commands", 
+                instantConfirm: "Instant confirmation via SMS", multiLangSupport: "Multi-language support",
+                sampleCommands: "Sample SMS Commands:", smsGuide: "SMS Booking Guide",
+                
+                // Services Section
+                ourServices: "Our Services", machineryRental: "Machinery Rental", skilledLabour: "Skilled Labour", 
+                easyBooking: "Easy Booking", machineryDesc: "Rent tractors, harvesters, ploughs, and other agricultural equipment from trusted owners in your area.",
+                labourDesc: "Find experienced farm workers for planting, harvesting, irrigation, and other agricultural tasks.",
+                bookingDesc: "Simple online booking system with date selection, price transparency, and secure payments.",
+                verifiedEquipment: "Verified equipment owners", competitivePricing: "Competitive pricing", 
+                deliveryOptions: "Delivery options available", verifiedWorkers: "Background verified workers",
+                skillMatching: "Skill-based matching", flexibleHiring: "Daily/weekly/monthly hiring",
+                realTimeAvail: "Real-time availability", instantConfirmation: "Instant confirmation", 
+                multiplePayments: "Multiple payment options",
+                
+                // Features Section
+                whyChoose: "Why Choose FarmConnect", costEffective: "Cost-Effective", verifiedPartners: "Verified Partners",
+                timeSaving: "Time-Saving", easyToUse: "Easy to Use", machineryRepair: "Machinery Repair", 
+                support247: "24/7 Support", multiLanguage: "Multi-Language", onSiteService: "On-Site Service",
+                costDesc: "Save up to 40% compared to traditional rental methods with our competitive pricing.",
+                verifiedDesc: "All machinery owners and laborers are thoroughly verified for your safety and peace of mind.",
+                timeDesc: "Find and book equipment or labor in minutes, not days. Focus on farming, not searching.",
+                easyDesc: "Simple interface designed specifically for farmers with varying levels of tech experience.",
+                repairDesc: "Expert repair services for all agricultural equipment with quick response times and genuine parts.",
+                supportDesc: "Our dedicated support team is available round the clock to assist with any issues.",
+                langDesc: "Available in Hindi, English, and Bengali to serve diverse farming communities.",
+                onSiteDesc: "Get machinery repairs done at your farm location to minimize downtime during critical seasons.",
+                
+                // How It Works Section
+                howItWorks: "How FarmConnect Works", step1: "Create Your Account", step2: "Browse & Select", 
+                step3: "Book & Confirm", step4: "Get to Work",
+                step1Desc: "Sign up as a farmer looking for services or as a provider offering machinery or labor.",
+                step2Desc: "Search for available machinery or labor in your area based on your specific requirements.",
+                step3Desc: "Select your dates, review pricing, and confirm your booking with secure payment options.",
+                step4Desc: "Your machinery or labor will arrive as scheduled. Focus on what matters - your farm.",
+                smsAlt: "SMS Booking Alternative", smsAltDesc: "For farmers without internet access, simply send an SMS to FARMCON (+1 7402674969) with your registered booking numbers.",
+                
+                // Testimonials Section
+                testimonialsTitle: "What Farmers Say About Us",
+                testimonial1: "FarmConnect has transformed how I manage my farm operations. I can now easily find tractors during peak season without any hassle.",
+                testimonial2: "As a machinery owner, FarmConnect has helped me earn extra income from my equipment during idle periods. The payment system is secure and timely.",
+                testimonial3: "The SMS booking feature is revolutionary! I don't have a smartphone, but I can still book laborers for my farm with a simple text message.",
+                farmer1: "Farm Owner, Punjab", owner1: "Tractor Owner, Uttar Pradesh", farmer2: "Traditional Farmer, Rajasthan",
+                
+                // FAQ Section
+                faqTitle: "Frequently Asked Questions",
+                faq1: "How do I register on FarmConnect?", faq2: "What types of machinery can I rent?",
+                faq3: "How does the SMS booking work?", faq4: "What if I need to cancel a booking?",
+                faq5: "How are payments processed for SMS bookings?", faq6: "Is the SMS service available in regional languages?",
+                faq1Ans: "Registration is simple! Click on the 'Register' button at the top of the page, fill in your details, and verify your phone number. You'll be ready to book in minutes.",
+                faq2Ans: "We offer a wide range of agricultural equipment including tractors, harvesters, ploughs, seeders, irrigation systems, and more specialized farming tools.",
+                faq3Ans: "Simply send an SMS with your booking request to FARMCON (+1 7402674969). Use simple commands like 'BOOK TRACTOR [date]' or 'FIND LABOR [type]'. Our system will process your request and send confirmation.",
+                faq4Ans: "You can cancel bookings through your dashboard. Cancellation policies vary by provider, so please check the specific terms before confirming your booking.",
+                faq5Ans: "For SMS bookings, payments can be made in cash directly to the service provider. We also support payment via UPI for those who have digital payment access.",
+                faq6Ans: "Yes! Our SMS service supports English, Hindi, and Bengali. Just send commands in your preferred language.",
+                
+                // CTA Section
+                ctaTitle: "Ready to Transform Your Farming Experience?",
+                ctaDesc: "Join thousands of farmers who are already benefiting from FarmConnect's services - both online and via SMS.",
+                signUpNow: "Sign Up Now", smsGuideBtn: "SMS Booking Guide",
+                noSmartphoneMsg: "No smartphone? No problem!",
+                smsInstruction: "Text [BOOKING FORMAT] to FARMCON (+1 7402674969) to get started with SMS booking.",
+                
+                // Footer
+                footerDesc: "Connecting farmers with agricultural machinery and skilled labor to make farming more efficient and profitable.",
+                quickLinks: "Quick Links", smsBooking: "SMS Booking", howItWorksLink: "How It Works", faqLink: "FAQ",
+                servicesTitle: "Services", machineryRentalLink: "Machinery Rental", laborHiring: "Labor Hiring",
+                checkout: "Checkout", smsGuideLink: "SMS Booking Guide", contactSupport: "Contact Support",
+                contactInfo: "Contact Info", smsFormat: "SMS: BOOKING FORMAT to +1 7402674969", 
+                project: "Final Year Project - JIS College of Engineering", smsBookingTitle: "SMS Booking",
+                textTo: "Text", to: "to",
+                
+                // Chatbot
+                chatWelcome: "🌾 Namaste! I'm your FarmConnect assistant. Ask me about machinery, labour, SMS booking, pricing, and more!",
+                chatPlaceholder: "Type your message..."
+            },
+            hi: {
+                // Navigation
+                home: "होम", machinery: "मशीनरी", labour: "श्रमिक", contact: "संपर्क",
+                dashboard: "डैशबोर्ड", profileSettings: "प्रोफ़ाइल सेटिंग्स", myOrders: "मेरे ऑर्डर",
+                logout: "लॉगआउट", login: "लॉगिन", register: "रजिस्टर", services: "सेवाएं",
+                
+                // Hero Section
+                heroTitle: "कनेक्ट करें, बुक करें, स्मार्ट खेती करें",
+                heroSubtitle: "कुछ ही क्लिक में कृषि मशीनरी और कुशल श्रम बुक करें। अपने खेती के कार्यों को अधिक कुशल और लागत प्रभावी बनाएं।",
+                getStarted: "शुरू करें", learnMore: "और जानें",
+                happyFarmers: "खुश किसान", machinesAvailable: "मशीनें उपलब्ध", villagesServed: "गाँव सेवित",
+                
+                // SMS Booking Section
+                smsTitle: "ऑफलाइन एसएमएस बुकिंग", smsDesc: "स्मार्टफोन के बिना किसानों के लिए कृषि पहुंच में क्रांतिकारी बदलाव",
+                smsBook: "सरल एसएमएस कमांड के साथ मशीनरी या श्रम बुक करें",
+                smsText: "FarmConnect बुनियादी मोबाइल फोन वाले किसानों के लिए एसएमएस के माध्यम से बुकिंग सक्षम बनाता है।",
+                noSmartphone: "स्मार्टफोन की आवश्यकता नहीं", simpleSMS: "सरल एसएमएस कमांड", 
+                instantConfirm: "एसएमएस पर तुरंत पुष्टि", multiLangSupport: "बहुभाषी समर्थन",
+                sampleCommands: "नमूना एसएमएस कमांड:", smsGuide: "एसएमएस बुकिंग गाइड",
+                
+                // Services Section
+                ourServices: "हमारी सेवाएं", machineryRental: "मशीनरी किराया", skilledLabour: "कुशल श्रम", 
+                easyBooking: "आसान बुकिंग", machineryDesc: "अपने क्षेत्र के विश्वसनीय मालिकों से ट्रैक्टर, हार्वेस्टर, हल और अन्य कृषि उपकरण किराए पर लें।",
+                labourDesc: "रोपाई, कटाई, सिंचाई और अन्य कृषि कार्यों के लिए अनुभवी किसान मजदूर खोजें।",
+                bookingDesc: "तिथि चयन, मूल्य पारदर्शिता और सुरक्षित भुगतान के साथ सरल ऑनलाइन बुकिंग प्रणाली।",
+                verifiedEquipment: "सत्यापित उपकरण मालिक", competitivePricing: "प्रतिस्पर्धी मूल्य निर्धारण", 
+                deliveryOptions: "डिलीवरी विकल्प उपलब्ध", verifiedWorkers: "पृष्ठभूमि सत्यापित कर्मचारी",
+                skillMatching: "कौशल-आधारित मिलान", flexibleHiring: "दैनिक/साप्ताहिक/मासिक नियुक्ति",
+                realTimeAvail: "वास्तविक समय उपलब्धता", instantConfirmation: "तुरंत पुष्टि", 
+                multiplePayments: "कई भुगतान विकल्प",
+                
+                // Features Section
+                whyChoose: "FarmConnect क्यों चुनें", costEffective: "लागत प्रभावी", verifiedPartners: "सत्यापित भागीदार",
+                timeSaving: "समय की बचत", easyToUse: "उपयोग में आसान", machineryRepair: "मशीनरी मरम्मत", 
+                support247: "24/7 सहायता", multiLanguage: "बहुभाषी", onSiteService: "ऑन-साइट सेवा",
+                costDesc: "हमारी प्रतिस्पर्धी मूल्य निर्धारण के साथ पारंपरिक किराये के तरीकों की तुलना में 40% तक बचत करें।",
+                verifiedDesc: "आपकी सुरक्षा और मानसिक शांति के लिए सभी मशीनरी मालिक और मजदूर पूरी तरह से सत्यापित हैं।",
+                timeDesc: "मिनटों में उपकरण या श्रम खोजें और बुक करें। खेती पर ध्यान दें, खोज पर नहीं।",
+                easyDesc: "विशेष रूप से किसानों के लिए डिज़ाइन किया गया सरल इंटरफ़ेस।",
+                repairDesc: "त्वरित प्रतिक्रिया समय और वास्तविक पुर्जों के साथ सभी कृषि उपकरणों के लिए विशेषज्ञ मरम्मत सेवाएं।",
+                supportDesc: "हमारी समर्पित सहायता टीम किसी भी मुद्दे में सहायता के लिए चौबीसों घंटे उपलब्ध है।",
+                langDesc: "विविध कृषि समुदायों की सेवा के लिए हिंदी, अंग्रेजी और बंगाली में उपलब्ध।",
+                onSiteDesc: "महत्वपूर्ण मौसमों में डाउनटाइम को कम करने के लिए अपने खेत के स्थान पर मशीनरी की मरम्मत करवाएं।",
+                
+                // How It Works Section
+                howItWorks: "FarmConnect कैसे काम करता है", step1: "अपना खाता बनाएं", step2: "ब्राउज़ करें और चुनें", 
+                step3: "बुक करें और पुष्टि करें", step4: "काम पर लग जाएं",
+                step1Desc: "सेवाओं की तलाश करने वाले किसान या मशीनरी या श्रम की पेशकश करने वाले प्रदाता के रूप में साइन अप करें।",
+                step2Desc: "अपनी विशिष्ट आवश्यकताओं के आधार पर अपने क्षेत्र में उपलब्ध मशीनरी या श्रम खोजें।",
+                step3Desc: "अपनी तारीखें चुनें, मूल्य निर्धारण की समीक्षा करें और सुरक्षित भुगतान विकल्पों के साथ अपनी बुकिंग की पुष्टि करें।",
+                step4Desc: "आपकी मशीनरी या श्रम निर्धारित समय पर आ जाएगा। उस पर ध्यान दें जो मायने रखता है - आपका खेत।",
+                smsAlt: "एसएमएस बुकिंग विकल्प", smsAltDesc: "इंटरनेट पहुंच के बिना किसानों के लिए, अपने पंजीकृत बुकिंग नंबरों के साथ FARMCON (+1 7402674969) पर एक एसएमएस भेजें।",
+                
+                // Testimonials Section
+                testimonialsTitle: "किसान हमारे बारे में क्या कहते हैं",
+                testimonial1: "FarmConnect ने मेरे खेत के संचालन के तरीके को बदल दिया है। अब मैं पीक सीजन में बिना किसी परेशानी के आसानी से ट्रैक्टर ढूंढ सकता हूं।",
+                testimonial2: "एक मशीनरी मालिक के रूप में, FarmConnect ने मुझे अपने उपकरणों से निष्क्रिय अवधि के दौरान अतिरिक्त आय अर्जित करने में मदद की है। भुगतान प्रणाली सुरक्षित और समय पर है।",
+                testimonial3: "एसएमएस बुकिंग सुविधा क्रांतिकारी है! मेरे पास स्मार्टफोन नहीं है, लेकिन मैं अभी भी एक साधारण टेक्स्ट संदेश के साथ अपने खेत के लिए मजदूर बुक कर सकता हूं।",
+                farmer1: "किसान, पंजाब", owner1: "ट्रैक्टर मालिक, उत्तर प्रदेश", farmer2: "पारंपरिक किसान, राजस्थान",
+                
+                // FAQ Section
+                faqTitle: "अक्सर पूछे जाने वाले प्रश्न",
+                faq1: "मैं FarmConnect पर कैसे रजिस्टर करूं?", faq2: "मैं किस प्रकार की मशीनरी किराए पर ले सकता हूं?",
+                faq3: "एसएमएस बुकिंग कैसे काम करती है?", faq4: "अगर मुझे बुकिंग रद्द करनी हो तो क्या करूं?",
+                faq5: "एसएमएस बुकिंग के लिए भुगतान कैसे संसाधित किए जाते हैं?", faq6: "क्या एसएमएस सेवा क्षेत्रीय भाषाओं में उपलब्ध है?",
+                faq1Ans: "रजिस्ट्रेशन सरल है! पृष्ठ के शीर्ष पर 'रजिस्टर' बटन पर क्लिक करें, अपना विवरण भरें और अपना फोन नंबर सत्यापित करें। आप मिनटों में बुकिंग के लिए तैयार होंगे।",
+                faq2Ans: "हम ट्रैक्टर, हार्वेस्टर, हल, सीडर, सिंचाई प्रणाली और अधिक विशिष्ट कृषि उपकरणों सहित कृषि उपकरणों की एक विस्तृत श्रृंखला प्रदान करते हैं।",
+                faq3Ans: "बस FARMCON (+1 7402674969) पर अपने बुकिंग अनुरोध के साथ एक एसएमएस भेजें। 'BOOK TRACTOR [date]' या 'FIND LABOR [type]' जैसे सरल कमांड का उपयोग करें।",
+                faq4Ans: "आप अपने डैशबोर्ड के माध्यम से बुकिंग रद्द कर सकते हैं। रद्दीकरण नीतियां प्रदाता के अनुसार भिन्न होती हैं, कृपया अपनी बुकिंग की पुष्टि करने से पहले विशिष्ट शर्तों की जांच करें।",
+                faq5Ans: "एसएमएस बुकिंग के लिए, भुगतान सीधे सेवा प्रदाता को नकद में किया जा सकता है। हम उन लोगों के लिए यूपीआई के माध्यम से भुगतान का भी समर्थन करते हैं जिनके पास डिजिटल भुगतान पहुंच है।",
+                faq6Ans: "हाँ! हमारी एसएमएस सेवा अंग्रेजी, हिंदी और बंगाली का समर्थन करती है। बस अपनी पसंदीदा भाषा में कमांड भेजें।",
+                
+                // CTA Section
+                ctaTitle: "अपने खेती के अनुभव को बदलने के लिए तैयार?",
+                ctaDesc: "हजारों किसानों से जुड़ें जो पहले से ही FarmConnect की सेवाओं से लाभान्वित हो रहे हैं - ऑनलाइन और एसएमएस दोनों के माध्यम से।",
+                signUpNow: "अभी साइन अप करें", smsGuideBtn: "एसएमएस बुकिंग गाइड",
+                noSmartphoneMsg: "स्मार्टफोन नहीं? कोई बात नहीं!",
+                smsInstruction: "एसएमएस बुकिंग शुरू करने के लिए FARMCON (+1 7402674969) पर [बुकिंग फॉर्मेट] टेक्स्ट करें।",
+                
+                // Footer
+                footerDesc: "किसानों को कृषि मशीनरी और कुशल श्रम से जोड़ना ताकि खेती अधिक कुशल और लाभदायक हो सके।",
+                quickLinks: "त्वरित लिंक", smsBooking: "एसएमएस बुकिंग", howItWorksLink: "यह कैसे काम करता है", faqLink: "अक्सर पूछे जाने वाले प्रश्न",
+                servicesTitle: "सेवाएं", machineryRentalLink: "मशीनरी किराया", laborHiring: "श्रम नियुक्ति",
+                checkout: "चेकआउट", smsGuideLink: "एसएमएस बुकिंग गाइड", contactSupport: "सहायता से संपर्क करें",
+                contactInfo: "संपर्क जानकारी", smsFormat: "एसएमएस: बुकिंग फॉर्मेट +1 7402674969 पर", 
+                project: "अंतिम वर्ष परियोजना - जेआईएस कॉलेज ऑफ इंजीनियरिंग", smsBookingTitle: "एसएमएस बुकिंग",
+                textTo: "टेक्स्ट करें", to: "को",
+                
+                // Chatbot
+                chatWelcome: "🌾 नमस्ते! मैं आपका FarmConnect सहायक हूँ। मुझसे मशीनरी, श्रम, एसएमएस बुकिंग, मूल्य निर्धारण और अधिक के बारे में पूछें!",
+                chatPlaceholder: "अपना संदेश टाइप करें..."
+            },
+            bn: {
+                // Navigation
+                home: "হোম", machinery: "যন্ত্রপাতি", labour: "শ্রমিক", contact: "যোগাযোগ",
+                dashboard: "ড্যাশবোর্ড", profileSettings: "প্রোফাইল সেটিংস", myOrders: "আমার অর্ডার",
+                logout: "লগআউট", login: "লগইন", register: "নিবন্ধন", services: "সেবাসমূহ",
+                
+                // Hero Section
+                heroTitle: "সংযোগ করুন, বুক করুন, স্মার্ট চাষ করুন",
+                heroSubtitle: "কৃষি যন্ত্রপাতি এবং দক্ষ শ্রম মাত্র কয়েক ক্লিকে বুক করুন। আপনার চাষের কাজগুলি আরও দক্ষ এবং সাশ্রয়ী করুন।",
+                getStarted: "শুরু করুন", learnMore: "আরও জানুন",
+                happyFarmers: "সুখী কৃষক", machinesAvailable: "যন্ত্রপাতি উপলব্ধ", villagesServed: "গ্রাম সেবিত",
+                
+                // SMS Booking Section
+                smsTitle: "অফলাইন এসএমএস বুকিং", smsDesc: "স্মার্টফোন ছাড়া কৃষকদের জন্য কৃষি অ্যাক্সেসে বিপ্লব",
+                smsBook: "সহজ এসএমএস কমান্ড দিয়ে যন্ত্রপাতি বা শ্রম বুক করুন",
+                smsText: "FarmConnect মৌলিক মোবাইল ফোন সহ কৃষকদের জন্য এসএমএস এর মাধ্যমে বুকিং সক্ষম করে।",
+                noSmartphone: "স্মার্টফোনের প্রয়োজন নেই", simpleSMS: "সহজ এসএমএস কমান্ড", 
+                instantConfirm: "এসএমএস এর মাধ্যমে তাৎক্ষণিক নিশ্চিতকরণ", multiLangSupport: "বহুভাষা সমর্থন",
+                sampleCommands: "নমুনা এসএমএস কমান্ড:", smsGuide: "এসএমএস বুকিং গাইড",
+                
+                // Services Section
+                ourServices: "আমাদের সেবাসমূহ", machineryRental: "যন্ত্রপাতি ভাড়া", skilledLabour: "দক্ষ শ্রম", 
+                easyBooking: "সহজ বুকিং", machineryDesc: "আপনার এলাকার বিশ্বস্ত মালিকদের কাছ থেকে ট্রাক্টর, হারভেস্টার, লাঙ্গল এবং অন্যান্য কৃষি যন্ত্রপাতি ভাড়া নিন।",
+                labourDesc: "রোপণ, ফসল কাটা, সেচ এবং অন্যান্য কৃষি কাজের জন্য অভিজ্ঞ কৃষি শ্রমিক খুঁজুন।",
+                bookingDesc: "তারিখ নির্বাচন, মূল্য স্বচ্ছতা এবং নিরাপদ অর্থ প্রদানের সাথে সহজ অনলাইন বুকিং ব্যবস্থা।",
+                verifiedEquipment: "যাচাইকৃত যন্ত্রপাতির মালিক", competitivePricing: "প্রতিযোগিতামূলক মূল্য", 
+                deliveryOptions: "ডেলিভারি বিকল্প উপলব্ধ", verifiedWorkers: "পটভূমি যাচাইকৃত কর্মী",
+                skillMatching: "দক্ষতা-ভিত্তিক মিল", flexibleHiring: "দৈনিক/সাপ্তাহিক/মাসিক নিয়োগ",
+                realTimeAvail: "রিয়েল-টাইম প্রাপ্যতা", instantConfirmation: "তাৎক্ষণিক নিশ্চিতকরণ", 
+                multiplePayments: "একাধিক পেমেন্ট বিকল্প",
+                
+                // Features Section
+                whyChoose: "কেন FarmConnect বেছে নেবেন", costEffective: "সাশ্রয়ী", verifiedPartners: "যাচাইকৃত অংশীদার",
+                timeSaving: "সময় সাশ্রয়ী", easyToUse: "ব্যবহার সহজ", machineryRepair: "যন্ত্রপাতি মেরামত", 
+                support247: "24/7 সমর্থন", multiLanguage: "বহুভাষা", onSiteService: "অন-সাইট পরিষেবা",
+                costDesc: "আমাদের প্রতিযোগিতামূলক মূল্যের সাথে ঐতিহ্যগত ভাড়া পদ্ধতির তুলনায় 40% পর্যন্ত সাশ্রয় করুন।",
+                verifiedDesc: "আপনার নিরাপত্তা এবং মানসিক শান্তির জন্য সমস্ত যন্ত্রপাতির মালিক এবং শ্রমিক সম্পূর্ণ যাচাইকৃত।",
+                timeDesc: "মিনিটের মধ্যে যন্ত্রপাতি বা শ্রম খুঁজুন এবং বুক করুন। চাষের উপর মনোযোগ দিন, অনুসন্ধানের উপর নয়।",
+                easyDesc: "বিশেষভাবে কৃষকদের জন্য ডিজাইন করা সহজ ইন্টারফেস।",
+                repairDesc: "দ্রুত প্রতিক্রিয়া সময় এবং প্রকৃত যন্ত্রাংশ সহ সমস্ত কৃষি যন্ত্রপাতির জন্য বিশেষজ্ঞ মেরামত পরিষেবা।",
+                supportDesc: "আমাদের নিবেদিত সহায়তা দল যেকোনো সমস্যায় সহায়তা করতে 24/7 উপলব্ধ।",
+                langDesc: "বিভিন্ন কৃষি সম্প্রদায়ের সেবা করার জন্য হিন্দি, ইংরেজি এবং বাংলায় উপলব্ধ।",
+                onSiteDesc: "গুরুত্বপূর্ণ মৌসুমে ডাউনটাইম কমানোর জন্য আপনার খামারের অবস্থানে যন্ত্রপাতি মেরামত করান।",
+                
+                // How It Works Section
+                howItWorks: "FarmConnect কিভাবে কাজ করে", step1: "আপনার অ্যাকাউন্ট তৈরি করুন", step2: "ব্রাউজ করুন এবং নির্বাচন করুন", 
+                step3: "বুক করুন এবং নিশ্চিত করুন", step4: "কাজে লেগে যান",
+                step1Desc: "সেবা খুঁজছেন কৃষক হিসেবে বা যন্ত্রপাতি বা শ্রম প্রদানকারী হিসাবে সাইন আপ করুন।",
+                step2Desc: "আপনার নির্দিষ্ট প্রয়োজনীয়তার ভিত্তিতে আপনার এলাকায় উপলব্ধ যন্ত্রপাতি বা শ্রম অনুসন্ধান করুন।",
+                step3Desc: "আপনার তারিখ নির্বাচন করুন, মূল্য পর্যালোচনা করুন এবং নিরাপদ পেমেন্ট বিকল্পগুলির সাথে আপনার বুকিং নিশ্চিত করুন।",
+                step4Desc: "আপনার যন্ত্রপাতি বা শ্রম নির্ধারিত সময়ে পৌঁছাবে। যা গুরুত্বপূর্ণ তার উপর মনোযোগ দিন - আপনার খামার।",
+                smsAlt: "এসএমএস বুকিং বিকল্প", smsAltDesc: "ইন্টারনেট অ্যাক্সেস ছাড়া কৃষকদের জন্য, আপনার নিবন্ধিত বুকিং নম্বর সহ FARMCON (+1 7402674969) এ একটি এসএমএস পাঠান।",
+                
+                // Testimonials Section
+                testimonialsTitle: "কৃষকরা আমাদের সম্পর্কে যা বলেন",
+                testimonial1: "FarmConnect আমার খামার পরিচালনার পদ্ধতি পরিবর্তন করেছে। আমি এখন পিক সিজনে কোনো ঝামেলা ছাড়াই সহজেই ট্রাক্টর খুঁজে পেতে পারি।",
+                testimonial2: "একজন যন্ত্রপাতির মালিক হিসাবে, FarmConnect আমাকে নিষ্ক্রিয় সময়কালে আমার সরঞ্জাম থেকে অতিরিক্ত আয় উপার্জন করতে সাহায্য করেছে। পেমেন্ট সিস্টেম নিরাপদ এবং সময়মত।",
+                testimonial3: "এসএমএস বুকিং বৈশিষ্ট্যটি বৈপ্লবিক! আমার কাছে স্মার্টফোন নেই, কিন্তু আমি এখনও একটি সাধারণ টেক্সট বার্তার মাধ্যমে আমার খামারের জন্য শ্রমিক বুক করতে পারি।",
+                farmer1: "কৃষক, পাঞ্জাব", owner1: "ট্রাক্টর মালিক, উত্তর প্রদেশ", farmer2: "ঐতিহ্যবাহী কৃষক, রাজস্থান",
+                
+                // FAQ Section
+                faqTitle: "প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী",
+                faq1: "আমি কিভাবে FarmConnect এ নিবন্ধন করব?", faq2: "আমি কি ধরনের যন্ত্রপাতি ভাড়া নিতে পারি?",
+                faq3: "এসএমএস বুকিং কিভাবে কাজ করে?", faq4: "আমার যদি বুকিং বাতিল করতে হয় তাহলে কি করব?",
+                faq5: "এসএমএস বুকিংয়ের জন্য পেমেন্ট কিভাবে প্রক্রিয়া করা হয়?", faq6: "এসএমএস পরিষেবা কি আঞ্চলিক ভাষায় উপলব্ধ?",
+                faq1Ans: "নিবন্ধন সহজ! পৃষ্ঠার শীর্ষে 'নিবন্ধন' বোতামে ক্লিক করুন, আপনার বিবরণ পূরণ করুন এবং আপনার ফোন নম্বর যাচাই করুন। আপনি মিনিটের মধ্যে বুকিংয়ের জন্য প্রস্তুত হবেন।",
+                faq2Ans: "আমরা ট্রাক্টর, হারভেস্টার, লাঙ্গল, বীজ বপনের যন্ত্র, সেচ ব্যবস্থা এবং আরও বিশেষায়িত কৃষি সরঞ্জাম সহ বিস্তৃত কৃষি যন্ত্রপাতি অফার করি।",
+                faq3Ans: "শুধু FARMCON (+1 7402674969) এ আপনার বুকিং অনুরোধ সহ একটি এসএমএস পাঠান। 'BOOK TRACTOR [date]' বা 'FIND LABOR [type]' এর মতো সহজ কমান্ড ব্যবহার করুন।",
+                faq4Ans: "আপনি আপনার ড্যাশবোর্ডের মাধ্যমে বুকিং বাতিল করতে পারেন। বাতিলকরণ নীতি প্রদানকারীর ভিত্তিতে পরিবর্তিত হয়, তাই আপনার বুকিং নিশ্চিত করার আগে নির্দিষ্ট শর্তাবলী পরীক্ষা করুন।",
+                faq5Ans: "এসএমএস বুকিংয়ের জন্য, পেমেন্ট সরাসরি পরিষেবা প্রদানকারীকে নগদে করা যেতে পারে। আমরা যাদের ডিজিটাল পেমেন্ট অ্যাক্সেস আছে তাদের জন্য UPI এর মাধ্যমে পেমেন্ট সমর্থন করি।",
+                faq6Ans: "হ্যাঁ! আমাদের এসএমএস পরিষেবা ইংরেজি, হিন্দি এবং বাংলা সমর্থন করে। শুধু আপনার পছন্দের ভাষায় কমান্ড পাঠান।",
+                
+                // CTA Section
+                ctaTitle: "আপনার চাষের অভিজ্ঞতা রূপান্তর করতে প্রস্তুত?",
+                ctaDesc: "হাজার হাজার কৃষকের সাথে যোগ দিন যারা ইতিমধ্যে FarmConnect এর পরিষেবা থেকে উপকৃত হচ্ছেন - অনলাইন এবং এসএমএস উভয়ের মাধ্যমে।",
+                signUpNow: "এখনই সাইন আপ করুন", smsGuideBtn: "এসএমএস বুকিং গাইড",
+                noSmartphoneMsg: "স্মার্টফোন নেই? কোন সমস্যা নেই!",
+                smsInstruction: "এসএমএস বুকিং শুরু করতে FARMCON (+1 7402674969) এ [বুকিং ফরম্যাট] টেক্সট করুন।",
+                
+                // Footer
+                footerDesc: "কৃষকদের কৃষি যন্ত্রপাতি এবং দক্ষ শ্রমের সাথে সংযুক্ত করা যাতে চাষ আরও দক্ষ এবং লাভজনক হয়।",
+                quickLinks: "দ্রুত লিঙ্ক", smsBooking: "এসএমএস বুকিং", howItWorksLink: "এটি কিভাবে কাজ করে", faqLink: "প্রশ্নোত্তর",
+                servicesTitle: "সেবাসমূহ", machineryRentalLink: "যন্ত্রপাতি ভাড়া", laborHiring: "শ্রম নিয়োগ",
+                checkout: "চেকআউট", smsGuideLink: "এসএমএস বুকিং গাইড", contactSupport: "সহায়তার সাথে যোগাযোগ করুন",
+                contactInfo: "যোগাযোগের তথ্য", smsFormat: "এসএমএস: বুকিং ফরম্যাট +1 7402674969 এ", 
+                project: "চূড়ান্ত বছর প্রকল্প - জেআইএস কলেজ অফ ইঞ্জিনিয়ারিং", smsBookingTitle: "এসএমএস বুকিং",
+                textTo: "টেক্সট করুন", to: "এ",
+                
+                // Chatbot
+                chatWelcome: "🌾 নমস্কার! আমি আপনার FarmConnect সহায়ক। যন্ত্রপাতি, শ্রম, এসএমএস বুকিং, দাম এবং আরও অনেক কিছু সম্পর্কে আমাকে জিজ্ঞাসা করুন!",
+                chatPlaceholder: "আপনার বার্তা টাইপ করুন..."
+            }
+        };
+
+        let currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('farmconnect_lang', lang);
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+                        if (el.hasAttribute('placeholder')) {
+                            el.placeholder = translations[lang][key];
+                        } else if (el.tagName === 'SELECT' && key === 'selectBankOption') {
+                            // Handle select options if needed
+                        } else {
+                            el.textContent = translations[lang][key];
+                        }
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const welcomeMsg = document.getElementById('welcome-message');
+            if (welcomeMsg && translations[lang].chatWelcome) {
+                welcomeMsg.innerHTML = translations[lang].chatWelcome;
+            }
+
+            const chatInput = document.getElementById('chatbot-input');
+            if (chatInput && translations[lang].chatPlaceholder) {
+                chatInput.placeholder = translations[lang].chatPlaceholder;
+            }
+        }
+
+        // Language switcher event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const lang = btn.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
         });
 
-        // Show/hide profile navigation based on actual session (no auto-login)
-        document.addEventListener('DOMContentLoaded', function() {
+        // Chatbot functionality (same as before)
+        (function () {
+            const toggleBtn = document.getElementById('chatbot-toggle');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const closeBtn = document.getElementById('chatbot-close');
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const inputField = document.getElementById('chatbot-input');
+            const sendBtn = document.getElementById('chatbot-send');
+
+            function openChat() {
+                chatbotContainer.style.display = 'flex';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                inputField.focus();
+            }
+
+            function closeChat() {
+                chatbotContainer.style.display = 'none';
+            }
+
+            if (toggleBtn) toggleBtn.addEventListener('click', openChat);
+            if (closeBtn) closeBtn.addEventListener('click', closeChat);
+
+            function addMessage(text, isUser = false) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message-bubble ${isUser ? 'user-message' : 'bot-message'}`;
+                msgDiv.textContent = text;
+                messagesContainer.appendChild(msgDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'typing-indicator';
+                typingDiv.innerHTML = '<span>●</span><span>●</span><span>●</span>';
+                typingDiv.id = 'typing-indicator';
+                messagesContainer.appendChild(typingDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                return typingDiv;
+            }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
+            }
+
+            function getBotResponse(message, lang) {
+                const lowerMsg = message.toLowerCase().trim();
+                const responses = {
+                    en: {
+                        greeting: "👋 Namaste! Welcome to FarmConnect. How can I help you today?",
+                        machinery: "🚜 We offer tractors (John Deere, Mahindra), harvesters, ploughs, and irrigation pumps. Book via Machinery page or SMS to +1 7402674969. Prices from ₹1200/day.",
+                        labour: "👨‍🌾 Skilled labour available for planting, harvesting, irrigation. Book via Labour page or SMS. Rates: ₹400-600/day per worker.",
+                        sms: "📱 SMS Booking Guide:\n• BOOK John Deere 5050D 2026-02-20 kalyani\n• LABOR HARVESTING 3 2026-02-20\nSend to: +1 7402674969\nYou'll get instant confirmation! No smartphone needed.",
+                        register: "📝 Register by clicking 'Register' button at top right. Fill details, then start booking instantly.",
+                        payment: "💰 We accept UPI, credit/debit cards, and cash on delivery. For cash, pay directly to the service provider.",
+                        price: "💲 Pricing Guide:\n• Tractors: ₹1200-2500/day\n• Harvesters: ₹3000-5000/day\n• Labour: ₹400-600/day per worker",
+                        default: "🌱 I'm here to help! Try asking about:\n• 'How to book a tractor?'\n• 'Labour hiring process'\n• 'SMS booking commands'\n• 'Payment methods'\n• 'Repair services'"
+                    },
+                    hi: {
+                        greeting: "👋 नमस्ते! FarmConnect में आपका स्वागत है। आज मैं आपकी कैसे मदद कर सकता हूँ?",
+                        machinery: "🚜 हम ट्रैक्टर (जॉन डियर, महिंद्रा), हार्वेस्टर, हल और सिंचाई पंप प्रदान करते हैं। मशीनरी पेज पर या SMS से बुक करें। कीमत ₹1200/दिन से शुरू।",
+                        labour: "👨‍🌾 रोपाई, कटाई, सिंचाई के लिए कुशल श्रमिक उपलब्ध। लेबर पेज पर या SMS से बुक करें। दर: ₹400-600/दिन प्रति श्रमिक।",
+                        sms: "📱 एसएमएस बुकिंग गाइड:\n• BOOK John Deere 5050D 2026-02-20 kalyani\n• LABOR HARVESTING 3 2026-02-20\nभेजें: +1 7402674969\nतुरंत पुष्टि मिलेगी! स्मार्टफोन की जरूरत नहीं।",
+                        register: "📝 ऊपर दाएं 'रजिस्टर' बटन पर क्लिक करके पंजीकरण करें।",
+                        payment: "💰 हम UPI, क्रेडिट/डेबिट कार्ड और कैश ऑन डिलीवरी स्वीकार करते हैं।",
+                        price: "💲 मूल्य गाइड:\n• ट्रैक्टर: ₹1200-2500/दिन\n• हार्वेस्टर: ₹3000-5000/दिन\n• श्रम: ₹400-600/दिन प्रति श्रमिक",
+                        default: "🌱 मैं आपकी मदद के लिए यहाँ हूँ! मशीनरी, श्रम, एसएमएस बुकिंग, भुगतान या मरम्मत के बारे में पूछें।"
+                    },
+                    bn: {
+                        greeting: "👋 নমস্কার! FarmConnect এ আপনাকে স্বাগতম। আজ আমি আপনাকে কিভাবে সাহায্য করতে পারি?",
+                        machinery: "🚜 আমরা ট্রাক্টর (জন ডিয়ার, মহিন্দ্র), হারভেস্টার, লাঙ্গল এবং সেচ পাম্প সরবরাহ করি। মেশিনারি পেজে বা SMS এ বুক করুন। দাম ₹1200/দিন থেকে।",
+                        labour: "👨‍🌾 রোপণ, ফসল কাটা, সেচের জন্য দক্ষ শ্রমিক উপলব্ধ। লেবার পেজে বা SMS এ বুক করুন। হার: ₹400-600/দিন প্রতি শ্রমিক।",
+                        sms: "📱 এসএমএস বুকিং গাইড:\n• BOOK John Deere 5050D 2026-02-20 kalyani\n• LABOR HARVESTING 3 2026-02-20\nপাঠান: +1 7402674969\nতাৎক্ষণিক নিশ্চিতকরণ পাবেন! স্মার্টফোনের প্রয়োজন নেই।",
+                        register: "📝 উপরে ডানদিকে 'নিবন্ধন' বোতামে ক্লিক করে নিবন্ধন করুন।",
+                        payment: "💰 আমরা UPI, ক্রেডিট/ডেবিট কার্ড এবং ক্যাশ অন ডেলিভারি গ্রহণ করি।",
+                        price: "💲 মূল্য গাইড:\n• ট্রাক্টর: ₹1200-2500/দিন\n• হারভেস্টার: ₹3000-5000/দিন\n• শ্রম: ₹400-600/দিন প্রতি শ্রমিক",
+                        default: "🌱 আমি এখানে আপনাকে সাহায্য করতে! যন্ত্রপাতি, শ্রম, এসএমএস বুকিং, অর্থ প্রদান বা মেরামত সম্পর্কে জিজ্ঞাসা করুন।"
+                    }
+                };
+                const langRes = responses[lang] || responses.en;
+                if (lowerMsg.match(/^(hi|hello|hey|namaste|hola)/)) return langRes.greeting;
+                if (lowerMsg.includes('tractor') || lowerMsg.includes('machinery')) return langRes.machinery;
+                if (lowerMsg.includes('labour') || lowerMsg.includes('labor') || lowerMsg.includes('worker')) return langRes.labour;
+                if (lowerMsg.includes('sms') || lowerMsg.includes('text')) return langRes.sms;
+                if (lowerMsg.includes('register') || lowerMsg.includes('sign up')) return langRes.register;
+                if (lowerMsg.includes('payment') || lowerMsg.includes('pay')) return langRes.payment;
+                if (lowerMsg.includes('price') || lowerMsg.includes('cost')) return langRes.price;
+                return langRes.default;
+            }
+
+            function processUserInput() {
+                const userText = inputField.value.trim();
+                if (userText === "") return;
+
+                addMessage(userText, true);
+                inputField.value = "";
+
+                const typingIndicator = showTypingIndicator();
+                const currentLang = localStorage.getItem('farmconnect_lang') || 'en';
+
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const reply = getBotResponse(userText, currentLang);
+                    addMessage(reply, false);
+                }, 600);
+            }
+
+            if (sendBtn) sendBtn.addEventListener('click', processUserInput);
+            if (inputField) inputField.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') processUserInput();
+            });
+
+            if (chatbotContainer) chatbotContainer.style.display = 'none';
+        })();
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', function () {
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Auth and session handling
+        document.addEventListener('DOMContentLoaded', function () {
+            updateLanguage(currentLang);
+
             const userProfileNav = document.getElementById('userProfileNav');
             const authButtons = document.getElementById('authButtons');
             const userDisplayName = document.getElementById('userDisplayName');
             const userDisplayRole = document.getElementById('userDisplayRole');
 
-            // Only use farmconnect_current_user or currentUser for session
             let currentUser = null;
-            try {
-                if (typeof userSession !== 'undefined' && userSession.getCurrentUser) {
-                    currentUser = userSession.getCurrentUser();
-                }
-            } catch (e) {
-                console.warn('userSession.getCurrentUser failed:', e);
+            const stored = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
+            if (stored) {
+                try { currentUser = JSON.parse(stored); } catch (e) { currentUser = null; }
             }
 
-            // Fallback to session key only (not remembered user)
-            if (!currentUser) {
-                const stored = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser') || null;
-                if (stored) {
-                    try { currentUser = JSON.parse(stored); } catch (e) { currentUser = null; }
-                }
+            if (currentUser && userProfileNav && authButtons) {
+                if (userDisplayName) userDisplayName.textContent = currentUser.fullname || currentUser.name || currentUser.email || '';
+                if (userDisplayRole) userDisplayRole.textContent = (currentUser.userType || currentUser.role || '').replace(/_/g, ' ');
+                userProfileNav.style.display = 'flex';
+                authButtons.style.display = 'none';
+            } else if (userProfileNav && authButtons) {
+                userProfileNav.style.display = 'none';
+                authButtons.style.display = 'flex';
             }
 
-            if (currentUser) {
-                // Populate display fields
-                userDisplayName.textContent = currentUser.fullname || currentUser.name || currentUser.email || '';
-                userDisplayRole.textContent = (currentUser.userType || currentUser.role || '')
-                    .toString()
-                    .replace(/_/g, ' ')
-                    .replace(/\b\w/g, c => c.toUpperCase());
-
-                if (userProfileNav) userProfileNav.style.display = 'flex';
-                if (authButtons) authButtons.style.display = 'none';
-            } else {
-                // No session: ensure logged-out UI
-                if (userProfileNav) userProfileNav.style.display = 'none';
-                if (authButtons) authButtons.style.display = 'flex';
+            // Gallery arrows
+            const gallery = document.getElementById('imageGallery');
+            const leftArrow = document.getElementById('galleryLeft');
+            const rightArrow = document.getElementById('galleryRight');
+            if (gallery && leftArrow && rightArrow) {
+                leftArrow.onclick = () => gallery.scrollBy({ left: -400, behavior: 'smooth' });
+                rightArrow.onclick = () => gallery.scrollBy({ left: 400, behavior: 'smooth' });
             }
         });
 
         function logout() {
-            if(confirm('Are you sure you want to logout?')) {
-                // Remove session keys from localStorage
+            if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('farmconnect_current_user');
                 localStorage.removeItem('currentUser');
-                localStorage.removeItem('farmconnect_remembered_user');
-                // Hide user profile, show auth buttons
-                document.getElementById('userProfileNav').style.display = 'none';
-                document.getElementById('authButtons').style.display = 'flex';
-                alert('Logged out successfully');
-                // Reload page to update UI
                 window.location.reload();
             }
         }
-
-        // Gallery arrow scroll functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const gallery = document.getElementById('imageGallery');
-            document.getElementById('galleryLeft').onclick = function() {
-                gallery.scrollBy({ left: -400, behavior: 'smooth' });
-            };
-            document.getElementById('galleryRight').onclick = function() {
-                gallery.scrollBy({ left: 400, behavior: 'smooth' });
-            };
-        });
     </script>
 </body>
+
 </html>
