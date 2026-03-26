@@ -52,9 +52,9 @@ class DashboardManager {
             const defaultUser = {
                 id: 'user_001',
                 userID: 'FC001',
-                fullname: 'Deepjoy Hazari',
-                name: 'Deepjoy Hazari',
-                email: 'deepjoy@example.com',
+                fullname: 'user',
+                name: 'user',
+                email: 'user@example.com',
                 phone: '+91 9876543210',
                 address: 'Kalyani, Nadia, West Bengal',
                 city: 'Kalyani',
